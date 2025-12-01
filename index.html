@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whatitu Website</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* === BAGIAN 1: DATABASE WARNA (THEMING) === */
+        :root {
+            /* Warna Default (Light Mode) */
+            --bg-color: #FFF8E7;
+            --text-color: #4A4A4A;
+            --card-bg: #FFFFFF;
+            --modal-bg: #FFFBEB;
+            --subtitle-color: #888;
+            --shadow-color: rgba(200, 180, 180, 0.15);
+            --icon-bg: #F3F3F3;
+            --toggle-bg: #FFC2D1;
+            --toggle-icon: #fff;
+        }
+
+        /* Warna Dark Mode (Override) */
+        body.dark-mode {
+            --bg-color: #121212; /* Hitam Matte (bukan hitam pekat) */
+            --text-color: #E0E0E0; /* Putih tulang */
+            --card-bg: #1E1E1E; /* Abu Gelap */
+            --modal-bg: #1E1E1E;
+            --subtitle-color: #A0A0A0;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --icon-bg: #2D2D2D;
+            --toggle-bg: #333;
+            --toggle-icon: #FFD700; /* Warna kuning untuk bulan/bintang */
+        }
+
+        /* --- RESET & DASAR --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Transisi halus saat ganti mode */
+        }
+
+        body {
+            background-color: var(--bg-color); /* Panggil Variabel */
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color); /* Panggil Variabel */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* --- TOMBOL TOGGLE DARK MODE --- */
+        .theme-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--toggle-bg);
+            color: var(--toggle-icon);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: none;
+            z-index: 100; /* Supaya selalu di atas */
+        }
+
+        /* --- HEADER MODERN --- */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 50px; /* Turun dikit biar ga nabrak tombol toggle */
+            position: relative;
+            z-index: 1;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px; height: 150px;
+            background: #FFC2D1;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Di Dark mode, glownya dikurangi opacity-nya biar ga norak */
+        body.dark-mode header::before {
+            opacity: 0.2; 
+        }
+
+        h1.brand-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 3.5rem;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #FF5F8B 0%, #B19CD9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            drop-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        h1.brand-logo::after {
+            content: '.';
+            color: var(--text-color);
+            -webkit-text-fill-color: var(--text-color);
+        }
+
+        p.subtitle {
+            font-size: 0.9rem;
+            color: var(--subtitle-color);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* --- CONTAINER MENU --- */
+        #menu-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-bottom: 50px;
+        }
+
+        /* --- TOMBOL MENU (CARD) --- */
+        .menu-card {
+            background: var(--card-bg); /* Panggil Variabel */
+            padding: 22px;
+            border-radius: 18px;
+            box-shadow: 0 10px 20px var(--shadow-color); 
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: munculSatuSatu 0.6s ease forwards;
+            opacity: 0;
+            border: 1px solid rgba(255,255,255,0.05); /* Border tipis halus */
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px var(--shadow-color);
+        }
+
+        .menu-card:active {
+            transform: scale(0.97);
+        }
+
+        .menu-card:nth-child(1) { animation-delay: 0.1s; border-left: 5px solid #FF5F8B; }
+        .menu-card:nth-child(2) { animation-delay: 0.2s; border-left: 5px solid #B19CD9; }
+        .menu-card:nth-child(3) { animation-delay: 0.3s; border-left: 5px solid #80ED99; }
+        .menu-card:nth-child(4) { animation-delay: 0.4s; border-left: 5px solid #FFB703; }
+
+        .menu-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-color); /* Ikut berubah saat dark mode */
+        }
+
+        .menu-icon {
+            font-size: 1.4rem;
+            background: var(--icon-bg);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* --- POP UP (MODAL) --- */
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        #modal-content {
+            background: var(--modal-bg);
+            width: 100%;
+            max-width: 360px;
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: popUpNaik 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #modal-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 20px;
+            background-color: #333;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #modal-title {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        #modal-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--subtitle-color);
+            margin-bottom: 25px;
+        }
+
+        .btn-action {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, #FF5F8B 0%, #FF8FAB 100%);
+            color: white;
+            text-decoration: none;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(255, 95, 139, 0.3);
+            transition: 0.3s;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 95, 139, 0.4);
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: var(--card-bg); /* Warna ngikut mode */
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .btn-close:active { transform: scale(0.9); }
+
+        @keyframes munculSatuSatu {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes popUpNaik {
+            from { transform: scale(0.8) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">☀️</button>
+
+    <header>
+        <h1 class="brand-logo">my whatitu</h1>
+        <p class="subtitle">Tempat terbaik untuk mencari sambel pecel, desain profesional, undangan digital, dan villa nyaman di Bromo.</p>
+    </header>
+
+    <div id="menu-container"></div>
+
+    <div id="modal-overlay" onclick="tutupPopup(event)">
+        <div id="modal-content">
+            <button class="btn-close" onclick="tutupPopup(null)">&times;</button>
+            
+            <img id="modal-img" src="" alt="Preview">
+            
+            <h2 id="modal-title">Judul</h2>
+            <p id="modal-desc">Deskripsi</p>
+            
+            <a id="modal-btn" href="#" class="btn-action" target="_blank">Pesan Sekarang</a>
+        </div>
+    </div>
+
+    <script>
+        /* === LOGIKA DARK MODE/LIGHT MODE === */
+        const body = document.body;
+        const themeBtn = document.getElementById('themeBtn');
+        const currentTheme = localStorage.getItem('theme'); // Cek apakah user pernah milih sebelumnya?
+
+        // 1. Cek Settingan Awal
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeBtn.innerText = '🌙'; // Icon Bulan
+        } else if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Kalau user belum pernah milih, tapi HP-nya mode gelap, kita ikutin HP-nya
+            body.classList.add('dark-mode');
+            themeBtn.innerText = '🌙';
+        }
+
+        // 2. Fungsi Tombol Ganti Mode
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeBtn.innerText = '🌙';
+                localStorage.setItem('theme', 'dark'); // Simpan pilihan user "Saya suka gelap"
+            } else {
+                themeBtn.innerText = '☀️';
+                localStorage.setItem('theme', 'light'); // Simpan pilihan user "Saya suka terang"
+            }
+        }
+
+        /* === DATABASE MENU === */
+        const dataMenu = [
+            {
+                id: 1,
+                judul: "Sambel Pecel Bu Leo",
+                icon: "🫘", 
+                deskripsi: "Ini Definisi Bumbu Pecel yang Sebenarnya! 🥜🌶 <br> <br> Bukan sambel pecel biasa yang encer dan hambar. Sambal Pecel Bu Leo menghadirkan tekstur yang medok dan rasa yang nendang!",
+                gambar: "comingsoon.png", 
+                linkEmbed: "https://wa.me/+6285217924584" 
+            },
+            {
+                id: 2,
+                judul: "Villa Royal Alamanda Bromo",
+                icon: "🏡",
+                deskripsi: "Tempat bersantai terbaik sambil menikmati indahnya daerah Bromo dan sekitarnya juga banyak wisata lain di sekitarnya.",
+                gambar: "omambar.jpg", // Pastikan nama file di Github huruf kecil semua
+                linkEmbed: "https://royalalamandabromo.my.canva.site/"
+            },
+            {
+                id: 3,
+                judul: "Semgart",
+                icon: "🖼️",
+                deskripsi: "Desainer Gambar baik poster, logo, dan banner. Menghadirkan desain yang indah dan modern.",
+                gambar: "semart.jpg", // Pastikan nama file di Github huruf kecil semua
+                linkEmbed: "https://www.instagram.com/markus_leo13"
+            },
+            {
+                id: 4,
+                judul: "Undangan Nikah Online",
+                icon: "✨",
+                deskripsi: "Pembuatan undangan pernikahan berbasis digital/online dengan tampilan menarik. Mulai dari 50k.",
+                gambar: "undangannkh.png", // Pastikan nama file di Github huruf kecil semua
+                linkEmbed: "https://ig.me/m/mywhatitu"
+            }
+        ];
+
+        /* === LOGIKA RENDER & POPUP === */
+        const container = document.getElementById('menu-container');
+
+        dataMenu.forEach(item => {
+            const box = document.createElement('div');
+            box.className = 'menu-card';
+            box.onclick = () => bukaPopup(item);
+
+            box.innerHTML = `
+                <span class="menu-title">${item.judul}</span>
+                <span class="menu-icon">${item.icon}</span>
+            `;
+            container.appendChild(box);
+        });
+
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalImg = document.getElementById('modal-img');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const modalBtn = document.getElementById('modal-btn');
+
+        function bukaPopup(data) {
+            modalTitle.innerText = data.judul;
+            modalDesc.innerHTML = data.deskripsi; 
+            modalImg.src = data.gambar;
+            modalBtn.href = data.linkEmbed;
+            modalOverlay.style.display = 'flex';
+        }
+
+        function tutupPopup(event) {
+            if (event === null || event.target === modalOverlay) {
+                modalOverlay.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
