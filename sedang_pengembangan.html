@@ -54,6 +54,7 @@
             /* Warna Teks Putih agar terbaca di gelap */
             color: #ffffff;
             text-align: center;
+            animation: slideUp 1s ease-out;
         }
 
         /* Style Judul */
@@ -63,13 +64,15 @@
             font-weight: 700;
             color: #4db8ff; /* Aksen warna biru muda (Cyan) biar futuristik */
             text-shadow: 0 0 10px rgba(77, 184, 255, 0.5);
+            animation: slideUp 1s ease-out;
         }
 
         /* Style Isi Teks */
         .bubble-text {
             font-size: 1.1em;
             line-height: 1.6;
-            color: #e0e0e0; /* Putih agak abu dikit biar mata gak sakit */
+            color: #e0e0e0; 
+            animation: slideUp 1s ease-out
         }
 
         .btn-back {
@@ -83,10 +86,16 @@
             font-weight: bold;
             box-shadow: 0 5px 0 #070736;
             transition: 0.2s;
+            animation: slideUp 1s ease-out;
         }
 
         .btn-back:hover { background-color: #7f8c8d; }
         .btn-back:active { transform: translateY(5px); box-shadow: none; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
     </style>
 </head>
