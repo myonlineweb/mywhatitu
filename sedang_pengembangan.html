@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Bubble Template</title>
+    <style>
+        /* --- 1. SETTING BACKGROUND GELAP --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            
+            /* GANTI URL DI BAWAH DENGAN NAMA FILE PNG KAMU */
+            /* Saya pakai placeholder gelap biar kamu bisa bayangkan hasilnya */
+            background-image: url('malamback.png');
+            
+            /* Agar gambar memenuhi layar & tidak gepeng */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Gambar diam saat di-scroll */
+            
+            /* Flexbox biar bubble ada di tengah layar */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- 2. STYLE BUBBLE (GLASS DARK) --- */
+        .bubble-container {
+            width: 80%;
+            max-width: 600px;
+            padding: 40px;
+            
+            /* Logika Desain Gelap: */
+            /* Background Hitam tapi Transparan (0.7 = 70% tebal) */
+            background-color: rgba(0, 0, 0, 0.25);
+            
+            /* Garis tepi tipis biar bubble terlihat terpisah dari background */
+            border: 1px solid rgba(255, 255, 255, 1);
+            
+            /* Membuat sudut tumpul */
+            border-radius: 20px;
+            
+            /* Efek blur di belakang kaca (Opsional, hapus jika berat) */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            
+            /* Bayangan biar makin pop-up */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            
+            /* Warna Teks Putih agar terbaca di gelap */
+            color: #ffffff;
+            text-align: center;
+        }
+
+        /* Style Judul */
+        .bubble-title {
+            margin-top: 0;
+            font-size: 2em;
+            font-weight: 700;
+            color: #4db8ff; /* Aksen warna biru muda (Cyan) biar futuristik */
+            text-shadow: 0 0 10px rgba(77, 184, 255, 0.5);
+        }
+
+        /* Style Isi Teks */
+        .bubble-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #e0e0e0; /* Putih agak abu dikit biar mata gak sakit */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bubble-container">
+        <h1 class="bubble-title">Sedang Dalam Pengembangan</h1>
+        <p class="bubble-text">
+"Pendidikan adalah senjata paling mematikan di dunia, karena dengan pendidikan, kamu dapat mengubah dunia." - Nelson Mandela            <br><br>
+"Belajar adalah satu-satunya investasi yang tidak pernah rugi." - Benjamin Franklin
+        </p>
+    </div>
+
+</body>
+</html>

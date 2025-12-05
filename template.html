@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- JUDUL SOALNYA ADA DISINI -->
+ <!-- JUDUL SOALNYA ADA DISINI -->
+  <!-- JUDUL SOALNYA ADA DISINI -->
+   <!-- JUDUL SOALNYA ADA DISINI -->
+    <!-- JUDUL SOALNYA ADA DISINI -->
+    <title>Template Soal</title>
+    <style>
+        /* --- 1. SETUP BACKGROUND --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Ganti 'background.png' dengan nama file gambarmu */
+            background-image: url('malamback.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* --- 2. KONTAINER UTAMA (Transparan 80%) --- */
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 40px 0;
+            padding: 30px;
+            
+            /* Ini kuncinya: Warna Putih dengan Opacity 0.8 (80%) */
+            /* Supaya terlihat 'tebal' tapi background tetap membayang */
+            background-color: rgba(255, 255, 255, 0.45); 
+            
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px); /* Efek blur kaca (opsional, biar makin mantap) */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* --- 3. STYLE SOAL --- */
+        .question-card {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            background-color: #FFFF;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1em;
+            color: #131B47
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background-color: #C3BFDB;
+            border-color: #666;
+            color: #131B47;
+        }
+
+        /* Warna saat Benar/Salah */
+        .correct {
+            background-color: #d4edda !important ;
+            border-color: #154F21 !important;
+            color: #45218A;
+        }
+
+        .wrong {
+            background-color: #f8d7da !important;
+            border-color: #471111 !important;
+            color: #45218A;
+        }
+
+        .disabled {
+            cursor: no-drop;
+            opacity: 0.9;
+        }
+        /* --- 4. PENJELASAN --- */
+        .explanation {
+            display: none; /* Sembunyi default */
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #C3BFDB;
+            border-left: 5px solid #383d41;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        /* --- 5. SCORE BOARD --- */
+        .score-board {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        /* Spacer biar konten paling bawah gak ketutup score board */
+        .spacer {
+            height: 80px;
+        }
+    </style>
+
+<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
+<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
+<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
+<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
+
+</head>
+<body>
+
+    <div class="container">
+        <h1>Kuis Mantap Abis</h1>
+        <div id="quiz-area">
+            </div>
+        <div class="spacer"></div>
+    </div>
+
+    <div class="score-board">
+        Benar: <span id="score-correct">0</span> | Salah: <span id="score-wrong">0</span>
+    </div>
+
+    <script>
+        // --- DATA SOAL ---
+        // Edit bagian ini. 
+        // Format: Pertanyaan, Array Pilihan, Index Jawaban Benar (0=A, 1=B, 2=C, 3=D), Penjelasan.
+        
+        let dataSoal = [
+                {
+                question: `1. Apa pertanyaan yang ingin diberikan?`,
+                options: [
+                    "Pilihan A",
+                    "Pilihan B",
+                    "Pilihan C",
+                    "Pilihan D"
+                ],
+                correctIndex: 0, // Kunci Jawaban (0,1,2, atau 3)
+                explanation: "Ini jawaban yang benar dan penjelasannya. Penjelasan muncul setelah memilih."
+            }
+        ]
+
+        // --- LOGIKA PROGRAM (JANGAN DIUBAH KECUALI PAHAM) ---
+        const quizArea = document.getElementById('quiz-area');
+        const scoreCorrectEl = document.getElementById('score-correct');
+        const scoreWrongEl = document.getElementById('score-wrong');
+
+        let correctCount = 0;
+        let wrongCount = 0;
+
+        function renderQuiz() {
+            quizArea.innerHTML = '';
+            
+            dataSoal.forEach((item, index) => {
+                // Buat Container Soal
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                
+                // Buat Judul Soal
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerText = item.question;
+                card.appendChild(qText);
+
+                // Buat Container Pilihan
+                const optList = document.createElement('ul');
+                optList.className = 'options';
+
+                item.options.forEach((opt, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt;
+                    
+                    // Event Klik Jawaban
+                    btn.onclick = () => checkAnswer(btn, item, optIndex, optList, explanationDiv);
+                    
+                    optList.appendChild(btn);
+                });
+                
+                card.appendChild(optList);
+
+                // Buat Container Penjelasan
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.innerHTML = `<strong>Jawaban:</strong> ${item.options[item.correctIndex]}<br><em>${item.explanation}</em>`;
+                card.appendChild(explanationDiv);
+
+                quizArea.appendChild(card);
+            });
+        }
+
+        function checkAnswer(selectedBtn, dataItem, selectedIndex, optListContainer, expDiv) {
+            // Cegah klik lagi kalau sudah dijawab di nomor ini
+            if (optListContainer.classList.contains('answered')) return;
+
+            // Tandai sudah dijawab
+            optListContainer.classList.add('answered');
+            
+            // Disable semua tombol di nomor ini
+            const allBtns = optListContainer.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.classList.add('disabled'));
+
+            // Cek Benar/Salah
+            if (selectedIndex === dataItem.correctIndex) {
+                // BENAR
+                selectedBtn.classList.add('correct');
+                correctCount++;
+                scoreCorrectEl.innerText = correctCount;
+            } else {
+                // SALAH
+                selectedBtn.classList.add('wrong');
+                wrongCount++;
+                scoreWrongEl.innerText = wrongCount;
+                
+                // Highlight jawaban yang benar
+                allBtns[dataItem.correctIndex].classList.add('correct');
+            }
+
+            // Tampilkan Penjelasan
+            expDiv.style.display = 'block';
+        }
+
+        // Jalankan Render
+        renderQuiz();
+
+    </script>
+</body>
+</html>
