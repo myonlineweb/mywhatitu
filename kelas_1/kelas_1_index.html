@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelas 1</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* === KONFIGURASI TEMA DAN GAMBAR BACKGROUND === */
+        :root {
+            /* MODE TERANG (SIANG) */
+            /* Ganti url(...) dengan nama file PNG terang kamu */
+            --bg-image: url('https://myonlineweb.github.io/mywhatitu/pagiback.png'); 
+            --text-color: #2c3e50; /* Biru Gelap (Bukan Hitam) */
+            --container-bg: rgba(255, 255, 255, 0.85); /* Putih transparan biar teks kebaca */
+            --shadow-btn: 0 6px 0 rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode {
+            /* MODE GELAP (MALAM) */
+            /* Ganti url(...) dengan nama file PNG gelap kamu */
+            --bg-image: url('https://myonlineweb.github.io/mywhatitu/malamback.png');
+            --text-color: #fdfbf7; /* Krem Putih Tulang (Bukan Putih Murni) */
+            --container-bg: rgba(20, 20, 40, 0.85); /* Gelap transparan */
+            --shadow-btn: 0 6px 0 rgba(0,0,0,0.3);
+        }
+
+        /* === DASAR === */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Fredoka', sans-serif; /* Font Gembul */
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-image 0.5s ease;
+            color: var(--text-color);
+        }
+
+        /* === WADAH UTAMA === */
+        .mobile-container {
+            width: 90%;
+            max-width: 400px;
+            background-color: var(--container-bg);
+            backdrop-filter: blur(5px); /* Efek kaca buram */
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+            transition: background-color 0.3s ease;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        /* === TOMBOL GANTI TEMA === */
+        .theme-toggle {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: #FFD93D;
+            border: none;
+            font-size: 1.5rem;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #E6B31E;
+            transition: transform 0.1s;
+        }
+        .theme-toggle:active { transform: translateY(4px); box-shadow: none; }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        p.subtitle {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        /* === GRID MENU KELAS === */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Kolom biar mirip menu game */
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: transform 0.2s;
+            box-shadow: var(--shadow-btn);
+            position: relative;
+            overflow: hidden;
+            opacity: 0; /* Sembunyi dulu */
+            animation: popJelly 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* WARNA-WARNI KELAS (WARNA PERMEN) */
+        .nomor-1 { background-color: #FF6B6B; } /* Merah Jambu */
+        .nomor-2 { background-color: #4ECDC4; } /* Tosca */
+        .nomor-3 { background-color: #FFE66D; color: #555; } /* Kuning */
+        .nomor-4 { background-color: #1A535C; } /* Hijau Tua */
+        .nomor-5 { background-color: #FF9F1C; } /* Oranye */
+        .nomor-6 { background-color: #6A0572; } /* Ungu */
+        .mitra { background-color: #748237; }
+
+
+                /* Mengatur Penundaan (Delay) biar muncul gantian */
+        .nomor-1 { animation-delay: 0.1s; } /* Muncul detik ke 0.1 */
+        .nomor-2 { animation-delay: 0.2s; } /* Muncul detik ke 0.2 */
+        .nomor-3 { animation-delay: 0.3s; }
+        .nomor-4 { animation-delay: 0.4s; }
+        .nomor-5 { animation-delay: 0.5s; }
+        .nomor-6 { animation-delay: 0.6s; }
+        .mitra   { animation-delay: 0.7s; }
+
+        .menu-item:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+
+        .menu-item:active {
+            transform: translateY(3px); /* Efek tombol ditekan */
+            box-shadow: none;
+        }
+
+        .emoji-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* === TOMBOL KEMBALI === */
+        .btn-back {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #95a5a6; /* Abu-abu soft */
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 5px 0 #7f8c8d;
+            transition: 0.2s;
+        }
+
+        .btn-back:hover { background-color: #7f8c8d; }
+        .btn-back:active { transform: translateY(5px); box-shadow: none; }
+
+        /* Footer */
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+        /* --- RESEP ANIMASI --- */
+
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popJelly {
+            0%   { opacity: 0; transform: scale(0.5); }
+            80%  { transform: scale(1.1); } /* Membesar dikit biar membal */
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
+
+        <h1>SD Nomor 1</h1>
+        <p class="subtitle">Apakah sudah siap belajar bersama Whatitu hari ini?</p>
+
+        <div class="menu-grid">
+            <a href="https://myonlineweb.github.io/mywhatitu/sedang_pengembangan_study.html" class="menu-item nomor-1">
+                <span class="emoji-icon">Soal 1</span> Kerjakan
+            </a>
+            <a href="https://myonlineweb.github.io/mywhatitu/sedang_pengembangan_study.html" class="menu-item nomor-2">
+                <span class="emoji-icon">Soal 2</span> Kerjakan
+            </a>
+            <a href="https://myonlineweb.github.io/mywhatitu/sedang_pengembangan_study.html" class="menu-item nomor-3">
+                <span class="emoji-icon">Soal 3</span> Kerjakan
+            </a>
+            <a href="https://myonlineweb.github.io/mywhatitu/sedang_pengembangan_study.html" class="menu-item nomor-4">
+                <span class="emoji-icon">Soal 4</span> Kerjakan
+            </a>
+            <a href="https://myonlineweb.github.io/mywhatitu/sedang_pengembangan_study.html" class="menu-item nomor-5">
+                <span class="emoji-icon">Soal 5</span> Kerjakan
+            </a>
+            <a href="https://myonlineweb.github.io/mywhatitu/sedang_pengembangan_study.html" class="menu-item nomor-6">
+                <span class="emoji-icon">Soal 6</span> Kerjakan
+            </a>
+            
+        </div>
+
+        <a href="index.html" class="btn-back">
+            Kembali ke Menu Awal
+        </a>
+
+        <div class="footer">
+            <p>&copy; My Whatitu </p>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const themeBtn = document.getElementById('themeBtn');
+        const currentTheme = localStorage.getItem('theme');
+
+        // Cek Local Storage saat pertama kali buka
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeBtn.innerText = '🌙';
+        }
+
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                themeBtn.innerText = '🌙';
+                localStorage.setItem('theme', 'dark'); // Simpan pilihan
+            } else {
+                themeBtn.innerText = '☀️';
+                localStorage.setItem('theme', 'light'); // Simpan pilihan
+            }
+        }
+    </script>
+
+</body>
+</html>
