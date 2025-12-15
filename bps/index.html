@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Level Smart Tools & AI Workflow</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+        :root {
+            --primary-bg: #0f172a;
+            --secondary-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --text-color: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #050a14 0%, #0b1120 100%);
+            /* Deep Navy */
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Animated Background Squares */
+        .squares {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .squares li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            /* Subtle glass-like */
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            bottom: -150px;
+            animation: animate 25s linear infinite;
+        }
+
+        .squares li:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .squares li:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .squares li:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .squares li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .squares li:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .squares li:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+
+        .squares li:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .squares li:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .squares li:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+
+        .squares li:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+                border-radius: 4px;
+            }
+
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 4rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        /* Glassmorphism Card Button */
+        .card-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            height: 100%;
+        }
+
+        .card-btn:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 10, 20, 0.85);
+            /* Darker overlay */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: #1e293b;
+            /* Fallback */
+            background: linear-gradient(to bottom right, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            /* Slight accent border */
+            border-radius: 20px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.95);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            /* Limit height */
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px 20px 0 0;
+            flex-shrink: 0;
+        }
+
+        .modal-header-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-title-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .modal-close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #cbd5e1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .modal-close-btn:hover {
+            background: #ef4444;
+            /* Red for close intent */
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-content-scroll {
+            padding: 2rem;
+            overflow-y: auto;
+            color: #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        /* Content Styling inside Modal */
+        .modal-body h4 {
+            color: var(--accent-color);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding-bottom: 0.25rem;
+            display: inline-block;
+        }
+
+        .modal-body h4:first-child {
+            margin-top: 0;
+        }
+
+        .modal-body p {
+            margin-bottom: 1rem;
+        }
+
+        .modal-body ul,
+        .modal-body ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code block styling */
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        /* SVG Icons */
+        svg {
+            width: 32px;
+            height: 32px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .card-btn {
+                padding: 2rem 1.5rem;
+            }
+
+            .modal {
+                width: 95%;
+                max-height: 85vh;
+            }
+
+            .modal-content-scroll {
+                padding: 1.5rem;
+            }
+
+            .modal-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .modal-title-text {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Animated Background -->
+    <ul class="squares">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+
+    <div class="container">
+        <header>
+            <h1>Next Level Smart Tools & AI Workflow</h1>
+            <p class="subtitle">Efisiensi, Hemat Biaya, dan Kemandirian Teknologi</p>
+        </header>
+
+        <div class="cards-grid">
+            <!-- Card 1: Affinity -->
+            <button class="card-btn" onclick="openModal('modal-affinity')">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                        <path d="M2 2l7.586 7.586"></path>
+                        <circle cx="11" cy="11" r="2"></circle>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="card-title">Affinity</h3>
+                    <p class="card-desc">The Adobe Killer</p>
+                </div>
+            </button>
+
+            <!-- Card 2: JASP -->
+            <button class="card-btn" onclick="openModal('modal-jasp')">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="card-title">JASP</h3>
+                    <p class="card-desc">Statistik Tanpa Biaya</p>
+                </div>
+            </button>
+
+            <!-- Card 3: Antigravity -->
+            <button class="card-btn" onclick="openModal('modal-antigravity')">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="card-title">Antigravity</h3>
+                    <p class="card-desc">Vibe Coding</p>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Modal 1: Affinity -->
+    <div id="modal-affinity" class="modal-overlay" onclick="closeModal(event, 'modal-affinity')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-header-content">
+                    <svg viewBox="0 0 24 24" style="color: var(--accent-color);">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                        <path d="M2 2l7.586 7.586"></path>
+                    </svg>
+                    <div class="modal-title-text">Affinity by Canva (The Adobe Killer)</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal(null, 'modal-affinity')">&times;</button>
+            </div>
+            <div class="modal-content-scroll">
+                <div class="modal-body">
+                    <h4>Apa itu Affinity?</h4>
+                    <p>Software desain grafis profesional (Vektor, Foto, & Layout) yang kini menjadi <strong>Standard
+                            Baru</strong> karena telah digratiskan penuh (100% Free) untuk penggunaan desktop. Solusi
+                        mutlak untuk menggantikan software bajakan di instansi pemerintahan.</p>
+
+                    <div
+                        style="background: rgba(40, 167, 69, 0.15); padding: 12px; border-left: 5px solid #28a745; margin: 15px 0; border-radius: 4px;">
+                        <strong style="color: #28a745;">REVOLUSI ANGGARAN (Rp 0):</strong><br>
+                        <small>BPS tidak perlu lagi menganggarkan biaya lisensi tahunan atau mengambil risiko hukum
+                            dengan software "tani" (bajakan). Affinity legal, aman, dan fitur tidak dikunci.</small>
+                    </div>
+
+                    <h4>Fitur Strategis untuk BPS:</h4>
+                    <ul>
+                        <li><strong>StudioLink Technology:</strong> Menggabungkan 3 aplikasi (Photo, Designer,
+                            Publisher) dalam satu jendela. Edit foto KCA (Kecamatan Dalam Angka) langsung di halaman
+                            layout tanpa pindah aplikasi.</li>
+                        <li><strong>Canva AI Integration:</strong> Karena BPS berlangganan <em>Canva Pro</em>, Anda
+                            otomatis mendapatkan akses ke <strong>"Canva AI Studio"</strong> di dalam Affinity
+                            (Generative Fill, Magic Expand) yang terkunci bagi user biasa.</li>
+                        <li><strong>Kompatibilitas Legacy:</strong> Mampu membuka dan mengedit file lama kantor (.PSD,
+                            .AI, .PDF) dengan presisi tinggi.</li>
+                    </ul>
+
+                    <h4>Cara Instalasi:</h4>
+                    <p>Download installer resmi di <strong>affinity.studio</strong>. Login menggunakan akun Canva
+                        Enterprise BPS untuk sinkronisasi aset cloud.</p>
+                </div>
+                <div class="download-section"
+                    style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color: #a78bfa; font-weight: 700; margin-bottom: 1rem;">Cara Aktivasi & Download Affinity
+                    </h3>
+
+                    <ol style="margin-left: 1.5rem; line-height: 1.8; color: #e2e8f0;">
+                        <li>Login ke akun <strong>Canva</strong> menggunakan email kantor/BPS.</li>
+                        <li>Pada dashboard Canva, cari menu <strong>Apps</strong> atau ketik "Affinity" di search bar.
+                        </li>
+                        <li>Klik banner <strong>"Affinity for Canva"</strong> atau "Claim License".</li>
+                        <li>Anda akan diarahkan untuk membuat akun Affinity ID yang terhubung dengan lisensi BPS.</li>
+                        <li>Setelah akun jadi, download aplikasinya di bawah ini:</li>
+                    </ol>
+
+                    <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                        <a href="https://www.affinity.studio/download" target="_blank"
+                            style="background: #a78bfa; color: #0f172a; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+                            Download Installer Resmi
+                        </a>
+                    </div>
+
+                    <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 10px;">
+                        *Catatan: Saat install, pilih "I have an account" dan login dengan email yang sudah dikoneksikan
+                        tadi.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Modal 2: JASP -->
+    <div id="modal-jasp" class="modal-overlay" onclick="closeModal(event, 'modal-jasp')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-header-content">
+                    <svg viewBox="0 0 24 24" style="color: var(--accent-color);">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <div class="modal-title-text">JASP (Statistik Tanpa Biaya)</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal(null, 'modal-jasp')">&times;</button>
+            </div>
+            <div class="modal-content-scroll">
+                <div class="modal-body">
+                    <h4>Apa itu JASP?</h4>
+                    <p><em>Jeffreys's Amazing Statistics Program</em>. Software statistik Open-Source (Gratis) dari
+                        University of Amsterdam yang dirancang untuk menggantikan software berbayar mahal dengan
+                        antarmuka yang jauh lebih manusiawi.</p>
+
+                    <h4>Mengapa BPS Wajib Migrasi?</h4>
+                    <ul style="margin-bottom: 15px;">
+                        <li><strong>Native SPSS Support (.sav):</strong> JASP membaca file data mentah BPS (.sav) secara
+                            langsung tanpa perlu konversi. Transisi dari software lama terasa sangat mulus.</li>
+                        <li><strong>Real-time Analysis:</strong> Tidak ada tombol "Run". Saat Anda mengubah satu angka
+                            di data, tabel dan grafik hasil analisis berubah seketika (Dynamic Update).</li>
+                        <li><strong>Metode Hibrida:</strong> Memfasilitasi transisi BPS dari statistik klasik
+                            (Frequentist) menuju statistik modern (Bayesian) dalam satu klik.</li>
+                    </ul>
+
+                    <div
+                        style="background: rgba(23, 162, 184, 0.15); padding: 10px; border-left: 4px solid #17a2b8; margin: 10px 0;">
+                        <strong>Workflow Efficiency:</strong><br>
+                        <small>Hasil analisis bisa langsung dicopy-paste ke Word dengan format standar APA (American
+                            Psychological Association). Sangat mempercepat pembuatan Laporan Analisis Statistik.</small>
+                    </div>
+
+                    <p><em>Download Resmi: <strong>jasp-stats.org</strong> (Support Windows, Mac, Linux)</em></p>
+                </div>
+                <div class="download-section"
+                    style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color: #2dd4bf; font-weight: 700; margin-bottom: 1rem;">📊 Cara Download JASP (Legal &
+                        Free)</h3>
+
+                    <ol style="margin-left: 1.5rem; line-height: 1.8; color: #e2e8f0;">
+                        <li>Kunjungi website resmi University of Amsterdam (JASP).</li>
+                        <li>Pilih versi <strong>"Windows 64-bit"</strong> (Standard).</li>
+                        <li>JASP tidak butuh crack. Cukup install -> Next -> Finish.</li>
+                    </ol>
+
+                    <div style="margin-top: 1.5rem;">
+                        <a href="https://jasp-stats.org/download/" target="_blank"
+                            style="background: #2dd4bf; color: #0f172a; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+                            🔗 Link Download JASP Resmi
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Antigravity -->
+    <div id="modal-antigravity" class="modal-overlay" onclick="closeModal(event, 'modal-antigravity')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-header-content">
+                    <svg viewBox="0 0 24 24" style="color: var(--accent-color);">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    <div class="modal-title-text">Google Antigravity & Vibe Coding</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal(null, 'modal-antigravity')">&times;</button>
+            </div>
+            <div class="modal-content-scroll">
+                <div class="modal-body">
+                    <h4>Apa itu Google Antigravity?</h4>
+                    <p>Platform <em>Agentic IDE</em> revolusioner dari Google (Rilis Q4 2025). Berbeda dengan editor
+                        kode biasa, Antigravity adalah "Ruang Kerja Cerdas" di mana Anda memerintah AI (Gemini 3 Pro)
+                        untuk menulis program, bukan mengetik sendiri.</p>
+
+                    <div <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+
+                        <h4>Panduan Teknis (Wajib Baca):</h4>
+
+                        <p><strong>1. Masalah "Python Bentrok" (Sangat Penting):</strong><br>
+                            Laptop kadang memiliki Python lama (bawaan SPSS/ArcGIS/projek lama vscode). Agar Antigravity
+                            berjalan
+                            lancar:
+                        </p>
+                        <ol style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
+                            <li>Buka Antigravity, tekan <code>Ctrl + Shift + P</code> (Command Palette).</li>
+                            <li>Ketik & Pilih: <strong>"Python: Select Interpreter"</strong>.</li>
+                            <li><strong>Pilih Python Versi Terbaru</strong> (misal 3.12.x). <span
+                                    style="color: #ff6b6b;">JANGAN</span> pilih path yang mengarah ke folder SPSS atau
+                                ArcGIS.</li>
+                        </ol>
+
+                        <p><strong>2. Cara Kerja (Vibe Coding):</strong></p>
+                        <ul>
+                            <li><strong>Chat Panel:</strong> Jangan pusing sintaks. Ketik perintah di panel kanan:
+                                <em>"Buatkan script untuk menarik data inflasi dari file Excel di folder ini, lalu buat
+                                    grafik garis trend 5 tahun terakhir."</em>
+                            </li>
+                            <li><strong>Auto-Execution:</strong> AI akan menulis kode, menginstall library yang kurang
+                                (pip
+                                install), dan menjalankan preview secara otomatis.</li>
+                        </ul>
+
+                        <p><strong>3. Solusi Jika Error (Self-Healing):</strong></p>
+                        <div
+                            style="display: flex; gap: 10px; align-items: center; background: rgba(220, 53, 69, 0.1); padding: 10px; border-radius: 5px;">
+                            <span style="font-size: 20px;">🚨</span>
+                            <div>
+                                Jika muncul error merah, jangan panik. Klik tombol <strong>"Fix with AI"</strong> yang
+                                muncul di samping pesan error. AI akan menganalisa log error, memperbaiki kodenya
+                                sendiri,
+                                dan menjalankannya ulang.
+                            </div>
+
+                        </div>
+                        <div class="download-section"
+                            style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                            <h3 style="color: #f472b6; font-weight: 700; margin-bottom: 1rem;">🤖 Setup Antigravity &
+                                Python Engine</h3>
+
+                            <div
+                                style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                <h4 style="color: #fbbf24; margin-bottom: 0.5rem;">Langkah 1: Install Python (Wajib)
+                                </h4>
+                                <p style="font-size: 0.9rem; margin-bottom: 10px;">Agar AI bisa menjalankan kode di
+                                    laptopmu, kamu butuh mesin Python.</p>
+                                <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
+                                    <li>Download Python versi terbaru (3.12.x).</li>
+                                    <li><strong>PENTING:</strong> Saat instalasi awal, CENTANG kotak bertuliskan: <br>
+                                        <code
+                                            style="background: #ef4444; color: white; padding: 2px 5px; border-radius: 4px;">Add python.exe to PATH</code>
+                                    </li>
+                                    <li>Jika tidak dicentang, Antigravity tidak akan mendeteksi Python kamu.</li>
+                                    <li>Klik "Install Now".</li>
+                                </ol>
+                                <div style="margin-top: 10px;">
+                                    <a href="https://www.python.org/downloads/" target="_blank"
+                                        style="color: #fbbf24; text-decoration: underline;">👉 Download Python
+                                        Official</a>
+                                </div>
+                            </div>
+
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="troubleshoot-section"
+                    style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px;">
+                    <h3
+                        style="color: #f87171; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
+                        <span>⚠️</span> Masalah "Python War" (Bentrok)
+                    </h3>
+
+                    <p style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 1.5rem;">
+                        Laptop sering punya banyak Python (bawaan SPSS/ArcGIS) yang bikin codingan error. Ini
+                        cara membereskannya.
+                    </p>
+
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h4 style="color: #fbbf24; font-size: 1rem; margin-bottom: 0.5rem;">1. Cek: Saya punya berapa
+                            Python?</h4>
+                        <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
+                            <li>Tekan <code
+                                    style="background: #333; padding: 2px 6px; border-radius: 4px;">Win + R</code>,
+                                ketik <code>cmd</code>, tekan Enter.</li>
+                            <li>Ketik perintah ini: <br>
+                                <code
+                                    style="display: block; background: #111; color: #a5d6ff; padding: 8px; margin: 5px 0; border-radius: 4px;">py --list</code>
+                            </li>
+                            <li>Lihat hasilnya:
+                                <ul style="list-style-type: disc; margin-left: 1rem; margin-top: 5px; color: #94a3b8;">
+                                    <li>Ada tanda bintang (<code>*</code>) = Itu Python utamamu.</li>
+                                    <li>Muncul versi jadul (2.7 / 3.8)? = Itu penyebab error.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h4 style="color: #fbbf24; font-size: 1rem; margin-bottom: 0.5rem;">2. Solusi Permanen (System
+                            Path)</h4>
+                        <p style="font-size: 0.85rem; color: #cbd5e1;">Memaksa laptop memprioritaskan Python terbaru.
+                        </p>
+                        <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
+                            <li>Tekan <code
+                                    style="background: #333; padding: 2px 6px; border-radius: 4px;">Win + R</code> di
+                                keyboard.</li>
+                            <li>Ketik: <code style="color: #a5d6ff;">sysdm.cpl</code> lalu Enter.</li>
+                            <li>Pilih Tab <strong>Advanced</strong> (Lanjutan).</li>
+                            <li>Klik tombol <strong>Environment Variables</strong> (kanan bawah).</li>
+                            <li>Di kolom <em>System variables</em> (kotak bawah), cari baris <strong>Path</strong>, lalu
+                                klik <strong>Edit</strong>.</li>
+                            <li>Cari baris <code>Python312</code> (atau versi barumu).</li>
+                            <li>Klik tombol <strong>Move Up</strong> berkali-kali sampai dia ada di <strong>URUTAN
+                                    PALING ATAS</strong>.</li>
+                            <li>Klik OK di semua jendela.</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">
+                        <h4 style="color: #fbbf24; font-size: 1rem; margin-bottom: 0.5rem;">3. Solusi Cepat (Di dalam
+                            Antigravity)</h4>
+                        <p style="font-size: 0.85rem; color: #cbd5e1;">Cara memilih versi Python tanpa mengganggu
+                            settingan laptop.</p>
+                        <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
+                            <li>Di dalam Antigravity/Editor, tekan <code
+                                    style="background: #333; padding: 2px 6px; border-radius: 4px;">Ctrl + Shift + P</code>
+                            </li>
+                            <li>Ketik: <strong>Python: Select Interpreter</strong>.</li>
+                            <li>Akan muncul daftar Python yang terdeteksi.</li>
+                            <li>Pilih yang versinya terbaru (misal: <code>3.12.x</code>) atau yang berlabel
+                                <code>Global</code>.
+                            </li>
+                            <li><strong>JANGAN</strong> pilih yang ada tulisan <code>SPSS</code> atau
+                                <code>ArcGIS</code>.
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeModal(event, modalId) {
+            // Close if clicked specifically on overlay or close button
+            // If event is null, it's a direct close (from close button)
+            if (!event || event.target.classList.contains('modal-overlay')) {
+                const modal = document.getElementById(modalId);
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            }
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal-overlay.active');
+                modals.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            }
+        });
+    </script>
+</body>
+
+</html>
