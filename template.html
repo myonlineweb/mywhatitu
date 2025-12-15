@@ -3,202 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- JUDUL SOALNYA ADA DISINI -->
- <!-- JUDUL SOALNYA ADA DISINI -->
-  <!-- JUDUL SOALNYA ADA DISINI -->
-   <!-- JUDUL SOALNYA ADA DISINI -->
-    <!-- JUDUL SOALNYA ADA DISINI -->
-    <title>Template Soal</title>
+    <title>Kuis Mantap Abis</title>
     <style>
-        /* --- 1. SETUP BACKGROUND --- */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Ganti 'background.png' dengan nama file gambarmu */
-            background-image: url('malamback.png'); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        /* --- 2. KONTAINER UTAMA (Transparan 80%) --- */
-        .container {
-            width: 80%;
-            max-width: 800px;
-            margin: 40px 0;
-            padding: 30px;
-            
-            /* Ini kuncinya: Warna Putih dengan Opacity 0.8 (80%) */
-            /* Supaya terlihat 'tebal' tapi background tetap membayang */
-            background-color: rgba(255, 255, 255, 0.45); 
-            
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            backdrop-filter: blur(5px); /* Efek blur kaca (opsional, biar makin mantap) */
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-        /* --- 3. STYLE SOAL --- */
-        .question-card {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        .question-text {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #222;
-        }
-
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .option-btn {
-            display: block;
-            width: 100%;
-            padding: 10px 15px;
-            margin: 5px 0;
-            background-color: #FFFF;
-            border: 1px solid #aaa;
-            border-radius: 5px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 1em;
-            color: #131B47
-        }
-
-        .option-btn:hover:not(.disabled) {
-            background-color: #C3BFDB;
-            border-color: #666;
-            color: #131B47;
-        }
-
-        /* Warna saat Benar/Salah */
-        .correct {
-            background-color: #d4edda !important ;
-            border-color: #154F21 !important;
-            color: #45218A;
-        }
-
-        .wrong {
-            background-color: #f8d7da !important;
-            border-color: #471111 !important;
-            color: #45218A;
-        }
-
-        .disabled {
-            cursor: no-drop;
-            opacity: 0.9;
-        }
-        /* --- 4. PENJELASAN --- */
-        .explanation {
-            display: none; /* Sembunyi default */
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #C3BFDB;
-            border-left: 5px solid #383d41;
-            border-radius: 4px;
-            font-size: 0.95em;
-        }
-
-        /* --- 5. SCORE BOARD --- */
-        .score-board {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: bold;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-            z-index: 100;
-        }
+        /* --- CSS SAMA SEPERTI SEBELUMNYA (GAK PERLU UBAH) --- */
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; background-image: url('malamback.png'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .container { width: 78%; max-width: 800px; margin: 40px 0; padding: 30px; background-color: rgba(255, 255, 255, 0.65); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+        .question-card { border-bottom: 2px solid #eee; padding-bottom: 25px; margin-bottom: 25px; }
+        .question-text { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; color: #2c3e50; }
+        .options { list-style-type: none; padding: 0; }
+        .option-btn { display: block; width: 100%; padding: 12px 20px; margin: 8px 0; background-color: #fff; border: 2px solid #ddd; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.2s; font-size: 1em; color: #444; font-weight: 500; }
+        .option-btn:hover:not(.disabled) { background-color: #eef2f3; border-color: #bbb; transform: translateX(5px); }
+        .correct { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; }
+        .wrong { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; }
+        .disabled { cursor: no-drop; opacity: 0.7; }
+        .explanation { display: none; margin-top: 15px; padding: 15px; background-color: #e8eaf6; border-left: 5px solid #3f51b5; border-radius: 4px; font-size: 0.95em; line-height: 1.5; color: #333; }
+        .submit-container { text-align: center; margin: 40px 0 20px 0; }
+        .btn-submit { padding: 15px 50px; font-size: 1.2em; font-weight: bold; color: white; background-color: #27ae60; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.3s ease; opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
+        .btn-submit.active { opacity: 1; pointer-events: auto; filter: grayscale(0%); animation: pulse 2s infinite; }
+        .btn-submit:hover { background-color: #219150; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(39, 174, 96, 0); } 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); } }
+        .score-board { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #2c3e50; color: white; padding: 15px; text-align: center; font-size: 1.2em; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.2); z-index: 100; display: flex; justify-content: center; gap: 20px; }
+        .spacer { height: 100px; }
         
-        /* Spacer biar konten paling bawah gak ketutup score board */
-        .spacer {
-            height: 80px;
-        }
+        /* STYLE MODAL POPUP */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-icon { font-size: 3em; margin-bottom: 10px; animation: pop 0.5s; }
+        .modal-content h2 { margin: 10px 0; color: #333; }
+        .result-summary { display: flex; justify-content: space-around; margin: 20px 0; gap: 10px; }
+        .res-box { flex: 1; padding: 10px; border-radius: 10px; color: white; display: flex; flex-direction: column; }
+        .res-box.correct { background: #27ae60; }
+        .res-box.score { background: #2980b9; transform: scale(1.1); font-weight: bold; }
+        .res-box.wrong { background: #c0392b; }
+        .res-box .label { font-size: 0.8em; opacity: 0.9; }
+        .res-box .val { font-size: 1.5em; font-weight: bold; }
+        .btn-close { margin-top: 15px; padding: 10px 30px; background: #333; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 1em; }
+        .btn-close:hover { background: #000; }
+        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
     </style>
-
-<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
-<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
-<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
-<!-- BAGIAN DIBAWAH INI YANG DI INPUT KEDALAM GEMINI -->
-
 </head>
 <body>
 
     <div class="container">
         <h1>Kuis Mantap Abis</h1>
-        <div id="quiz-area">
-            </div>
+        <div id="quiz-area"></div>
+        <div class="submit-container">
+            <button id="btn-submit" class="btn-submit">SELESAIKAN SEMUA SOAL</button>
+        </div>
         <div class="spacer"></div>
     </div>
 
     <div class="score-board">
-        Benar: <span id="score-correct">0</span> | Salah: <span id="score-wrong">0</span>
+        <span>✅ Benar: <span id="score-correct">0</span></span>
+        <span>❌ Salah: <span id="score-wrong">0</span></span>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2>Hasil Terkirim!</h2>
+            <p>Data jawabanmu sudah aman di database Firebase.</p>
+            <div class="result-summary">
+                <div class="res-box correct">
+                    <span class="label">Benar</span>
+                    <span class="val" id="modal-correct">0</span>
+                </div>
+                <div class="res-box score">
+                    <span class="label">Nilai</span>
+                    <span class="val" id="modal-score">0</span>
+                </div>
+                <div class="res-box wrong">
+                    <span class="label">Salah</span>
+                    <span class="val" id="modal-wrong">0</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="btn-close">Mantap Abis</button>
+        </div>
     </div>
 
     <script>
         // --- DATA SOAL ---
-        // Edit bagian ini. 
-        // Format: Pertanyaan, Array Pilihan, Index Jawaban Benar (0=A, 1=B, 2=C, 3=D), Penjelasan.
-        
         let dataSoal = [
-                {
-                question: `1. Apa pertanyaan yang ingin diberikan?`,
-                options: [
-                    "Pilihan A",
-                    "Pilihan B",
-                    "Pilihan C",
-                    "Pilihan D"
-                ],
-                correctIndex: 0, // Kunci Jawaban (0,1,2, atau 3)
-                explanation: "Ini jawaban yang benar dan penjelasannya. Penjelasan muncul setelah memilih."
+            {
+                question: "1. Apa ibukota Indonesia?",
+                options: ["Bandung", "Jakarta", "Surabaya", "Medan"],
+                correctIndex: 1, 
+                explanation: "Jakarta adalah ibukota negara Indonesia saat ini."
+            },
+            {
+                question: "2. Siapakah presiden pertama Indonesia?",
+                options: ["Soeharto", "B.J. Habibie", "Ir. Soekarno", "Jokowi"],
+                correctIndex: 2,
+                explanation: "Ir. Soekarno adalah proklamator dan presiden pertama RI."
+            },
+            {
+                question: "3. 5 + 5 = ?",
+                options: ["10", "20", "11", "9"],
+                correctIndex: 0,
+                explanation: "Hasil penjumlahan 5 ditambah 5 adalah 10."
             }
-        ]
+        ];
 
-        // --- LOGIKA PROGRAM (JANGAN DIUBAH KECUALI PAHAM) ---
+        // --- SYSTEM ENGINE ---
         const quizArea = document.getElementById('quiz-area');
         const scoreCorrectEl = document.getElementById('score-correct');
         const scoreWrongEl = document.getElementById('score-wrong');
+        // Kita ambil element btnSubmit disini juga untuk logika tampilan
+        const btnSubmitGame = document.getElementById('btn-submit');
 
-        let correctCount = 0;
-        let wrongCount = 0;
+        // VARIABLE GLOBAL (Agar bisa dibaca oleh script Firebase nanti)
+        var correctCount = 0;
+        var wrongCount = 0;
+        var answeredCount = 0;
 
         function renderQuiz() {
             quizArea.innerHTML = '';
-            
             dataSoal.forEach((item, index) => {
-                // Buat Container Soal
                 const card = document.createElement('div');
                 card.className = 'question-card';
                 
-                // Buat Judul Soal
                 const qText = document.createElement('div');
                 qText.className = 'question-text';
                 qText.innerText = item.question;
                 card.appendChild(qText);
 
-                // Buat Container Pilihan
                 const optList = document.createElement('ul');
                 optList.className = 'options';
 
@@ -206,16 +137,12 @@
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
                     btn.innerText = opt;
-                    
-                    // Event Klik Jawaban
                     btn.onclick = () => checkAnswer(btn, item, optIndex, optList, explanationDiv);
-                    
                     optList.appendChild(btn);
                 });
                 
                 card.appendChild(optList);
 
-                // Buat Container Penjelasan
                 const explanationDiv = document.createElement('div');
                 explanationDiv.className = 'explanation';
                 explanationDiv.innerHTML = `<strong>Jawaban:</strong> ${item.options[item.correctIndex]}<br><em>${item.explanation}</em>`;
@@ -226,39 +153,112 @@
         }
 
         function checkAnswer(selectedBtn, dataItem, selectedIndex, optListContainer, expDiv) {
-            // Cegah klik lagi kalau sudah dijawab di nomor ini
             if (optListContainer.classList.contains('answered')) return;
 
-            // Tandai sudah dijawab
             optListContainer.classList.add('answered');
-            
-            // Disable semua tombol di nomor ini
+            answeredCount++;
+
             const allBtns = optListContainer.querySelectorAll('.option-btn');
             allBtns.forEach(btn => btn.classList.add('disabled'));
 
-            // Cek Benar/Salah
             if (selectedIndex === dataItem.correctIndex) {
-                // BENAR
                 selectedBtn.classList.add('correct');
                 correctCount++;
                 scoreCorrectEl.innerText = correctCount;
             } else {
-                // SALAH
                 selectedBtn.classList.add('wrong');
                 wrongCount++;
                 scoreWrongEl.innerText = wrongCount;
-                
-                // Highlight jawaban yang benar
                 allBtns[dataItem.correctIndex].classList.add('correct');
             }
 
-            // Tampilkan Penjelasan
             expDiv.style.display = 'block';
+            checkCompletion();
         }
 
-        // Jalankan Render
+        function checkCompletion() {
+            if (answeredCount === dataSoal.length) {
+                btnSubmitGame.classList.add('active');
+                btnSubmitGame.innerText = "KIRIM JAWABAN SEKARANG!";
+            }
+        }
+
+        // Render pertama kali
         renderQuiz();
 
+    </script> 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // --- KONFIGURASI FIREBASE ---
+        // GANTI BAGIAN INI DENGAN PUNYAMU SENDIRI
+        const firebaseConfig = {
+            apiKey: "GANTI_DENGAN_API_KEY_MU",
+            authDomain: "GANTI_DENGAN_PROJECT_ID.firebaseapp.com",
+            projectId: "GANTI_DENGAN_PROJECT_ID",
+            storageBucket: "GANTI_DENGAN_PROJECT_ID.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456:web:xxxxx"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Ambil tombol submit
+        const btnSubmitFirebase = document.getElementById('btn-submit');
+        
+        btnSubmitFirebase.addEventListener('click', async () => {
+            if (!btnSubmitFirebase.classList.contains('active')) return;
+
+            // Kita akses variable global dari script sebelah (correctCount, dll)
+            // Di HTML biasa, variable di script root otomatis masuk window
+            // Jadi aman untuk diakses disini.
+            
+            let finalScore = Math.round((correctCount / dataSoal.length) * 100);
+
+            const dataJawaban = {
+                nama_user: "Tamu", 
+                skor: finalScore,
+                benar: correctCount,
+                salah: wrongCount,
+                waktu: new Date().toISOString()
+            };
+
+            const originalText = btnSubmitFirebase.innerText;
+            btnSubmitFirebase.innerText = "Mengirim...";
+            btnSubmitFirebase.classList.add('disabled');
+
+            try {
+                const docRef = await addDoc(collection(db, "hasil_kuis"), dataJawaban);
+                console.log("Document written with ID: ", docRef.id);
+
+                // Tampilkan Modal
+                showModal(correctCount, wrongCount, finalScore);
+                
+                btnSubmitFirebase.innerText = "Terkirim ✅";
+                btnSubmitFirebase.classList.remove('active');
+
+            } catch (e) {
+                console.error("Error: ", e);
+                alert("Gagal kirim ke database: " + e.message);
+                btnSubmitFirebase.innerText = originalText;
+                btnSubmitFirebase.classList.remove('disabled');
+            }
+        });
+
+        // Helper functions untuk Modal (dipasang ke window agar global)
+        window.showModal = (benar, salah, skor) => {
+            document.getElementById('modal-correct').innerText = benar;
+            document.getElementById('modal-wrong').innerText = salah;
+            document.getElementById('modal-score').innerText = skor;
+            document.getElementById('custom-modal').classList.add('show');
+        }
+
+        window.closeModal = () => {
+            document.getElementById('custom-modal').classList.remove('show');
+        }
     </script>
 </body>
 </html>
