@@ -3,19 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Next Level Smart Tools & AI Workflow</title>
+    
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700;800&display=swap');
 
         :root {
+            --primary-bg: #87CEEB;
+            --secondary-bg: rgba(255, 255, 255, 0.95);
+            --accent-color: #0ea5e9;
+            --accent-hover: #0284c7;
+            --text-color: #1e3a5f;
+            --text-secondary: #475569;
+            --glass-bg: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --card-shadow: rgba(0, 100, 150, 0.25);
+            --header-gradient: linear-gradient(135deg, #1e3a5f, #0369a1);
+        }
+
+        [data-theme="dark"] {
             --primary-bg: #0f172a;
-            --secondary-bg: #1e293b;
-            --accent-color: #38bdf8;
-            --accent-hover: #0ea5e9;
+            --secondary-bg: rgba(30, 41, 59, 0.95);
+            --accent-color: #a78bfa;
+            --accent-hover: #8b5cf6;
             --text-color: #f8fafc;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-secondary: #cbd5e1;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: rgba(0, 0, 0, 0.4);
+            --header-gradient: linear-gradient(135deg, #fff, #c4b5fd);
         }
 
         * {
@@ -24,227 +44,484 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #050a14 0%, #0b1120 100%);
-            /* Deep Navy */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-color);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+            transition: color 0.5s ease;
+        }
+
+        /* ============================================
+           LOADING SCREEN
+           ============================================ */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
         }
 
-        /* Animated Background Squares */
-        .squares {
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
             z-index: 0;
-            pointer-events: none;
         }
 
-        .squares li {
-            position: absolute;
-            display: block;
-            list-style: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            /* Subtle glass-like */
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            bottom: -150px;
-            animation: animate 25s linear infinite;
-        }
-
-        .squares li:nth-child(1) {
-            left: 25%;
-            width: 80px;
-            height: 80px;
-            animation-delay: 0s;
-        }
-
-        .squares li:nth-child(2) {
-            left: 10%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 2s;
-            animation-duration: 12s;
-        }
-
-        .squares li:nth-child(3) {
-            left: 70%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 4s;
-        }
-
-        .squares li:nth-child(4) {
-            left: 40%;
-            width: 60px;
-            height: 60px;
-            animation-delay: 0s;
-            animation-duration: 18s;
-        }
-
-        .squares li:nth-child(5) {
-            left: 65%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 0s;
-        }
-
-        .squares li:nth-child(6) {
-            left: 75%;
-            width: 110px;
-            height: 110px;
-            animation-delay: 3s;
-        }
-
-        .squares li:nth-child(7) {
-            left: 35%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 7s;
-        }
-
-        .squares li:nth-child(8) {
-            left: 50%;
-            width: 25px;
-            height: 25px;
-            animation-delay: 15s;
-            animation-duration: 45s;
-        }
-
-        .squares li:nth-child(9) {
-            left: 20%;
-            width: 15px;
-            height: 15px;
-            animation-delay: 2s;
-            animation-duration: 35s;
-        }
-
-        .squares li:nth-child(10) {
-            left: 85%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 0s;
-            animation-duration: 11s;
-        }
-
-        @keyframes animate {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.8;
-                border-radius: 4px;
-            }
-
-            100% {
-                transform: translateY(-1000px) rotate(720deg);
-                opacity: 0;
-                border-radius: 50%;
-            }
-        }
-
-        /* Main Container */
-        .container {
+        .loading-content {
+            position: relative;
             z-index: 10;
             text-align: center;
-            padding: 2rem;
-            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .loading-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .loading-circle-animated {
+            border: 4px solid transparent;
+            border-top-color: #38bdf8;
+            border-right-color: #a78bfa;
+            animation: spin 1.2s linear infinite;
+        }
+
+        .loading-circle-inner {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-bottom-color: #fbbf24;
+            border-left-color: #22c55e;
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        .loading-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        .loading-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: gradientShift 3s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .loading-subtitle {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .loading-credit {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .loading-credit span {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .loading-progress {
+            width: 200px;
+            max-width: 80%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin: 30px auto 0;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+            background-size: 200% 100%;
+            border-radius: 4px;
+            width: 0%;
+            animation: progressGradient 1.5s ease infinite;
+            transition: width 0.3s ease;
+        }
+
+        @keyframes progressGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .loading-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .loading-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: floatUp 4s ease-in-out infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .loading-tip {
+            margin-top: 40px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 350px;
+        }
+
+        .loading-tip-label {
+            font-size: 0.7rem;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .loading-tip-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        /* Interactive Elements on Loading */
+        .loading-interactive {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .loading-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .loading-dot:nth-child(1) { background: #38bdf8; animation: bounce 1.4s ease infinite 0s; }
+        .loading-dot:nth-child(2) { background: #a78bfa; animation: bounce 1.4s ease infinite 0.2s; }
+        .loading-dot:nth-child(3) { background: #f472b6; animation: bounce 1.4s ease infinite 0.4s; }
+        .loading-dot:nth-child(4) { background: #fbbf24; animation: bounce 1.4s ease infinite 0.6s; }
+        .loading-dot:nth-child(5) { background: #22c55e; animation: bounce 1.4s ease infinite 0.8s; }
+
+        .loading-dot:hover {
+            transform: scale(1.5);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+        }
+
+        /* ============================================
+           MAIN CANVAS
+           ============================================ */
+        #mainCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px var(--card-shadow);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .toggle-icon {
+            font-size: 28px;
+            transition: all 0.4s ease;
+            line-height: 1;
+        }
+
+        .sun-icon { display: block; }
+        .moon-icon { display: none; }
+
+        [data-theme="dark"] .sun-icon { display: none; }
+        [data-theme="dark"] .moon-icon { display: block; }
+
+        .theme-label {
+            position: fixed;
+            top: 85px;
+            right: 15px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.3s;
+        }
+
+        .main-wrapper.visible {
+            opacity: 1;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1100px;
             width: 100%;
         }
 
         header {
-            margin-bottom: 4rem;
-            animation: fadeInDown 1s ease-out;
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 0.8s ease-out;
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: clamp(1.5rem, 5vw, 2.8rem);
             font-weight: 800;
-            background: linear-gradient(to right, #fff, #94a3b8);
+            background: var(--header-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.8rem;
-            letter-spacing: -1px;
-            line-height: 1.1;
+            background-clip: text;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            padding: 0 10px;
         }
 
         p.subtitle {
-            font-size: 1.25rem;
-            color: #cbd5e1;
-            font-weight: 300;
-            letter-spacing: 0.5px;
+            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            padding: 0 10px;
         }
 
         /* Cards Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
+            gap: 1.5rem;
+            padding: 10px;
+            width: 100%;
         }
 
-        /* Glassmorphism Card Button */
         .card-btn {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 3rem 2rem;
+            padding: 2rem 1.5rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            gap: 1.2rem;
+            box-shadow: 0 8px 32px var(--card-shadow);
             position: relative;
             overflow: hidden;
             text-align: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .card-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
             height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .card-btn:hover::before {
+            left: 100%;
         }
 
         .card-btn:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 16px 48px var(--card-shadow);
+            border-color: var(--accent-color);
+        }
+
+        .card-btn:active {
+            transform: translateY(-4px) scale(1.01);
         }
 
         .icon-box {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--accent-color);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .icon-box::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            top: 0;
+            left: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.25), transparent);
+            border-radius: 50% 50% 0 0;
+        }
+
+        .icon-box svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+            z-index: 1;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .card-title {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-color);
         }
 
         .card-desc {
-            font-size: 1rem;
-            color: #94a3b8;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
             line-height: 1.5;
         }
 
@@ -255,17 +532,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 10, 20, 0.85);
-            /* Darker overlay */
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            z-index: 1000;
+            z-index: 2000;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 15px;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
         }
 
         .modal-overlay.active {
@@ -274,94 +551,103 @@
         }
 
         .modal {
-            background: #1e293b;
-            /* Fallback */
-            background: linear-gradient(to bottom right, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            /* Slight accent border */
+            background: var(--secondary-bg);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 0;
-            max-width: 700px;
-            width: 90%;
+            max-width: 650px;
+            width: 100%;
             position: relative;
-            transform: scale(0.95);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
             display: flex;
             flex-direction: column;
-            max-height: 90vh;
-            /* Limit height */
+            max-height: 85vh;
+            overflow: hidden;
         }
 
         .modal-overlay.active .modal {
-            transform: scale(1);
+            transform: scale(1) translateY(0);
         }
 
         .modal-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 20px 20px 0 0;
+            background: var(--glass-bg);
             flex-shrink: 0;
+            gap: 10px;
         }
 
         .modal-header-content {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .modal-header-content svg {
+            width: 28px;
+            height: 28px;
+            color: var(--accent-color);
+            flex-shrink: 0;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
         }
 
         .modal-title-text {
-            font-size: 1.5rem;
+            font-size: clamp(1rem, 3vw, 1.25rem);
             font-weight: 700;
-            color: #fff;
-            line-height: 1.2;
+            color: var(--text-color);
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .modal-close-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(239, 68, 68, 0.15);
             border: none;
-            color: #cbd5e1;
-            width: 36px;
-            height: 36px;
+            color: #ef4444;
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             font-size: 1.5rem;
             line-height: 1;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .modal-close-btn:hover {
             background: #ef4444;
-            /* Red for close intent */
             color: white;
             transform: rotate(90deg);
         }
 
         .modal-content-scroll {
-            padding: 2rem;
+            padding: 1.5rem;
             overflow-y: auto;
-            color: #e2e8f0;
-            font-size: 1rem;
-            line-height: 1.6;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            line-height: 1.7;
             text-align: left;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Content Styling inside Modal */
         .modal-body h4 {
             color: var(--accent-color);
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            font-size: 1.1rem;
-            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-            padding-bottom: 0.25rem;
-            display: inline-block;
+            margin-top: 1.25rem;
+            margin-bottom: 0.6rem;
+            font-size: 1.05rem;
+            font-weight: 700;
         }
 
         .modal-body h4:first-child {
@@ -369,36 +655,101 @@
         }
 
         .modal-body p {
-            margin-bottom: 1rem;
+            margin-bottom: 0.9rem;
         }
 
-        .modal-body ul,
-        .modal-body ol {
-            padding-left: 1.5rem;
+        .modal-body ul, .modal-body ol {
+            padding-left: 1.25rem;
             margin-bottom: 1rem;
         }
 
         .modal-body li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
-        /* Code block styling */
+        .modal-body strong {
+            color: var(--text-color);
+        }
+
+        /* Info Box */
+        .info-box {
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .info-box.success {
+            background: rgba(34, 197, 94, 0.12);
+            border-left: 4px solid #22c55e;
+        }
+
+        .info-box.info {
+            background: rgba(59, 130, 246, 0.12);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .info-box.warning {
+            background: rgba(245, 158, 11, 0.12);
+            border-left: 4px solid #f59e0b;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Download Section */
+        .download-section {
+            padding: 1.25rem;
+            background: var(--glass-bg);
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            margin-top: 1.25rem;
+        }
+
+        .download-section h3 {
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-top: 0.75rem;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
         code {
-            font-family: 'Consolas', 'Monaco', monospace;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 4px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 2px 6px;
             border-radius: 4px;
+            font-size: 0.85em;
         }
 
-        /* SVG Icons */
-        svg {
-            width: 32px;
-            height: 32px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        [data-theme="dark"] code {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         @keyframes fadeInDown {
@@ -406,268 +757,376 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* Scrollbar Styling */
+        /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: var(--accent-color);
+            border-radius: 3px;
         }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+            .main-wrapper {
+                padding: 90px 15px 30px;
             }
 
-            .container {
-                padding: 1.5rem;
+            .theme-toggle {
+                width: 50px;
+                height: 50px;
+                top: 12px;
+                right: 12px;
+            }
+
+            .toggle-icon {
+                font-size: 22px;
+            }
+
+            .theme-label {
+                top: 70px;
+                right: 12px;
+                padding: 6px 10px;
+                font-size: 0.7rem;
+            }
+
+            header {
+                margin-bottom: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .card-btn {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem 1.25rem;
+                gap: 1rem;
+            }
+
+            .icon-box {
+                width: 65px;
+                height: 65px;
+            }
+
+            .icon-box svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
             }
 
             .modal {
-                width: 95%;
-                max-height: 85vh;
-            }
-
-            .modal-content-scroll {
-                padding: 1.5rem;
+                max-height: 90vh;
+                border-radius: 16px;
             }
 
             .modal-header {
-                padding: 1rem 1.5rem;
+                padding: 1rem 1.25rem;
+            }
+
+            .modal-content-scroll {
+                padding: 1.25rem;
+            }
+
+            .download-section {
+                padding: 1rem;
+            }
+
+            .loading-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .loading-icon {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            h1 {
+                font-size: 1.3rem;
             }
 
             .modal-title-text {
-                font-size: 1.2rem;
+                font-size: 0.95rem;
+            }
+
+            .modal-close-btn {
+                width: 34px;
+                height: 34px;
+                min-width: 34px;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-wrapper {
+                padding: 70px 20px 20px;
+                justify-content: flex-start;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .card-btn {
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+
+            .icon-box {
+                width: 50px;
+                height: 50px;
+            }
+
+            .icon-box svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .modal {
+                max-height: 95vh;
+            }
+
+            .loading-logo {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 15px;
+            }
+
+            .loading-icon {
+                font-size: 24px;
+            }
+
+            .loading-tip {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 
-<body>
+<body data-theme="light">
 
-    <!-- Animated Background -->
-    <ul class="squares">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
-
-    <div class="container">
-        <header>
-            <h1>Next Level Smart Tools & AI Workflow</h1>
-            <p class="subtitle">Efisiensi, Hemat Biaya, dan Kemandirian Teknologi</p>
-        </header>
-
-        <div class="cards-grid">
-            <!-- Card 1: Affinity -->
-            <button class="card-btn" onclick="openModal('modal-affinity')">
-                <div class="icon-box">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                        <path d="M2 2l7.586 7.586"></path>
-                        <circle cx="11" cy="11" r="2"></circle>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="card-title">Affinity</h3>
-                    <p class="card-desc">The Adobe Killer</p>
-                </div>
-            </button>
-
-            <!-- Card 2: JASP -->
-            <button class="card-btn" onclick="openModal('modal-jasp')">
-                <div class="icon-box">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="20" x2="18" y2="10"></line>
-                        <line x1="12" y1="20" x2="12" y2="4"></line>
-                        <line x1="6" y1="20" x2="6" y2="14"></line>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="card-title">JASP</h3>
-                    <p class="card-desc">Statistik Tanpa Biaya</p>
-                </div>
-            </button>
-
-            <!-- Card 3: Antigravity -->
-            <button class="card-btn" onclick="openModal('modal-antigravity')">
-                <div class="icon-box">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="16 18 22 12 16 6"></polyline>
-                        <polyline points="8 6 2 12 8 18"></polyline>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="card-title">Antigravity</h3>
-                    <p class="card-desc">Vibe Coding</p>
-                </div>
-            </button>
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <canvas class="loading-canvas" id="loadingCanvas"></canvas>
+        
+        <div class="loading-particles" id="loadingParticles"></div>
+        
+        <div class="loading-content">
+            <div class="loading-logo">
+                <div class="loading-circle loading-circle-animated"></div>
+                <div class="loading-circle-inner"></div>
+                <div class="loading-icon">🚀</div>
+            </div>
+            
+            <h1 class="loading-title">Smart Tools</h1>
+            <p class="loading-subtitle">Next Level AI Workflow</p>
+            <p class="loading-credit">From <span>Bima & Maurel</span> to BPS</p>
+            
+            <div class="loading-progress">
+                <div class="loading-progress-bar" id="loadingProgressBar"></div>
+            </div>
+            
+            <div class="loading-interactive">
+                <div class="loading-dot" onclick="playSound(1)"></div>
+                <div class="loading-dot" onclick="playSound(2)"></div>
+                <div class="loading-dot" onclick="playSound(3)"></div>
+                <div class="loading-dot" onclick="playSound(4)"></div>
+                <div class="loading-dot" onclick="playSound(5)"></div>
+            </div>
+            
+            <div class="loading-tip">
+                <div class="loading-tip-label">💡 Did you know?</div>
+                <div class="loading-tip-text" id="loadingTipText">Klik titik-titik warna di atas untuk berinteraksi!</div>
+            </div>
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- MAIN CANVAS -->
+    <canvas id="mainCanvas"></canvas>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <span class="toggle-icon sun-icon">☀️</span>
+        <span class="toggle-icon moon-icon">🌙</span>
+    </button>
+
+    <!-- Theme Label -->
+    <div class="theme-label" id="themeLabel">🏖️ Pantai Pagi</div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="container">
+            <header>
+                <h1>Next Level Smart Tools & AI Workflow</h1>
+                <p class="subtitle">Efisiensi, Hemat Biaya, dan Kemandirian Teknologi</p>
+            </header>
+
+            <div class="cards-grid">
+                <!-- Card 1: Affinity -->
+                <button class="card-btn" onclick="openModal('modal-affinity')">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                            <path d="M2 2l7.586 7.586"></path>
+                            <circle cx="11" cy="11" r="2"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Affinity</h3>
+                        <p class="card-desc">The Adobe Killer - Desain profesional gratis</p>
+                    </div>
+                </button>
+
+                <!-- Card 2: JASP -->
+                <button class="card-btn" onclick="openModal('modal-jasp')">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="card-title">JASP</h3>
+                        <p class="card-desc">Statistik Tanpa Biaya - Alternatif SPSS</p>
+                    </div>
+                </button>
+
+                <!-- Card 3: Antigravity -->
+                <button class="card-btn" onclick="openModal('modal-antigravity')">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Antigravity</h3>
+                        <p class="card-desc">Vibe Coding - Program dengan AI</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal 1: Affinity -->
-    <div id="modal-affinity" class="modal-overlay" onclick="closeModal(event, 'modal-affinity')">
-        <div class="modal">
+    <div id="modal-affinity" class="modal-overlay" onclick="handleModalClick(event, 'modal-affinity')">
+        <div class="modal" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <div class="modal-header-content">
-                    <svg viewBox="0 0 24 24" style="color: var(--accent-color);">
+                    <svg viewBox="0 0 24 24">
                         <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                         <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                        <path d="M2 2l7.586 7.586"></path>
                     </svg>
-                    <div class="modal-title-text">Affinity by Canva (The Adobe Killer)</div>
+                    <div class="modal-title-text">Affinity by Canva</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeModal(null, 'modal-affinity')">&times;</button>
+                <button class="modal-close-btn" onclick="closeModal('modal-affinity')">&times;</button>
             </div>
             <div class="modal-content-scroll">
                 <div class="modal-body">
-                    <h4>Apa itu Affinity?</h4>
-                    <p>Software desain grafis profesional (Vektor, Foto, & Layout) yang kini menjadi <strong>Standard
-                            Baru</strong> karena telah digratiskan penuh (100% Free) untuk penggunaan desktop. Solusi
-                        mutlak untuk menggantikan software bajakan di instansi pemerintahan.</p>
+                    <h4>🎨 Apa itu Affinity?</h4>
+                    <p>Software desain grafis profesional (Vektor, Foto, & Layout) yang kini menjadi <strong>Standard Baru</strong> karena telah digratiskan penuh (100% Free) untuk penggunaan desktop.</p>
 
-                    <div
-                        style="background: rgba(40, 167, 69, 0.15); padding: 12px; border-left: 5px solid #28a745; margin: 15px 0; border-radius: 4px;">
-                        <strong style="color: #28a745;">REVOLUSI ANGGARAN (Rp 0):</strong><br>
-                        <small>BPS tidak perlu lagi menganggarkan biaya lisensi tahunan atau mengambil risiko hukum
-                            dengan software "tani" (bajakan). Affinity legal, aman, dan fitur tidak dikunci.</small>
+                    <div class="info-box success">
+                        <strong style="color: #22c55e;">💰 REVOLUSI ANGGARAN (Rp 0)</strong>
+                        <span>BPS tidak perlu lagi menganggarkan biaya lisensi tahunan atau mengambil risiko hukum dengan software bajakan. Affinity legal, aman, dan fitur tidak dikunci.</span>
                     </div>
 
-                    <h4>Fitur Strategis untuk BPS:</h4>
+                    <h4>⚡ Fitur Strategis untuk BPS</h4>
                     <ul>
-                        <li><strong>StudioLink Technology:</strong> Menggabungkan 3 aplikasi (Photo, Designer,
-                            Publisher) dalam satu jendela. Edit foto KCA (Kecamatan Dalam Angka) langsung di halaman
-                            layout tanpa pindah aplikasi.</li>
-                        <li><strong>Canva AI Integration:</strong> Karena BPS berlangganan <em>Canva Pro</em>, Anda
-                            otomatis mendapatkan akses ke <strong>"Canva AI Studio"</strong> di dalam Affinity
-                            (Generative Fill, Magic Expand) yang terkunci bagi user biasa.</li>
-                        <li><strong>Kompatibilitas Legacy:</strong> Mampu membuka dan mengedit file lama kantor (.PSD,
-                            .AI, .PDF) dengan presisi tinggi.</li>
+                        <li><strong>StudioLink Technology:</strong> Menggabungkan 3 aplikasi (Photo, Designer, Publisher) dalam satu jendela.</li>
+                        <li><strong>Canva AI Integration:</strong> Akses ke "Canva AI Studio" (Generative Fill, Magic Expand).</li>
+                        <li><strong>Kompatibilitas Legacy:</strong> Mampu membuka file .PSD, .AI, .PDF dengan presisi tinggi.</li>
                     </ul>
 
-                    <h4>Cara Instalasi:</h4>
-                    <p>Download installer resmi di <strong>affinity.studio</strong>. Login menggunakan akun Canva
-                        Enterprise BPS untuk sinkronisasi aset cloud.</p>
-                </div>
-                <div class="download-section"
-                    style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                    <h3 style="color: #a78bfa; font-weight: 700; margin-bottom: 1rem;">Cara Aktivasi & Download Affinity
-                    </h3>
-
-                    <ol style="margin-left: 1.5rem; line-height: 1.8; color: #e2e8f0;">
-                        <li>Login ke akun <strong>Canva</strong> menggunakan email kantor/BPS.</li>
-                        <li>Pada dashboard Canva, cari menu <strong>Apps</strong> atau ketik "Affinity" di search bar.
-                        </li>
-                        <li>Klik banner <strong>"Affinity for Canva"</strong> atau "Claim License".</li>
-                        <li>Anda akan diarahkan untuk membuat akun Affinity ID yang terhubung dengan lisensi BPS.</li>
-                        <li>Setelah akun jadi, download aplikasinya di bawah ini:</li>
-                    </ol>
-
-                    <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
-                        <a href="https://www.affinity.studio/download" target="_blank"
-                            style="background: #a78bfa; color: #0f172a; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
-                            Download Installer Resmi
+                    <div class="download-section">
+                        <h3>📥 Cara Aktivasi & Download</h3>
+                        <ol>
+                            <li>Login ke akun <strong>Canva</strong> menggunakan email kantor/BPS</li>
+                            <li>Pada dashboard Canva, cari menu <strong>Apps</strong> atau ketik "Affinity"</li>
+                            <li>Klik banner <strong>"Affinity for Canva"</strong> atau "Claim License"</li>
+                            <li>Buat akun Affinity ID yang terhubung dengan lisensi BPS</li>
+                        </ol>
+                        <a href="https://www.affinity.studio/download" target="_blank" class="download-btn">
+                            ⬇️ Download Installer Resmi
                         </a>
                     </div>
-
-                    <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 10px;">
-                        *Catatan: Saat install, pilih "I have an account" dan login dengan email yang sudah dikoneksikan
-                        tadi.
-                    </p>
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <!-- Modal 2: JASP -->
-    <div id="modal-jasp" class="modal-overlay" onclick="closeModal(event, 'modal-jasp')">
-        <div class="modal">
+    <div id="modal-jasp" class="modal-overlay" onclick="handleModalClick(event, 'modal-jasp')">
+        <div class="modal" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <div class="modal-header-content">
-                    <svg viewBox="0 0 24 24" style="color: var(--accent-color);">
+                    <svg viewBox="0 0 24 24">
                         <line x1="18" y1="20" x2="18" y2="10"></line>
                         <line x1="12" y1="20" x2="12" y2="4"></line>
                         <line x1="6" y1="20" x2="6" y2="14"></line>
                     </svg>
-                    <div class="modal-title-text">JASP (Statistik Tanpa Biaya)</div>
+                    <div class="modal-title-text">JASP Statistics</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeModal(null, 'modal-jasp')">&times;</button>
+                <button class="modal-close-btn" onclick="closeModal('modal-jasp')">&times;</button>
             </div>
             <div class="modal-content-scroll">
                 <div class="modal-body">
-                    <h4>Apa itu JASP?</h4>
-                    <p><em>Jeffreys's Amazing Statistics Program</em>. Software statistik Open-Source (Gratis) dari
-                        University of Amsterdam yang dirancang untuk menggantikan software berbayar mahal dengan
-                        antarmuka yang jauh lebih manusiawi.</p>
+                    <h4>📊 Apa itu JASP?</h4>
+                    <p><em>Jeffreys's Amazing Statistics Program</em>. Software statistik Open-Source (Gratis) dari University of Amsterdam dengan antarmuka yang sangat user-friendly.</p>
 
-                    <h4>Mengapa BPS Wajib Migrasi?</h4>
-                    <ul style="margin-bottom: 15px;">
-                        <li><strong>Native SPSS Support (.sav):</strong> JASP membaca file data mentah BPS (.sav) secara
-                            langsung tanpa perlu konversi. Transisi dari software lama terasa sangat mulus.</li>
-                        <li><strong>Real-time Analysis:</strong> Tidak ada tombol "Run". Saat Anda mengubah satu angka
-                            di data, tabel dan grafik hasil analisis berubah seketika (Dynamic Update).</li>
-                        <li><strong>Metode Hibrida:</strong> Memfasilitasi transisi BPS dari statistik klasik
-                            (Frequentist) menuju statistik modern (Bayesian) dalam satu klik.</li>
+                    <h4>🎯 Mengapa BPS Wajib Migrasi?</h4>
+                    <ul>
+                        <li><strong>Native SPSS Support (.sav):</strong> Membaca file data mentah BPS secara langsung tanpa konversi.</li>
+                        <li><strong>Real-time Analysis:</strong> Tidak ada tombol "Run". Hasil langsung berubah saat data diubah.</li>
+                        <li><strong>Metode Hibrida:</strong> Mendukung statistik Frequentist dan Bayesian.</li>
                     </ul>
 
-                    <div
-                        style="background: rgba(23, 162, 184, 0.15); padding: 10px; border-left: 4px solid #17a2b8; margin: 10px 0;">
-                        <strong>Workflow Efficiency:</strong><br>
-                        <small>Hasil analisis bisa langsung dicopy-paste ke Word dengan format standar APA (American
-                            Psychological Association). Sangat mempercepat pembuatan Laporan Analisis Statistik.</small>
+                    <div class="info-box info">
+                        <strong style="color: #3b82f6;">📋 Workflow Efficiency</strong>
+                        <span>Hasil analisis bisa langsung copy-paste ke Word dengan format standar APA.</span>
                     </div>
 
-                    <p><em>Download Resmi: <strong>jasp-stats.org</strong> (Support Windows, Mac, Linux)</em></p>
-                </div>
-                <div class="download-section"
-                    style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                    <h3 style="color: #2dd4bf; font-weight: 700; margin-bottom: 1rem;">📊 Cara Download JASP (Legal &
-                        Free)</h3>
-
-                    <ol style="margin-left: 1.5rem; line-height: 1.8; color: #e2e8f0;">
-                        <li>Kunjungi website resmi University of Amsterdam (JASP).</li>
-                        <li>Pilih versi <strong>"Windows 64-bit"</strong> (Standard).</li>
-                        <li>JASP tidak butuh crack. Cukup install -> Next -> Finish.</li>
-                    </ol>
-
-                    <div style="margin-top: 1.5rem;">
-                        <a href="https://jasp-stats.org/download/" target="_blank"
-                            style="background: #2dd4bf; color: #0f172a; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
-                            🔗 Link Download JASP Resmi
+                    <div class="download-section">
+                        <h3>📥 Download JASP (Legal & Free)</h3>
+                        <ol>
+                            <li>Kunjungi website resmi University of Amsterdam</li>
+                            <li>Pilih versi <strong>"Windows 64-bit"</strong> (Standard)</li>
+                            <li>Install → Next → Finish. Tidak butuh crack!</li>
+                        </ol>
+                        <a href="https://jasp-stats.org/download/" target="_blank" class="download-btn">
+                            🔗 Download JASP Official
                         </a>
                     </div>
                 </div>
@@ -676,202 +1135,991 @@
     </div>
 
     <!-- Modal 3: Antigravity -->
-    <div id="modal-antigravity" class="modal-overlay" onclick="closeModal(event, 'modal-antigravity')">
-        <div class="modal">
+    <div id="modal-antigravity" class="modal-overlay" onclick="handleModalClick(event, 'modal-antigravity')">
+        <div class="modal" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <div class="modal-header-content">
-                    <svg viewBox="0 0 24 24" style="color: var(--accent-color);">
+                    <svg viewBox="0 0 24 24">
                         <polyline points="16 18 22 12 16 6"></polyline>
                         <polyline points="8 6 2 12 8 18"></polyline>
                     </svg>
-                    <div class="modal-title-text">Google Antigravity & Vibe Coding</div>
+                    <div class="modal-title-text">Google Antigravity</div>
                 </div>
-                <button class="modal-close-btn" onclick="closeModal(null, 'modal-antigravity')">&times;</button>
+                <button class="modal-close-btn" onclick="closeModal('modal-antigravity')">&times;</button>
             </div>
             <div class="modal-content-scroll">
                 <div class="modal-body">
-                    <h4>Apa itu Google Antigravity?</h4>
-                    <p>Platform <em>Agentic IDE</em> revolusioner dari Google (Rilis Q4 2025). Berbeda dengan editor
-                        kode biasa, Antigravity adalah "Ruang Kerja Cerdas" di mana Anda memerintah AI (Gemini 3 Pro)
-                        untuk menulis program, bukan mengetik sendiri.</p>
+                    <h4>🚀 Apa itu Google Antigravity?</h4>
+                    <p>Platform <em>Agentic IDE</em> revolusioner dari Google. "Ruang Kerja Cerdas" di mana Anda memerintah AI (Gemini 3 Pro) untuk menulis program.</p>
 
-                    <div <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+                    <h4>⚙️ Panduan Teknis</h4>
 
-                        <h4>Panduan Teknis (Wajib Baca):</h4>
-
-                        <p><strong>1. Masalah "Python Bentrok" (Sangat Penting):</strong><br>
-                            Laptop kadang memiliki Python lama (bawaan SPSS/ArcGIS/projek lama vscode). Agar Antigravity
-                            berjalan
-                            lancar:
-                        </p>
-                        <ol style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;">
-                            <li>Buka Antigravity, tekan <code>Ctrl + Shift + P</code> (Command Palette).</li>
-                            <li>Ketik & Pilih: <strong>"Python: Select Interpreter"</strong>.</li>
-                            <li><strong>Pilih Python Versi Terbaru</strong> (misal 3.12.x). <span
-                                    style="color: #ff6b6b;">JANGAN</span> pilih path yang mengarah ke folder SPSS atau
-                                ArcGIS.</li>
-                        </ol>
-
-                        <p><strong>2. Cara Kerja (Vibe Coding):</strong></p>
-                        <ul>
-                            <li><strong>Chat Panel:</strong> Jangan pusing sintaks. Ketik perintah di panel kanan:
-                                <em>"Buatkan script untuk menarik data inflasi dari file Excel di folder ini, lalu buat
-                                    grafik garis trend 5 tahun terakhir."</em>
-                            </li>
-                            <li><strong>Auto-Execution:</strong> AI akan menulis kode, menginstall library yang kurang
-                                (pip
-                                install), dan menjalankan preview secara otomatis.</li>
-                        </ul>
-
-                        <p><strong>3. Solusi Jika Error (Self-Healing):</strong></p>
-                        <div
-                            style="display: flex; gap: 10px; align-items: center; background: rgba(220, 53, 69, 0.1); padding: 10px; border-radius: 5px;">
-                            <span style="font-size: 20px;">🚨</span>
-                            <div>
-                                Jika muncul error merah, jangan panik. Klik tombol <strong>"Fix with AI"</strong> yang
-                                muncul di samping pesan error. AI akan menganalisa log error, memperbaiki kodenya
-                                sendiri,
-                                dan menjalankannya ulang.
-                            </div>
-
-                        </div>
-                        <div class="download-section"
-                            style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                            <h3 style="color: #f472b6; font-weight: 700; margin-bottom: 1rem;">🤖 Setup Antigravity &
-                                Python Engine</h3>
-
-                            <div
-                                style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                                <h4 style="color: #fbbf24; margin-bottom: 0.5rem;">Langkah 1: Install Python (Wajib)
-                                </h4>
-                                <p style="font-size: 0.9rem; margin-bottom: 10px;">Agar AI bisa menjalankan kode di
-                                    laptopmu, kamu butuh mesin Python.</p>
-                                <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
-                                    <li>Download Python versi terbaru (3.12.x).</li>
-                                    <li><strong>PENTING:</strong> Saat instalasi awal, CENTANG kotak bertuliskan: <br>
-                                        <code
-                                            style="background: #ef4444; color: white; padding: 2px 5px; border-radius: 4px;">Add python.exe to PATH</code>
-                                    </li>
-                                    <li>Jika tidak dicentang, Antigravity tidak akan mendeteksi Python kamu.</li>
-                                    <li>Klik "Install Now".</li>
-                                </ol>
-                                <div style="margin-top: 10px;">
-                                    <a href="https://www.python.org/downloads/" target="_blank"
-                                        style="color: #fbbf24; text-decoration: underline;">👉 Download Python
-                                        Official</a>
-                                </div>
-                            </div>
-
-
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="troubleshoot-section"
-                    style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px;">
-                    <h3
-                        style="color: #f87171; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
-                        <span>⚠️</span> Masalah "Python War" (Bentrok)
-                    </h3>
-
-                    <p style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 1.5rem;">
-                        Laptop sering punya banyak Python (bawaan SPSS/ArcGIS) yang bikin codingan error. Ini
-                        cara membereskannya.
-                    </p>
-
-                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                        <h4 style="color: #fbbf24; font-size: 1rem; margin-bottom: 0.5rem;">1. Cek: Saya punya berapa
-                            Python?</h4>
-                        <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
-                            <li>Tekan <code
-                                    style="background: #333; padding: 2px 6px; border-radius: 4px;">Win + R</code>,
-                                ketik <code>cmd</code>, tekan Enter.</li>
-                            <li>Ketik perintah ini: <br>
-                                <code
-                                    style="display: block; background: #111; color: #a5d6ff; padding: 8px; margin: 5px 0; border-radius: 4px;">py --list</code>
-                            </li>
-                            <li>Lihat hasilnya:
-                                <ul style="list-style-type: disc; margin-left: 1rem; margin-top: 5px; color: #94a3b8;">
-                                    <li>Ada tanda bintang (<code>*</code>) = Itu Python utamamu.</li>
-                                    <li>Muncul versi jadul (2.7 / 3.8)? = Itu penyebab error.</li>
-                                </ul>
-                            </li>
-                        </ol>
+                    <div class="info-box warning">
+                        <strong style="color: #f59e0b;">⚠️ Masalah "Python Bentrok"</strong>
+                        <span>Laptop kadang memiliki Python lama (bawaan SPSS/ArcGIS). Pilih Python versi terbaru di interpreter settings.</span>
                     </div>
 
-                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                        <h4 style="color: #fbbf24; font-size: 1rem; margin-bottom: 0.5rem;">2. Solusi Permanen (System
-                            Path)</h4>
-                        <p style="font-size: 0.85rem; color: #cbd5e1;">Memaksa laptop memprioritaskan Python terbaru.
-                        </p>
-                        <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
-                            <li>Tekan <code
-                                    style="background: #333; padding: 2px 6px; border-radius: 4px;">Win + R</code> di
-                                keyboard.</li>
-                            <li>Ketik: <code style="color: #a5d6ff;">sysdm.cpl</code> lalu Enter.</li>
-                            <li>Pilih Tab <strong>Advanced</strong> (Lanjutan).</li>
-                            <li>Klik tombol <strong>Environment Variables</strong> (kanan bawah).</li>
-                            <li>Di kolom <em>System variables</em> (kotak bawah), cari baris <strong>Path</strong>, lalu
-                                klik <strong>Edit</strong>.</li>
-                            <li>Cari baris <code>Python312</code> (atau versi barumu).</li>
-                            <li>Klik tombol <strong>Move Up</strong> berkali-kali sampai dia ada di <strong>URUTAN
-                                    PALING ATAS</strong>.</li>
-                            <li>Klik OK di semua jendela.</li>
-                        </ol>
-                    </div>
+                    <p><strong>Cara Kerja (Vibe Coding):</strong></p>
+                    <ul>
+                        <li><strong>Chat Panel:</strong> Ketik perintah bahasa natural, AI akan menulis kode.</li>
+                        <li><strong>Auto-Execution:</strong> AI menginstall library dan menjalankan preview otomatis.</li>
+                        <li><strong>Self-Healing:</strong> Klik "Fix with AI" jika ada error.</li>
+                    </ul>
 
-                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">
-                        <h4 style="color: #fbbf24; font-size: 1rem; margin-bottom: 0.5rem;">3. Solusi Cepat (Di dalam
-                            Antigravity)</h4>
-                        <p style="font-size: 0.85rem; color: #cbd5e1;">Cara memilih versi Python tanpa mengganggu
-                            settingan laptop.</p>
-                        <ol style="margin-left: 1.5rem; font-size: 0.9rem; line-height: 1.6;">
-                            <li>Di dalam Antigravity/Editor, tekan <code
-                                    style="background: #333; padding: 2px 6px; border-radius: 4px;">Ctrl + Shift + P</code>
-                            </li>
-                            <li>Ketik: <strong>Python: Select Interpreter</strong>.</li>
-                            <li>Akan muncul daftar Python yang terdeteksi.</li>
-                            <li>Pilih yang versinya terbaru (misal: <code>3.12.x</code>) atau yang berlabel
-                                <code>Global</code>.
-                            </li>
-                            <li><strong>JANGAN</strong> pilih yang ada tulisan <code>SPSS</code> atau
-                                <code>ArcGIS</code>.
-                            </li>
+                    <div class="download-section">
+                        <h3>🤖 Setup Python Engine</h3>
+                        <ol>
+                            <li>Download Python versi terbaru (3.12.x)</li>
+                            <li><strong>PENTING:</strong> Saat instalasi, centang <code>Add python.exe to PATH</code></li>
+                            <li>Klik "Install Now"</li>
+                        </ol>
+                        <a href="https://www.python.org/downloads/" target="_blank" class="download-btn">
+                            🐍 Download Python Official
+                        </a>
+
+                        <h3 style="margin-top: 1.25rem;">🔧 Solusi Python Bentrok</h3>
+                        <ol>
+                            <li>Tekan <code>Ctrl + Shift + P</code> di Antigravity</li>
+                            <li>Ketik: <strong>Python: Select Interpreter</strong></li>
+                            <li>Pilih versi terbaru (3.12.x)</li>
+                            <li><strong>JANGAN</strong> pilih yang ada tulisan SPSS atau ArcGIS</li>
                         </ol>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
 
     <script>
+        // ============================================
+        // LOADING SCREEN CANVAS
+        // ============================================
+        const loadingCanvas = document.getElementById('loadingCanvas');
+        const loadingCtx = loadingCanvas.getContext('2d');
+        let loadingTime = 0;
+
+        function resizeLoadingCanvas() {
+            loadingCanvas.width = window.innerWidth;
+            loadingCanvas.height = window.innerHeight;
+        }
+        resizeLoadingCanvas();
+
+        // Loading particles
+        const loadingParticlesContainer = document.getElementById('loadingParticles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'loading-particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 4 + 's';
+            particle.style.animationDuration = (3 + Math.random() * 3) + 's';
+            const colors = ['#38bdf8', '#a78bfa', '#f472b6', '#fbbf24', '#22c55e'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.width = (4 + Math.random() * 6) + 'px';
+            particle.style.height = particle.style.width;
+            loadingParticlesContainer.appendChild(particle);
+        }
+
+        // Loading canvas animation
+        function drawLoadingBackground() {
+            const width = loadingCanvas.width;
+            const height = loadingCanvas.height;
+            loadingTime += 0.01;
+
+            // Gradient background
+            const grad = loadingCtx.createLinearGradient(0, 0, width, height);
+            grad.addColorStop(0, '#0f172a');
+            grad.addColorStop(0.5, '#1e1b4b');
+            grad.addColorStop(1, '#0f172a');
+            loadingCtx.fillStyle = grad;
+            loadingCtx.fillRect(0, 0, width, height);
+
+            // Animated waves
+            for (let i = 0; i < 3; i++) {
+                loadingCtx.beginPath();
+                loadingCtx.moveTo(0, height);
+                
+                for (let x = 0; x <= width; x += 10) {
+                    const y = height - 100 - i * 50 + Math.sin(x * 0.005 + loadingTime + i) * 30;
+                    loadingCtx.lineTo(x, y);
+                }
+                
+                loadingCtx.lineTo(width, height);
+                loadingCtx.closePath();
+                
+                const waveGrad = loadingCtx.createLinearGradient(0, height - 200, 0, height);
+                const alpha = 0.1 - i * 0.02;
+                waveGrad.addColorStop(0, `rgba(139, 92, 246, ${alpha})`);
+                waveGrad.addColorStop(1, `rgba(56, 189, 248, ${alpha})`);
+                loadingCtx.fillStyle = waveGrad;
+                loadingCtx.fill();
+            }
+
+            // Stars
+            for (let i = 0; i < 50; i++) {
+                const x = (i * 137.5) % width;
+                const y = (i * 73.7) % (height * 0.6);
+                const size = 1 + Math.sin(loadingTime * 2 + i) * 0.5;
+                const alpha = 0.5 + Math.sin(loadingTime * 3 + i * 0.5) * 0.5;
+                
+                loadingCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                loadingCtx.beginPath();
+                loadingCtx.arc(x, y, size, 0, Math.PI * 2);
+                loadingCtx.fill();
+            }
+        }
+
+        let loadingAnimationId;
+        function animateLoading() {
+            drawLoadingBackground();
+            loadingAnimationId = requestAnimationFrame(animateLoading);
+        }
+        animateLoading();
+
+        // Loading tips
+        const tips = [
+            "Klik titik-titik warna di atas untuk berinteraksi!",
+            "Affinity adalah alternatif gratis untuk Adobe Creative Suite",
+            "JASP bisa membaca file .sav langsung tanpa konversi",
+            "Gunakan Ctrl+Shift+P untuk command palette di Antigravity",
+            "Ganti tema dengan tombol matahari/bulan di pojok kanan"
+        ];
+        let currentTip = 0;
+
+        setInterval(() => {
+            currentTip = (currentTip + 1) % tips.length;
+            const tipElement = document.getElementById('loadingTipText');
+            tipElement.style.opacity = 0;
+            setTimeout(() => {
+                tipElement.textContent = tips[currentTip];
+                tipElement.style.opacity = 1;
+            }, 300);
+        }, 3000);
+
+        // Interactive sound effect (visual feedback)
+        function playSound(num) {
+            const dots = document.querySelectorAll('.loading-dot');
+            dots[num - 1].style.transform = 'scale(2)';
+            dots[num - 1].style.boxShadow = '0 0 30px currentColor';
+            
+            setTimeout(() => {
+                dots[num - 1].style.transform = '';
+                dots[num - 1].style.boxShadow = '';
+            }, 300);
+
+            // Update icon based on clicked dot
+            const icons = ['🚀', '✨', '💫', '⚡', '🎯'];
+            document.querySelector('.loading-icon').textContent = icons[num - 1];
+        }
+
+        // Loading progress
+        let progress = 0;
+        const progressBar = document.getElementById('loadingProgressBar');
+        
+        function updateProgress() {
+            progress += Math.random() * 15;
+            if (progress > 100) progress = 100;
+            progressBar.style.width = progress + '%';
+            
+            if (progress < 100) {
+                setTimeout(updateProgress, 200 + Math.random() * 300);
+            } else {
+                setTimeout(hideLoading, 500);
+            }
+        }
+        
+        setTimeout(updateProgress, 500);
+
+        function hideLoading() {
+            cancelAnimationFrame(loadingAnimationId);
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.add('hidden');
+            
+            const mainWrapper = document.getElementById('mainWrapper');
+            mainWrapper.classList.add('visible');
+        }
+
+        // ============================================
+        // MAIN CANVAS SETUP
+        // ============================================
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let time = 0;
+        let isDarkMode = false;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initSceneObjects();
+        }
+        
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            resizeLoadingCanvas();
+        });
+
+        // ============================================
+        // SCENE OBJECTS
+        // ============================================
+        let clouds = [];
+        let birds = [];
+        let dolphins = [];
+        let stars = [];
+        let shootingStars = [];
+        let shootingStarTimer = 0;
+
+        function initSceneObjects() {
+            // Clouds
+            clouds = [];
+            for (let i = 0; i < 5; i++) {
+                clouds.push({
+                    x: Math.random() * width,
+                    y: 30 + Math.random() * 80,
+                    size: 50 + Math.random() * 60,
+                    speed: 0.2 + Math.random() * 0.3
+                });
+            }
+
+            // Birds
+            birds = [];
+            for (let i = 0; i < 6; i++) {
+                birds.push({
+                    x: Math.random() * width,
+                    y: 50 + Math.random() * 120,
+                    speed: 1 + Math.random() * 1.5,
+                    phase: Math.random() * Math.PI * 2,
+                    size: 6 + Math.random() * 5
+                });
+            }
+
+            // Dolphins
+            dolphins = [];
+            for (let i = 0; i < 2; i++) {
+                dolphins.push({
+                    x: width * 0.25 + Math.random() * width * 0.5,
+                    baseY: height * 0.55,
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.018 + Math.random() * 0.01,
+                    jumpHeight: 60 + Math.random() * 40,
+                    size: 25 + Math.random() * 15
+                });
+            }
+
+            // Stars
+            stars = [];
+            const starCount = Math.min(200, Math.floor(width * height / 5000));
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height * 0.6,
+                    size: Math.random() * 2.5 + 0.5,
+                    twinkleSpeed: 0.02 + Math.random() * 0.04,
+                    phase: Math.random() * Math.PI * 2,
+                    color: Math.random() > 0.8 ? 
+                        `hsl(${200 + Math.random() * 60}, 70%, 80%)` : 
+                        'white'
+                });
+            }
+
+            // Reset shooting stars
+            shootingStars = [];
+        }
+
+        resizeCanvas();
+
+        // ============================================
+        // BEACH SCENE (LIGHT MODE)
+        // ============================================
+        function drawBeachScene() {
+            // Sky gradient - morning
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, height * 0.65);
+            skyGrad.addColorStop(0, '#87CEEB');
+            skyGrad.addColorStop(0.3, '#B0E0E6');
+            skyGrad.addColorStop(0.6, '#FFE4B5');
+            skyGrad.addColorStop(1, '#FFDAB9');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            // Sun with rays
+            const sunX = width * 0.85;
+            const sunY = height * 0.12;
+            const sunRadius = Math.min(55, width * 0.09);
+
+            // Sun rays
+            ctx.save();
+            ctx.translate(sunX, sunY);
+            ctx.rotate(time * 0.1);
+            for (let i = 0; i < 12; i++) {
+                ctx.rotate(Math.PI / 6);
+                ctx.beginPath();
+                ctx.moveTo(sunRadius * 1.2, 0);
+                ctx.lineTo(sunRadius * 1.8, 0);
+                ctx.strokeStyle = 'rgba(255, 200, 100, 0.4)';
+                ctx.lineWidth = 8;
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // Sun glow
+            const sunGlow = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunRadius * 3);
+            sunGlow.addColorStop(0, 'rgba(255, 220, 100, 0.7)');
+            sunGlow.addColorStop(0.4, 'rgba(255, 180, 80, 0.3)');
+            sunGlow.addColorStop(1, 'rgba(255, 180, 80, 0)');
+            ctx.fillStyle = sunGlow;
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, sunRadius * 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Sun core
+            const sunCore = ctx.createRadialGradient(sunX - 10, sunY - 10, 0, sunX, sunY, sunRadius);
+            sunCore.addColorStop(0, '#FFFDE7');
+            sunCore.addColorStop(0.5, '#FFD54F');
+            sunCore.addColorStop(1, '#FFA726');
+            ctx.fillStyle = sunCore;
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Clouds
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            clouds.forEach(cloud => {
+                cloud.x += cloud.speed;
+                if (cloud.x > width + cloud.size * 2) cloud.x = -cloud.size * 2;
+                drawCloud(cloud.x, cloud.y, cloud.size);
+            });
+
+            // Birds
+            birds.forEach(bird => {
+                bird.x += bird.speed;
+                bird.phase += 0.18;
+                if (bird.x > width + 40) bird.x = -40;
+                drawBird(bird.x, bird.y, bird.phase, bird.size);
+            });
+
+            // Ocean
+            const oceanY = height * 0.5;
+            const oceanGrad = ctx.createLinearGradient(0, oceanY, 0, height * 0.72);
+            oceanGrad.addColorStop(0, '#006994');
+            oceanGrad.addColorStop(0.4, '#0077B6');
+            oceanGrad.addColorStop(1, '#00B4D8');
+            ctx.fillStyle = oceanGrad;
+            ctx.fillRect(0, oceanY, width, height * 0.22);
+
+            // Ocean shine
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.beginPath();
+            ctx.ellipse(width * 0.7, oceanY + 30, width * 0.3, 40, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Waves
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                for (let x = 0; x <= width; x += 12) {
+                    const y = oceanY + 12 + i * 14 + Math.sin(x * 0.012 + time * 2.5 + i * 0.5) * 7;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            // Dolphins
+            dolphins.forEach(dolphin => {
+                dolphin.phase += dolphin.speed;
+                const jumpProgress = (Math.sin(dolphin.phase) + 1) / 2;
+                
+                if (Math.sin(dolphin.phase) > 0.15) {
+                    const y = dolphin.baseY - jumpProgress * dolphin.jumpHeight;
+                    const rotation = Math.sin(dolphin.phase) * 0.5;
+                    drawDolphin(dolphin.x, y, dolphin.size, rotation);
+                    
+                    if (jumpProgress < 0.2) {
+                        drawSplash(dolphin.x, dolphin.baseY + 10, dolphin.size);
+                    }
+                }
+            });
+
+            // Beach
+            const sandY = height * 0.68;
+            const sandGrad = ctx.createLinearGradient(0, sandY, 0, height);
+            sandGrad.addColorStop(0, '#F5DEB3');
+            sandGrad.addColorStop(0.3, '#DEB887');
+            sandGrad.addColorStop(1, '#D2B48C');
+            ctx.fillStyle = sandGrad;
+
+            ctx.beginPath();
+            ctx.moveTo(0, sandY);
+            for (let x = 0; x <= width; x += 30) {
+                const y = sandY + Math.sin(x * 0.006 + time * 0.8) * 10;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fill();
+
+            // Foam
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            for (let x = 0; x <= width; x += 10) {
+                const y = sandY + Math.sin(x * 0.01 + time * 3) * 8 - 8;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Palm trees
+            if (width > 400) {
+                drawPalmTree(60, height * 0.70, Math.min(140, height * 0.2));
+                drawPalmTree(width - 70, height * 0.70, Math.min(120, height * 0.17));
+            }
+        }
+
+        function drawCloud(x, y, size) {
+            ctx.beginPath();
+            ctx.arc(x, y, size * 0.3, 0, Math.PI * 2);
+            ctx.arc(x + size * 0.25, y - size * 0.12, size * 0.38, 0, Math.PI * 2);
+            ctx.arc(x + size * 0.6, y, size * 0.3, 0, Math.PI * 2);
+            ctx.arc(x + size * 0.35, y + size * 0.08, size * 0.22, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawBird(x, y, phase, size) {
+            ctx.strokeStyle = '#2d3748';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const wingY = Math.sin(phase) * size * 0.7;
+            ctx.moveTo(x - size * 1.2, y + wingY);
+            ctx.quadraticCurveTo(x - size * 0.4, y - size * 0.4, x, y);
+            ctx.quadraticCurveTo(x + size * 0.4, y - size * 0.4, x + size * 1.2, y + wingY);
+            ctx.stroke();
+        }
+
+        function drawDolphin(x, y, size, rotation) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+
+            // Body gradient
+            const grad = ctx.createLinearGradient(-size, -size * 0.3, size, size * 0.3);
+            grad.addColorStop(0, '#4A5568');
+            grad.addColorStop(0.5, '#718096');
+            grad.addColorStop(1, '#A0AEC0');
+            ctx.fillStyle = grad;
+
+            // Body
+            ctx.beginPath();
+            ctx.ellipse(0, 0, size, size * 0.38, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Belly
+            ctx.fillStyle = '#CBD5E0';
+            ctx.beginPath();
+            ctx.ellipse(0, size * 0.1, size * 0.7, size * 0.18, 0, 0, Math.PI);
+            ctx.fill();
+
+            // Snout
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(size * 0.75, 0);
+            ctx.lineTo(size * 1.25, -size * 0.06);
+            ctx.lineTo(size * 1.25, size * 0.06);
+            ctx.closePath();
+            ctx.fill();
+
+            // Dorsal fin
+            ctx.beginPath();
+            ctx.moveTo(-size * 0.05, -size * 0.32);
+            ctx.quadraticCurveTo(size * 0.1, -size * 0.8, size * 0.25, -size * 0.32);
+            ctx.closePath();
+            ctx.fill();
+
+            // Tail
+            ctx.beginPath();
+            ctx.moveTo(-size * 0.9, 0);
+            ctx.quadraticCurveTo(-size * 1.1, -size * 0.2, -size * 1.35, -size * 0.45);
+            ctx.quadraticCurveTo(-size * 1.15, -size * 0.1, -size * 1.05, 0);
+            ctx.quadraticCurveTo(-size * 1.15, size * 0.1, -size * 1.35, size * 0.45);
+            ctx.quadraticCurveTo(-size * 1.1, size * 0.2, -size * 0.9, 0);
+            ctx.fill();
+
+            // Eye
+            ctx.fillStyle = '#1A202C';
+            ctx.beginPath();
+            ctx.arc(size * 0.5, -size * 0.1, size * 0.08, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eye shine
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(size * 0.52, -size * 0.12, size * 0.03, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawSplash(x, y, size) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI;
+                const distance = size * (0.6 + Math.random() * 0.4);
+                const sx = x + Math.cos(angle) * distance;
+                const sy = y - Math.sin(angle) * distance * 0.5;
+                const splashSize = 2 + Math.random() * 4;
+                ctx.beginPath();
+                ctx.arc(sx, sy, splashSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawPalmTree(x, y, h) {
+            // Trunk shadow
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.beginPath();
+            ctx.ellipse(x + 20, y + 5, h * 0.4, 10, 0.3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Trunk
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineWidth = Math.max(12, h * 0.09);
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.quadraticCurveTo(x - 8, y - h * 0.5, x + 5, y - h);
+            ctx.stroke();
+
+            // Trunk texture
+            ctx.strokeStyle = '#654321';
+            ctx.lineWidth = Math.max(10, h * 0.07);
+            for (let i = 1; i < 8; i++) {
+                const ty = y - (i * h / 8);
+                const tx = x + (5 * i / 8) - 4;
+                ctx.beginPath();
+                ctx.arc(tx, ty, 6, 0, Math.PI, true);
+                ctx.stroke();
+            }
+
+            // Leaves
+            ctx.fillStyle = '#228B22';
+            const leafCount = 7;
+            for (let i = 0; i < leafCount; i++) {
+                const angle = (i / leafCount) * Math.PI * 2;
+                ctx.save();
+                ctx.translate(x + 5, y - h);
+                ctx.rotate(angle);
+
+                // Leaf shape
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                const leafLength = h * 0.55 + Math.sin(time + i) * 5;
+                ctx.quadraticCurveTo(leafLength * 0.5, -h * 0.12, leafLength, h * 0.05);
+                ctx.quadraticCurveTo(leafLength * 0.5, h * 0.12, 0, 0);
+                ctx.fill();
+
+                // Leaf detail
+                ctx.strokeStyle = '#1a6b1a';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(leafLength * 0.9, h * 0.03);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            // Coconuts
+            ctx.fillStyle = '#8B4513';
+            for (let i = 0; i < 3; i++) {
+                const cx = x + 5 + Math.cos(i * 2) * 8;
+                const cy = y - h + 10 + Math.sin(i * 1.5) * 5;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // ============================================
+        // MOUNTAIN SCENE (DARK MODE) - FIXED
+        // ============================================
+        function drawMountainScene() {
+            // Night sky gradient
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
+            skyGrad.addColorStop(0, '#020617');
+            skyGrad.addColorStop(0.2, '#0f172a');
+            skyGrad.addColorStop(0.5, '#1e1b4b');
+            skyGrad.addColorStop(0.7, '#312e81');
+            skyGrad.addColorStop(1, '#1e1b4b');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            // Milky way
+            const milkyGrad = ctx.createLinearGradient(width * 0.2, 0, width * 0.8, height * 0.5);
+            milkyGrad.addColorStop(0, 'rgba(139, 92, 246, 0)');
+            milkyGrad.addColorStop(0.3, 'rgba(139, 92, 246, 0.05)');
+            milkyGrad.addColorStop(0.5, 'rgba(196, 181, 253, 0.1)');
+            milkyGrad.addColorStop(0.7, 'rgba(139, 92, 246, 0.05)');
+            milkyGrad.addColorStop(1, 'rgba(139, 92, 246, 0)');
+            ctx.fillStyle = milkyGrad;
+            ctx.fillRect(0, 0, width, height * 0.6);
+
+            // Stars with twinkling
+            stars.forEach(star => {
+                star.phase += star.twinkleSpeed;
+                const brightness = 0.3 + Math.sin(star.phase) * 0.7;
+                
+                // Star core
+                ctx.fillStyle = star.color === 'white' ? 
+                    `rgba(255, 255, 255, ${brightness})` : 
+                    star.color.replace(')', `, ${brightness})`).replace('hsl', 'hsla');
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Glow for larger stars
+                if (star.size > 1.5 && brightness > 0.6) {
+                    const glow = ctx.createRadialGradient(
+                        star.x, star.y, 0,
+                        star.x, star.y, star.size * 4
+                    );
+                    glow.addColorStop(0, `rgba(200, 200, 255, ${brightness * 0.3})`);
+                    glow.addColorStop(1, 'rgba(200, 200, 255, 0)');
+                    ctx.fillStyle = glow;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size * 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // Shooting stars
+            shootingStarTimer += 0.016;
+            if (shootingStarTimer > 2 + Math.random() * 3) {
+                createShootingStar();
+                shootingStarTimer = 0;
+            }
+
+            // Update and draw shooting stars
+            for (let i = shootingStars.length - 1; i >= 0; i--) {
+                const star = shootingStars[i];
+                star.x += Math.cos(star.angle) * star.speed;
+                star.y += Math.sin(star.angle) * star.speed;
+                star.opacity -= 0.015;
+
+                if (star.opacity <= 0 || star.x > width + 100 || star.y > height) {
+                    shootingStars.splice(i, 1);
+                    continue;
+                }
+
+                // Trail
+                const trailLength = star.length;
+                const trailGrad = ctx.createLinearGradient(
+                    star.x, star.y,
+                    star.x - Math.cos(star.angle) * trailLength,
+                    star.y - Math.sin(star.angle) * trailLength
+                );
+                trailGrad.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
+                trailGrad.addColorStop(0.3, `rgba(200, 200, 255, ${star.opacity * 0.5})`);
+                trailGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                ctx.strokeStyle = trailGrad;
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(star.x, star.y);
+                ctx.lineTo(
+                    star.x - Math.cos(star.angle) * trailLength,
+                    star.y - Math.sin(star.angle) * trailLength
+                );
+                ctx.stroke();
+
+                // Head glow
+                const headGlow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, 15);
+                headGlow.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
+                headGlow.addColorStop(0.5, `rgba(200, 200, 255, ${star.opacity * 0.4})`);
+                headGlow.addColorStop(1, 'rgba(200, 200, 255, 0)');
+                ctx.fillStyle = headGlow;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, 15, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Moon
+            const moonX = width * 0.12;
+            const moonY = height * 0.15;
+            const moonR = Math.min(45, width * 0.07);
+
+            // Moon glow
+            const moonGlow = ctx.createRadialGradient(moonX, moonY, moonR * 0.5, moonX, moonY, moonR * 4);
+            moonGlow.addColorStop(0, 'rgba(255, 255, 240, 0.3)');
+            moonGlow.addColorStop(0.5, 'rgba(200, 200, 220, 0.1)');
+            moonGlow.addColorStop(1, 'rgba(200, 200, 220, 0)');
+            ctx.fillStyle = moonGlow;
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, moonR * 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Moon surface
+            const moonSurf = ctx.createRadialGradient(moonX - moonR * 0.2, moonY - moonR * 0.2, 0, moonX, moonY, moonR);
+            moonSurf.addColorStop(0, '#FFFFF5');
+            moonSurf.addColorStop(0.5, '#F5F5E6');
+            moonSurf.addColorStop(1, '#E8E8D8');
+            ctx.fillStyle = moonSurf;
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Moon craters
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+            ctx.beginPath();
+            ctx.arc(moonX + moonR * 0.3, moonY - moonR * 0.2, moonR * 0.15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(moonX - moonR * 0.2, moonY + moonR * 0.35, moonR * 0.22, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(moonX + moonR * 0.4, moonY + moonR * 0.3, moonR * 0.1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Mountains - Layer 1 (back, darkest)
+            ctx.fillStyle = '#1e1b4b';
+            drawMountainShape(-width * 0.1, height, width * 0.4, height * 0.35);
+            drawMountainShape(width * 0.15, height, width * 0.45, height * 0.42);
+            drawMountainShape(width * 0.45, height, width * 0.4, height * 0.38);
+            drawMountainShape(width * 0.7, height, width * 0.35, height * 0.32);
+
+            // Mountains - Layer 2 (middle)
+            ctx.fillStyle = '#312e81';
+            drawMountainShape(-width * 0.05, height, width * 0.35, height * 0.3);
+            drawMountainShape(width * 0.2, height, width * 0.4, height * 0.35);
+            drawMountainShape(width * 0.5, height, width * 0.38, height * 0.32);
+            drawMountainShape(width * 0.75, height, width * 0.32, height * 0.28);
+
+            // Mountains - Layer 3 (front with snow)
+            drawMountainWithSnow(width * 0.02, height, width * 0.3, height * 0.26);
+            drawMountainWithSnow(width * 0.25, height, width * 0.35, height * 0.3);
+            drawMountainWithSnow(width * 0.52, height, width * 0.32, height * 0.27);
+            drawMountainWithSnow(width * 0.78, height, width * 0.25, height * 0.22);
+
+            // Pine forest silhouette
+
+
+            // Ground
+            const groundGrad = ctx.createLinearGradient(0, height * 0.85, 0, height);
+            groundGrad.addColorStop(0, '#0a0a15');
+            groundGrad.addColorStop(1, '#050508');
+            ctx.fillStyle = groundGrad;
+            ctx.fillRect(0, height * 0.88, width, height * 0.12);
+
+            // Fog layers
+            for (let i = 0; i < 3; i++) {
+                const fogY = height * (0.7 + i * 0.05);
+                const fogGrad = ctx.createLinearGradient(0, fogY, 0, fogY + 50);
+                fogGrad.addColorStop(0, 'rgba(100, 100, 150, 0)');
+                fogGrad.addColorStop(0.5, `rgba(100, 100, 150, ${0.04 - i * 0.01})`);
+                fogGrad.addColorStop(1, 'rgba(100, 100, 150, 0)');
+                ctx.fillStyle = fogGrad;
+                ctx.fillRect(0, fogY, width, 50);
+            }
+
+            // Northern lights effect (subtle)
+            const auroraGrad = ctx.createLinearGradient(width * 0.3, height * 0.1, width * 0.7, height * 0.4);
+            auroraGrad.addColorStop(0, 'rgba(34, 197, 94, 0)');
+            auroraGrad.addColorStop(0.3, `rgba(34, 197, 94, ${0.02 + Math.sin(time * 0.5) * 0.02})`);
+            auroraGrad.addColorStop(0.5, `rgba(59, 130, 246, ${0.03 + Math.sin(time * 0.7) * 0.02})`);
+            auroraGrad.addColorStop(0.7, `rgba(139, 92, 246, ${0.02 + Math.sin(time * 0.6) * 0.02})`);
+            auroraGrad.addColorStop(1, 'rgba(139, 92, 246, 0)');
+            ctx.fillStyle = auroraGrad;
+            ctx.fillRect(0, 0, width, height * 0.5);
+        }
+
+        function createShootingStar() {
+            shootingStars.push({
+                x: Math.random() * width * 0.6 + width * 0.1,
+                y: Math.random() * height * 0.3,
+                speed: 8 + Math.random() * 6,
+                angle: Math.PI / 4 + (Math.random() - 0.5) * 0.5,
+                opacity: 1,
+                length: 100 + Math.random() * 80
+            });
+        }
+
+        function drawMountainShape(x, baseY, w, h) {
+            ctx.beginPath();
+            ctx.moveTo(x, baseY);
+            
+            // More natural mountain shape
+            ctx.lineTo(x + w * 0.3, baseY - h * 0.6);
+            ctx.lineTo(x + w * 0.45, baseY - h * 0.85);
+            ctx.lineTo(x + w * 0.5, baseY - h);
+            ctx.lineTo(x + w * 0.55, baseY - h * 0.9);
+            ctx.lineTo(x + w * 0.7, baseY - h * 0.5);
+            ctx.lineTo(x + w, baseY);
+            
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawMountainWithSnow(x, baseY, w, h) {
+            // Mountain body
+            ctx.fillStyle = '#4c1d95';
+            ctx.beginPath();
+            ctx.moveTo(x, baseY);
+            ctx.lineTo(x + w * 0.3, baseY - h * 0.6);
+            ctx.lineTo(x + w * 0.45, baseY - h * 0.88);
+            ctx.lineTo(x + w * 0.5, baseY - h);
+            ctx.lineTo(x + w * 0.55, baseY - h * 0.92);
+            ctx.lineTo(x + w * 0.7, baseY - h * 0.55);
+            ctx.lineTo(x + w, baseY);
+            ctx.closePath();
+            ctx.fill();
+
+            // Snow cap
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.moveTo(x + w * 0.5, baseY - h);
+            ctx.lineTo(x + w * 0.35, baseY - h * 0.72);
+            ctx.lineTo(x + w * 0.38, baseY - h * 0.78);
+            ctx.lineTo(x + w * 0.42, baseY - h * 0.74);
+            ctx.lineTo(x + w * 0.48, baseY - h * 0.82);
+            ctx.lineTo(x + w * 0.52, baseY - h * 0.78);
+            ctx.lineTo(x + w * 0.58, baseY - h * 0.82);
+            ctx.lineTo(x + w * 0.62, baseY - h * 0.76);
+            ctx.lineTo(x + w * 0.65, baseY - h * 0.72);
+            ctx.closePath();
+            ctx.fill();
+
+            // Snow streaks
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x + w * 0.45, baseY - h * 0.7);
+            ctx.lineTo(x + w * 0.42, baseY - h * 0.5);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x + w * 0.55, baseY - h * 0.72);
+            ctx.lineTo(x + w * 0.58, baseY - h * 0.48);
+            ctx.stroke();
+        }
+
+        function drawPineTree(x, y, h) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x - h * 0.22, y);
+            ctx.lineTo(x - h * 0.08, y - h * 0.35);
+            ctx.lineTo(x - h * 0.18, y - h * 0.35);
+            ctx.lineTo(x - h * 0.05, y - h * 0.65);
+            ctx.lineTo(x - h * 0.12, y - h * 0.65);
+            ctx.lineTo(x, y - h);
+            ctx.lineTo(x + h * 0.12, y - h * 0.65);
+            ctx.lineTo(x + h * 0.05, y - h * 0.65);
+            ctx.lineTo(x + h * 0.18, y - h * 0.35);
+            ctx.lineTo(x + h * 0.08, y - h * 0.35);
+            ctx.lineTo(x + h * 0.22, y);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // ============================================
+        // ANIMATION LOOP
+        // ============================================
+        function animate() {
+            time += 0.016;
+            ctx.clearRect(0, 0, width, height);
+
+            if (isDarkMode) {
+                drawMountainScene();
+            } else {
+                drawBeachScene();
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const theme = isDarkMode ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+
+            const label = document.getElementById('themeLabel');
+            label.textContent = isDarkMode ? '🏔️ Pegunungan Malam' : '🏖️ Pantai Pagi';
+
+            const toggle = document.getElementById('themeToggle');
+            toggle.style.transform = 'scale(1.2) rotate(360deg)';
+            setTimeout(() => {
+                toggle.style.transform = '';
+            }, 400);
+
+            // Reinitialize stars for dark mode
+            if (isDarkMode) {
+                initSceneObjects();
+            }
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('theme') || 'light';
+            isDarkMode = saved === 'dark';
+            document.body.setAttribute('data-theme', saved);
+
+            const label = document.getElementById('themeLabel');
+            label.textContent = isDarkMode ? '🏔️ Pegunungan Malam' : '🏖️ Pantai Pagi';
+        }
+        loadTheme();
+
+        // ============================================
+        // MODAL FUNCTIONS
+        // ============================================
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
-        }
-
-        function closeModal(event, modalId) {
-            // Close if clicked specifically on overlay or close button
-            // If event is null, it's a direct close (from close button)
-            if (!event || event.target.classList.contains('modal-overlay')) {
-                const modal = document.getElementById(modalId);
-                modal.classList.remove('active');
-                document.body.style.overflow = 'auto'; // Restore scrolling
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
         }
 
-        // Close on Escape key
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                const modals = document.querySelectorAll('.modal-overlay.active');
-                modals.forEach(modal => {
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function handleModalClick(event, modalId) {
+            if (event.target.classList.contains('modal-overlay')) {
+                closeModal(modalId);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
                     modal.classList.remove('active');
                 });
-                document.body.style.overflow = 'auto'; // Restore scrolling
+                document.body.style.overflow = '';
             }
         });
+
+        // ============================================
+        // TOUCH SUPPORT
+        // ============================================
+        document.querySelectorAll('.card-btn').forEach(card => {
+            card.addEventListener('touchstart', function() {
+                this.style.transform = 'translateY(-4px) scale(1.01)';
+            }, { passive: true });
+
+            card.addEventListener('touchend', function() {
+                this.style.transform = '';
+            }, { passive: true });
+        });
+
+        console.log('🏖️ Beach & 🏔️ Mountain Scene Loaded!');
+        console.log('From Bima & Maurel to BPS');
     </script>
 </body>
 
