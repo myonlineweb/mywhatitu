@@ -155,26 +155,319 @@
     
     <script>
         // --- DATA SOAL ---
-        let dataSoal = [
-            {
-                question: "1. Apa ibukota Indonesia?",
-                options: ["Bandung", "Jakarta", "Surabaya", "Medan"],
-                correctIndex: 1, 
-                explanation: "Jakarta adalah ibukota negara Indonesia saat ini."
-            },
-            {
-                question: "2. Siapakah presiden pertama Indonesia?",
-                options: ["Soeharto", "B.J. Habibie", "Ir. Soekarno", "Jokowi"],
-                correctIndex: 2,
-                explanation: "Ir. Soekarno adalah proklamator dan presiden pertama RI."
-            },
-            {
-                question: "3. 5 + 5 = ?",
-                options: ["10", "20", "11", "9"],
-                correctIndex: 0,
-                explanation: "Hasil penjumlahan 5 ditambah 5 adalah 10."
-            }
-        ];
+/**
+ * TASK_ID: TKA_SD6_DEC2025_001
+ * CURRICULUM_LEVEL: SD (Grade 6 - Phase C)
+ * SUBJECT: General Academic Competency (TKA)
+ * ASSESSMENT_TYPE: Multiple Choice
+ * DIFFICULTY_LEVEL: Balanced (Medium to Hard)
+ */
+
+let dataSoal = [
+    {
+        question: "1. Hasil dari 2.500 + 4.500 : 50 - 150 adalah...",
+        options: ["2.440", "2.350", "2.400", "2.540"],
+        correctIndex: 0,
+        explanation: "Sesuai aturan operasional: 4.500 : 50 = 90. Kemudian 2.500 + 90 - 150 = 2.440."
+    },
+    {
+        question: "2. Nilai tempat angka 7 pada bilangan 1.745.000 adalah...",
+        options: ["Ratus ribuan", "Puluh ribuan", "Jutaan", "Ribuan"],
+        correctIndex: 0,
+        explanation: "Angka 7 menempati posisi ratus ribuan."
+    },
+    {
+        question: "3. FPB dari 36, 48, dan 72 adalah...",
+        options: ["6", "12", "18", "24"],
+        correctIndex: 1,
+        explanation: "Faktor persekutuan terbesar yang dapat membagi ketiga bilangan tersebut adalah 12."
+    },
+    {
+        question: "4. Sebuah lingkaran memiliki diameter 28 cm. Berapakah luasnya? (π = 22/7)",
+        options: ["154 cm²", "308 cm²", "616 cm²", "1.232 cm²"],
+        correctIndex: 2,
+        explanation: "Jari-jari (r) = 14 cm. Luas = π × r² = 22/7 × 14 × 14 = 616 cm²."
+    },
+    {
+        question: "5. Perbandingan uang Andi dan Budi adalah 3 : 5. Jika total uang mereka Rp800.000, berapa uang Andi?",
+        options: ["Rp300.000", "Rp500.000", "Rp400.000", "Rp200.000"],
+        correctIndex: 0,
+        explanation: "Uang Andi = 3/(3+5) × 800.000 = 3/8 × 800.000 = 300.000."
+    },
+    {
+        question: "6. Ide pokok dalam sebuah paragraf biasanya terdapat pada...",
+        options: ["Kalimat penjelas", "Kalimat utama", "Seluruh paragraf", "Judul teks"],
+        correctIndex: 1,
+        explanation: "Ide pokok adalah inti masalah yang dituangkan dalam kalimat utama."
+    },
+    {
+        question: "7. Sinonim dari kata 'signifikan' dalam konteks perkembangan teknologi adalah...",
+        options: ["Kecil", "Berarti", "Lambat", "Sederhana"],
+        correctIndex: 1,
+        explanation: "Signifikan berarti penting atau memberikan dampak yang berarti."
+    },
+    {
+        question: "8. Manakah yang termasuk kalimat efektif?",
+        options: ["Para ibu-ibu sedang memasak.", "Budi masuk ke dalam kelas.", "Siswa sedang belajar di kelas.", "Dia sangat rajin sekali."],
+        correctIndex: 2,
+        explanation: "Kalimat efektif tidak menggunakan pemborosan kata (pleonasme)."
+    },
+    {
+        question: "9. Tokoh antagonis dalam sebuah cerita adalah tokoh yang memiliki sifat...",
+        options: ["Baik", "Pendukung", "Penentang/Jahat", "Lucu"],
+        correctIndex: 2,
+        explanation: "Antagonis adalah tokoh yang menentang tokoh utama (protagonis)."
+    },
+    {
+        question: "10. Penulisan ejaan yang benar adalah...",
+        options: ["Apotik", "Apotek", "Apoteg", "Apotiq"],
+        correctIndex: 1,
+        explanation: "Kata baku menurut KBBI adalah Apotek."
+    },
+    {
+        question: "11. Perkembangbiakan tumbuhan secara generatif melibatkan...",
+        options: ["Tunas", "Spora", "Penyerbukan", "Cangkok"],
+        correctIndex: 2,
+        explanation: "Generatif adalah perkembangbiakan melalui proses kawin (penyerbukan bunga)."
+    },
+    {
+        question: "12. Planet yang dijuluki sebagai planet merah adalah...",
+        options: ["Venus", "Jupiter", "Mars", "Saturnus"],
+        correctIndex: 2,
+        explanation: "Mars memiliki permukaan yang kaya oksida besi sehingga tampak merah."
+    },
+    {
+        question: "13. Proses perubahan wujud benda dari padat langsung menjadi gas disebut...",
+        options: ["Mencair", "Menyublim", "Menguap", "Mengkristal"],
+        correctIndex: 1,
+        explanation: "Menyublim adalah perubahan zat padat menjadi gas tanpa melalui fase cair."
+    },
+    {
+        question: "14. Organ pencernaan manusia yang berfungsi menyerap sari-sari makanan adalah...",
+        options: ["Lambung", "Usus Besar", "Usus Halus", "Kerongkongan"],
+        correctIndex: 2,
+        explanation: "Penyerapan nutrisi terjadi di usus halus."
+    },
+    {
+        question: "15. Contoh energi alternatif yang tidak akan habis adalah...",
+        options: ["Batu bara", "Minyak bumi", "Matahari", "Gas alam"],
+        correctIndex: 2,
+        explanation: "Matahari adalah sumber energi terbarukan."
+    },
+    {
+        question: "16. Dasar negara Indonesia adalah...",
+        options: ["UUD 1945", "Proklamasi", "Pancasila", "Bhinneka Tunggal Ika"],
+        correctIndex: 2,
+        explanation: "Pancasila adalah landasan idiil dan dasar negara RI."
+    },
+    {
+        question: "17. Sikap menghargai perbedaan agama mencerminkan pengamalan Pancasila sila ke-...",
+        options: ["1", "2", "3", "5"],
+        correctIndex: 0,
+        explanation: "Ketuhanan Yang Maha Esa berkaitan dengan toleransi antarumat beragama."
+    },
+    {
+        question: "18. Lembaga yang bertugas membuat undang-undang disebut lembaga...",
+        options: ["Eksekutif", "Yudikatif", "Legislatif", "Federatif"],
+        correctIndex: 2,
+        explanation: "Lembaga Legislatif (DPR/DPD/MPR) berfungsi merumuskan undang-undang."
+    },
+    {
+        question: "19. Hak anak di rumah salah satunya adalah...",
+        options: ["Membantu orang tua", "Belajar dengan rajin", "Mendapatkan kasih sayang", "Menjaga kebersihan"],
+        correctIndex: 2,
+        explanation: "Mendapatkan kasih sayang adalah hak, sedangkan membantu orang tua adalah kewajiban."
+    },
+    {
+        question: "20. Organisasi ASEAN didirikan di kota...",
+        options: ["Jakarta", "Manila", "Bangkok", "Singapura"],
+        correctIndex: 2,
+        explanation: "Deklarasi Bangkok (1967) menandai berdirinya ASEAN."
+    },
+    {
+        question: "21. Hasil dari (-12) x 5 + 20 adalah...",
+        options: ["-40", "-80", "80", "40"],
+        correctIndex: 0,
+        explanation: "(-60) + 20 = -40."
+    },
+    {
+        question: "22. KPK dari 15 dan 20 adalah...",
+        options: ["30", "45", "60", "80"],
+        correctIndex: 2,
+        explanation: "Kelipatan persekutuan terkecil yang bisa dibagi 15 dan 20 adalah 60."
+    },
+    {
+        question: "23. 2,5 liter sama dengan berapa mililiter?",
+        options: ["25 ml", "250 ml", "2.500 ml", "25.000 ml"],
+        correctIndex: 2,
+        explanation: "1 liter = 1.000 ml. Maka 2,5 x 1.000 = 2.500 ml."
+    },
+    {
+        question: "24. Akar pangkat tiga dari 27.440 adalah...",
+        options: ["24", "34", "14", "44"],
+        correctIndex: 1, // Note: Error check - actual 30^3=27000. 34^3 = 39,304. Correction: Let's use 2744.
+        question: "24. Akar pangkat tiga dari 2.744 adalah...",
+        options: ["12", "14", "16", "18"],
+        correctIndex: 1,
+        explanation: "14 x 14 x 14 = 2.744."
+    },
+    {
+        question: "25. Kecepatan rata-rata 60 km/jam. Waktu tempuh 3 jam. Jaraknya adalah...",
+        options: ["20 km", "120 km", "180 km", "240 km"],
+        correctIndex: 2,
+        explanation: "Jarak = Kecepatan x Waktu = 60 x 3 = 180 km."
+    },
+    {
+        question: "26. Sinonim dari 'Edukasi' adalah...",
+        options: ["Hiburan", "Pendidikan", "Kesehatan", "Pekerjaan"],
+        correctIndex: 1,
+        explanation: "Edukasi diserap dari bahasa Inggris 'Education' yang berarti pendidikan."
+    },
+    {
+        question: "27. Antonim dari kata 'Subur' adalah...",
+        options: ["Gembur", "Lebat", "Tandus", "Hijau"],
+        correctIndex: 2,
+        explanation: "Lawan kata subur adalah tandus (gersang)."
+    },
+    {
+        question: "28. Bagian surat yang berisi alamat pengirim dan tanggal disebut...",
+        options: ["Salam pembuka", "Isi surat", "Kepala surat", "Penutup surat"],
+        correctIndex: 2,
+        explanation: "Kop atau kepala surat memuat identitas pengirim."
+    },
+    {
+        question: "29. Kalimat tanya yang menanyakan alasan adalah menggunakan kata...",
+        options: ["Kapan", "Dimana", "Mengapa", "Bagaimana"],
+        correctIndex: 2,
+        explanation: "Mengapa digunakan untuk menanyakan sebab atau alasan."
+    },
+    {
+        question: "30. Berikut ini yang merupakan karya sastra puisi adalah...",
+        options: ["Novel", "Cerpen", "Sajak", "Biografi"],
+        correctIndex: 2,
+        explanation: "Sajak adalah bentuk karya sastra puisi."
+    },
+    {
+        question: "31. Alat pernapasan pada ikan adalah...",
+        options: ["Paru-paru", "Trakea", "Insang", "Kulit"],
+        correctIndex: 2,
+        explanation: "Ikan bernapas dengan menyaring oksigen di air melalui insang."
+    },
+    {
+        question: "32. Hewan yang berkembang biak dengan cara melahirkan disebut...",
+        options: ["Ovipar", "Vivipar", "Ovovivipar", "Fragmentasi"],
+        correctIndex: 1,
+        explanation: "Vivipar adalah cara berkembang biak hewan mamalia/melahirkan."
+    },
+    {
+        question: "33. Konduktor panas yang baik biasanya terbuat dari...",
+        options: ["Kayu", "Plastik", "Logam", "Karet"],
+        correctIndex: 2,
+        explanation: "Logam (besi, alumunium) adalah penghantar panas yang baik."
+    },
+    {
+        question: "34. Bagian bunga yang berfungsi sebagai alat kelamin jantan adalah...",
+        options: ["Putik", "Benang sari", "Mahkota", "Kelopak"],
+        correctIndex: 1,
+        explanation: "Benang sari menghasilkan serbuk sari (sel kelamin jantan)."
+    },
+    {
+        question: "35. Peristiwa siang dan malam terjadi karena adanya...",
+        options: ["Rotasi bumi", "Revolusi bumi", "Rotasi bulan", "Gerhana"],
+        correctIndex: 0,
+        explanation: "Perputaran bumi pada porosnya (rotasi) mengakibatkan siang dan malam."
+    },
+    {
+        question: "36. Lagu Kebangsaan Indonesia Raya diciptakan oleh...",
+        options: ["Moh. Hatta", "W.R. Supratman", "C. Simanjuntak", "Ibu Sud"],
+        correctIndex: 1,
+        explanation: "Wage Rudolf Supratman adalah pencipta lagu kebangsaan RI."
+    },
+    {
+        question: "37. Bhinneka Tunggal Ika memiliki arti...",
+        options: ["Satu untuk semua", "Berbeda-beda tetap satu", "Berjaya di tanah air", "Bersatu kita teguh"],
+        correctIndex: 1,
+        explanation: "Semboyan ini diambil dari Kitab Sutasoma karya Mpu Tantular."
+    },
+    {
+        question: "38. Ibukota negara Malaysia adalah...",
+        options: ["Bangkok", "Singapura", "Kuala Lumpur", "Manila"],
+        correctIndex: 2,
+        explanation: "Kuala Lumpur adalah pusat pemerintahan Malaysia."
+    },
+    {
+        question: "39. Kerja sama ASEAN di bidang ekonomi contohnya adalah...",
+        options: ["Pertukaran pelajar", "ZOPFAN", "AFTA", "SEA Games"],
+        correctIndex: 2,
+        explanation: "AFTA (ASEAN Free Trade Area) adalah kerja sama perdagangan bebas."
+    },
+    {
+        question: "40. Teks proklamasi kemerdekaan dibacakan pada tanggal...",
+        options: ["17 Agustus 1945", "18 Agustus 1945", "17 Agustus 1944", "20 Mei 1908"],
+        correctIndex: 0,
+        explanation: "Proklamasi dikumandangkan di Jl. Pegangsaan Timur No. 56."
+    },
+    {
+        question: "41. Berapakah 25% dari 200.000?",
+        options: ["25.000", "50.000", "75.000", "100.000"],
+        correctIndex: 1,
+        explanation: "0.25 x 200.000 = 50.000."
+    },
+    {
+        question: "42. Volume kubus dengan sisi 10 cm adalah...",
+        options: ["100 cm³", "1.000 cm³", "10.000 cm³", "600 cm³"],
+        correctIndex: 1,
+        explanation: "Volume = s x s x s = 10 x 10 x 10 = 1.000."
+    },
+    {
+        question: "43. Kata tanya untuk menanyakan jumlah adalah...",
+        options: ["Bagaimana", "Berapa", "Dimana", "Siapa"],
+        correctIndex: 1,
+        explanation: "Berapa digunakan untuk menanyakan kuantitas atau harga."
+    },
+    {
+        question: "44. Karangan yang berdasarkan fakta dan kenyataan disebut...",
+        options: ["Fiksi", "Nonfiksi", "Dongeng", "Mitos"],
+        correctIndex: 1,
+        explanation: "Nonfiksi dibuat berdasarkan data dan kenyataan objektif."
+    },
+    {
+        question: "45. Gaya yang bekerja saat kita mengerem sepeda adalah gaya...",
+        options: ["Pegas", "Magnet", "Gesek", "Gravitasi"],
+        correctIndex: 2,
+        explanation: "Gesekan antara kampas rem dan roda memperlambat gerak."
+    },
+    {
+        question: "46. Perubahan energi pada setrika listrik adalah...",
+        options: ["Listrik menjadi gerak", "Listrik menjadi panas", "Listrik menjadi cahaya", "Listrik menjadi bunyi"],
+        correctIndex: 1,
+        explanation: "Elemen pemanas mengubah energi listrik menjadi kalor."
+    },
+    {
+        question: "47. Padi -> Tikus -> Ular -> Elang. Dalam rantai makanan ini, ular berperan sebagai...",
+        options: ["Produsen", "Konsumen I", "Konsumen II", "Pengurai"],
+        correctIndex: 2,
+        explanation: "Tikus adalah konsumen I, maka ular adalah konsumen II."
+    },
+    {
+        question: "48. Sikap yang sesuai dengan sila ke-4 Pancasila adalah...",
+        options: ["Musyawarah mufakat", "Berdoa", "Berbagi makanan", "Cinta tanah air"],
+        correctIndex: 0,
+        explanation: "Sila ke-4 menekankan pada kerakyatan dan musyawarah."
+    },
+    {
+        question: "49. Tari Kecak berasal dari provinsi...",
+        options: ["Jawa Barat", "Bali", "Sumatera Barat", "Aceh"],
+        correctIndex: 1,
+        explanation: "Tari Kecak adalah seni tari tradisional khas Bali."
+    },
+    {
+        question: "50. Mata uang negara Thailand adalah...",
+        options: ["Rupiah", "Ringgit", "Bath", "Peso"],
+        correctIndex: 2,
+        explanation: "Baht (sering dieja Bath) adalah mata uang resmi Thailand."
+    }
+];
 
         // --- SYSTEM ENGINE ---
         const quizArea = document.getElementById('quiz-area');

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWhatituS</title>
+    <style>
+        /* --- CSS SAMA SEPERTI SEBELUMNYA (GAK PERLU UBAH) --- */
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; background-image: url('malamback.png'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .container { width: 78%; max-width: 800px; margin: 40px 0; padding: 30px; background-color: rgba(255, 255, 255, 0.65); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+        .question-card { border-bottom: 2px solid #eee; padding-bottom: 25px; margin-bottom: 25px; }
+        .question-text { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; color: #2c3e50; }
+        .options { list-style-type: none; padding: 0; }
+        .option-btn { display: block; width: 100%; padding: 12px 20px; margin: 8px 0; background-color: #fff; border: 2px solid #ddd; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.2s; font-size: 1em; color: #444; font-weight: 500; }
+        .option-btn:hover:not(.disabled) { background-color: #eef2f3; border-color: #bbb; transform: translateX(5px); }
+        .correct { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; }
+        .wrong { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; }
+        .disabled { cursor: no-drop; opacity: 0.7; }
+        .explanation { display: none; margin-top: 15px; padding: 15px; background-color: #e8eaf6; border-left: 5px solid #3f51b5; border-radius: 4px; font-size: 0.95em; line-height: 1.5; color: #333; }
+        .submit-container { text-align: center; margin: 40px 0 20px 0; }
+        .btn-submit { padding: 15px 50px; font-size: 1.2em; font-weight: bold; color: white; background-color: #27ae60; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.3s ease; opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
+        .btn-submit.active { opacity: 1; pointer-events: auto; filter: grayscale(0%); animation: pulse 2s infinite; }
+        .btn-submit:hover { background-color: #219150; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(39, 174, 96, 0); } 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); } }
+        .score-board { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #2c3e50; color: white; padding: 15px; text-align: center; font-size: 1.2em; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.2); z-index: 100; display: flex; justify-content: center; gap: 20px; }
+        .spacer { height: 100px; }
+        
+        /* STYLE MODAL POPUP */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-icon { font-size: 3em; margin-bottom: 10px; animation: pop 0.5s; }
+        .modal-content h2 { margin: 10px 0; color: #333; }
+        .result-summary { display: flex; justify-content: space-around; margin: 20px 0; gap: 10px; }
+        .res-box { flex: 1; padding: 10px; border-radius: 10px; color: white; display: flex; flex-direction: column; }
+        .res-box.correct { background: #27ae60; }
+        .res-box.score { background: #2980b9; transform: scale(1.1); font-weight: bold; }
+        .res-box.wrong { background: #c0392b; }
+        .res-box .label { font-size: 0.8em; opacity: 0.9; }
+        .res-box .val { font-size: 1.5em; font-weight: bold; }
+        .btn-close { margin-top: 15px; padding: 10px 30px; background: #333; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 1em; }
+        .btn-close:hover { background: #000; }
+        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        
+        /* --- STYLE KHUSUS PASSWORD EYE --- */
+        .password-wrapper {
+            position: relative; /* Kunci agar icon bisa nempel relatif ke kotak ini */
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        /* Kita pindahkan style input kesini agar lebih rapi */
+        .password-wrapper input {
+            width: 100%; 
+            padding: 15px; 
+            padding-right: 50px; /* PENTING: Kasih jarak kanan biar teks gak nabrak icon */
+            border-radius: 10px; 
+            border: 2px solid #ddd; 
+            font-size: 1.1em; 
+            box-sizing: border-box;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%); /* Biar pas di tengah vertikal */
+            cursor: pointer;
+            color: #888;
+            user-select: none; /* Biar icon gak ke-blok biru kalau diklik */
+        }
+        
+        .eye-icon:hover {
+            color: #333;
+        }
+        /* Tambahan Style untuk Warning */
+        .modal-icon.warning {
+            color: #f39c12; /* Warna Oranye/Kuning Peringatan */
+            animation: shake 0.5s; /* Animasi getar */
+        }
+
+        /* Animasi Getar biar kerasa "Error" */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Template MyWhatituS</h1>
+        <div style="margin-bottom: 20px; max-width: 100%;">
+    <input type="text" id="input-nama" placeholder="Ketik Username" 
+    style="width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd; font-size: 1.1em; box-sizing: border-box;">
+</div>
+<div class="password-wrapper">
+        <input type="password" id="input-password" placeholder="Ketik Password">
+        
+        <span id="btn-toggle-pass" class="eye-icon" title="Lihat Password">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </span>
+    </div>
+<div id="quiz-area"></div>
+        <div id="quiz-area"></div>
+        <div class="submit-container">
+            <button id="btn-submit" class="btn-submit">SELESAIKAN SEMUA SOAL</button>
+        </div>
+        <div class="spacer"></div>
+    </div>
+
+    <div class="score-board">
+        <span>✅ Benar: <span id="score-correct">0</span></span>
+        <span>❌ Salah: <span id="score-wrong">0</span></span>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2>Hasil Terkirim!</h2>
+            <p>Data jawabanmu sudah aman di database Firebase.</p>
+            <div class="result-summary">
+                <div class="res-box correct">
+                    <span class="label">Benar</span>
+                    <span class="val" id="modal-correct">0</span>
+                </div>
+                <div class="res-box score">
+                    <span class="label">Nilai</span>
+                    <span class="val" id="modal-score">0</span>
+                </div>
+                <div class="res-box wrong">
+                    <span class="label">Salah</span>
+                    <span class="val" id="modal-wrong">0</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="btn-close">Selesai</button>
+        </div>
+    </div>
+
+<div id="warning-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon warning">⚠️</div>
+            
+            <h2 id="warning-title" style="color: #c0392b;">Ups, Tunggu Dulu!</h2>
+            <p id="warning-message" style="color: #555; line-height: 1.6;">Ada input/password yang tidak sesuai nih!</p>
+            
+            <button onclick="closeWarning()" class="btn-close" style="background-color: #c0392b;">Perbaiki</button>
+        </div>
+    </div>
+    
+    <script>
+
+/**
+ * TASK_ID: TKA_SD6_EXPERT_50_2025_PART2
+ * SUBJECT: Integrated Academic Competency (HOTS)
+ * DIFFICULTY: Expert / High-Level
+ * TOTAL_ITEMS: 50
+ */
+
+let dataSoal = [
+    {
+        question: "1. Sebuah bak mandi berbentuk kubus dengan panjang rusuk 1,2 meter. Jika bak tersebut bocor dan kehilangan air 5 liter setiap 15 menit, berapa lama waktu yang dibutuhkan hingga air dalam bak yang awalnya penuh tersisa setengahnya?",
+        options: ["36 jam", "43,2 jam", "72 jam", "86,4 jam"],
+        correctIndex: 1,
+        explanation: "Volume total = 1.728 liter. Setengahnya = 864 liter. Kebocoran = 20 liter/jam. Waktu = 864 / 20 = 43,2 jam."
+    },
+    {
+        question: "2. Mengapa tumbuhan di gurun cenderung memiliki daun yang kecil atau bahkan berbentuk duri?",
+        options: [
+            "Untuk mempercepat proses fotosintesis.",
+            "Untuk menangkap embun di malam hari.",
+            "Untuk meminimalkan penguapan (transpirasi) akibat suhu panas.",
+            "Untuk melindungi diri dari suhu dingin di gurun."
+        ],
+        correctIndex: 2,
+        explanation: "Luas permukaan daun yang kecil atau berbentuk duri secara drastis mengurangi laju penguapan air di lingkungan yang kering."
+    },
+    {
+        question: "3. Bacalah teks berikut: 'Teknologi AI dapat membantu efisiensi kerja, namun jika tidak diawasi, ia dapat menggantikan peran manusia secara masif.' Apa ide pokok dari teks tersebut?",
+        options: [
+            "AI adalah teknologi terbaik abad ini.",
+            "Kekhawatiran manusia terhadap teknologi baru.",
+            "Dampak ganda teknologi AI bagi pekerjaan manusia.",
+            "Cara mengoperasikan AI di kantor."
+        ],
+        correctIndex: 2,
+        explanation: "Teks menonjolkan dua sisi (efisiensi dan risiko penggantian manusia), yang merupakan dampak ganda."
+    },
+    {
+        question: "4. Sebuah peta memiliki skala 1 : 2.500.000. Jika jarak kota P ke kota Q pada peta adalah 6 cm, dan seorang pengendara motor menempuhnya dengan kecepatan 60 km/jam, berapa jam waktu perjalanannya?",
+        options: ["2 jam", "2,5 jam", "3 jam", "3,5 jam"],
+        correctIndex: 1,
+        explanation: "Jarak sebenarnya = 6 x 2.500.000 = 15.000.000 cm = 150 km. Waktu = 150 / 60 = 2,5 jam."
+    },
+    {
+        question: "5. Manakah dari kegiatan berikut yang merupakan contoh pengamalan Sila ke-3 Pancasila di sekolah?",
+        options: [
+            "Memilih ketua kelas melalui pemungutan suara.",
+            "Mengikuti upacara bendera dengan khidmat.",
+            "Membantu teman yang kesulitan biaya sekolah.",
+            "Menghargai pendapat teman saat berdiskusi."
+        ],
+        correctIndex: 1,
+        explanation: "Upacara bendera memupuk rasa cinta tanah air dan persatuan nasional sesuai nilai Persatuan Indonesia."
+    },
+    {
+        question: "6. Jika suhu di puncak gunung adalah -5°C dan suhu di kaki gunung adalah 28°C, berapakah selisih suhu kedua tempat tersebut?",
+        options: ["23°C", "33°C", " -23°C", "-33°C"],
+        correctIndex: 1,
+        explanation: "Selisih = 28 - (-5) = 28 + 5 = 33°C."
+    },
+    {
+        question: "7. Proses pernapasan manusia yang melibatkan otot antartulang rusuk berkontraksi sehingga rongga dada membesar disebut...",
+        options: ["Inspirasi pernapasan dada", "Ekspirasi pernapasan dada", "Inspirasi pernapasan perut", "Ekspirasi pernapasan perut"],
+        correctIndex: 0,
+        explanation: "Inspirasi adalah proses menghirup udara; penggunaan otot antartulang rusuk menandakan pernapasan dada."
+    },
+    {
+        question: "8. Manakah kalimat efektif yang benar di bawah ini?",
+        options: [
+            "Bagi semua peserta lomba diharapkan berkumpul.",
+            "Siswa-siswa itu sedang mengerjakan tugas-tugasnya.",
+            "Semua peserta lomba diharapkan berkumpul.",
+            "Ibu memasak sayur, menggoreng tempe, dan sambal."
+        ],
+        correctIndex: 2,
+        explanation: "Kalimat ini subjeknya jelas dan tidak mengandung pemborosan kata atau ketidaksejajaran."
+    },
+    {
+        question: "9. Sebuah roda memiliki jari-jari 35 cm. Jika roda tersebut berputar sebanyak 500 kali, berapa meter jarak yang ditempuh roda tersebut?",
+        options: ["1.100 m", "1.500 m", "2.200 m", "2.500 m"],
+        correctIndex: 0,
+        explanation: "Keliling = 2 x 22/7 x 35 = 220 cm. Jarak = 220 x 500 = 110.000 cm = 1.100 m."
+    },
+    {
+        question: "10. Apa tujuan utama Belanda mendirikan VOC (Vereenigde Oostindische Compagnie) di Indonesia?",
+        options: [
+            "Membantu rakyat Indonesia melawan penjajah lain.",
+            "Menghindari persaingan antar pedagang Belanda dan memonopoli rempah-rempah.",
+            "Menyebarkan agama di wilayah Nusantara.",
+            "Membangun infrastruktur jalan raya di Jawa."
+        ],
+        correctIndex: 1,
+        explanation: "VOC dibentuk untuk menyatukan kekuatan pedagang Belanda guna menguasai pasar rempah dunia."
+    },
+    {
+        question: "11. Jika a = 4, b = -3, dan c = 2, berapakah hasil dari (a x b) + (b x c) - a?",
+        options: ["-22", "-18", "-14", "-10"],
+        correctIndex: 0,
+        explanation: "(4 x -3) + (-3 x 2) - 4 = -12 + (-6) - 4 = -22."
+    },
+    {
+        question: "12. Peristiwa menyublim adalah perubahan wujud benda dari...",
+        options: ["Padat menjadi cair", "Gas menjadi padat", "Padat menjadi gas", "Cair menjadi gas"],
+        correctIndex: 2,
+        explanation: "Menyublim adalah perubahan langsung dari fase padat ke gas, contohnya pada kapur barus."
+    },
+    {
+        question: "13. Negara anggota ASEAN yang dikenal sebagai 'Negara Gajah Putih' adalah...",
+        options: ["Vietnam", "Thailand", "Kamboja", "Myanmar"],
+        correctIndex: 1,
+        explanation: "Thailand memiliki julukan tersebut karena gajah putih dianggap keramat dan simbol kerajaan di sana."
+    },
+    {
+        question: "14. Sebuah data nilai matematika adalah: 7, 8, 8, 9, 7, 6, 10, 8. Berapakah rata-rata (mean) nilai tersebut?",
+        options: ["7,75", "7,875", "8,0", "8,125"],
+        correctIndex: 1,
+        explanation: "Total = 63. Jumlah data = 8. Rata-rata = 63 / 8 = 7,875."
+    },
+    {
+        question: "15. Apa fungsi dari katup jantung?",
+        options: [
+            "Memompa darah ke seluruh tubuh.",
+            "Menyaring racun di dalam darah.",
+            "Menjaga agar darah tidak mengalir kembali ke ruang sebelumnya.",
+            "Menghasilkan sel darah merah yang baru."
+        ],
+        correctIndex: 2,
+        explanation: "Katup memastikan aliran darah satu arah (one-way traffic) di dalam jantung."
+    },
+    {
+        question: "16. Majas personifikasi ditemukan pada kalimat...",
+        options: [
+            "Wajahnya cantik bagaikan bunga mawar.",
+            "Nyiur melambai-lambai di tepi pantai.",
+            "Ayah membanting tulang demi keluarga.",
+            "Suaranya menggelegar membelah angkasa."
+        ],
+        correctIndex: 1,
+        explanation: "Personifikasi memberikan sifat manusia (melambai) pada benda mati (nyiur)."
+    },
+    {
+        question: "17. Sebuah tabung tanpa tutup memiliki jari-jari 10 cm dan tinggi 20 cm. Berapakah luas permukaan tabung tersebut? (π = 3,14)",
+        options: ["1.256 cm²", "1.570 cm²", "1.884 cm²", "2.198 cm²"],
+        correctIndex: 1,
+        explanation: "Luas = (π x r²) + (2 x π x r x t) = (314) + (1.256) = 1.570 cm²."
+    },
+    {
+        question: "18. Gerakan planet berputar pada porosnya sendiri disebut...",
+        options: ["Revolusi", "Rotasi", "Orbit", "Eklips"],
+        correctIndex: 1,
+        explanation: "Rotasi adalah perputaran pada sumbu/poros, sedangkan revolusi adalah mengelilingi benda lain."
+    },
+    {
+        question: "19. Hak asasi manusia yang paling dasar dan tidak dapat dikurangi dalam keadaan apapun adalah...",
+        options: ["Hak milik", "Hak atas pendidikan", "Hak untuk hidup", "Hak untuk bekerja"],
+        correctIndex: 2,
+        explanation: "Hak untuk hidup adalah 'non-derogable right' yang merupakan dasar dari semua hak lainnya."
+    },
+    {
+        question: "20. Jika harga 2 lusin pensil adalah Rp48.000, berapa harga 15 buah pensil?",
+        options: ["Rp25.000", "Rp30.000", "Rp35.000", "Rp40.000"],
+        correctIndex: 1,
+        explanation: "1 lusin = 12 buah. 2 lusin = 24 buah. Harga per buah = 48.000 / 24 = 2.000. 15 buah = 15 x 2.000 = 30.000."
+    },
+    {
+        question: "21. Mengapa kabel listrik di pinggir jalan dipasang agak kendur?",
+        options: [
+            "Agar hemat penggunaan kabel.",
+            "Agar tidak putus saat memuai di siang hari.",
+            "Agar tidak putus saat menyusut di malam hari yang dingin.",
+            "Agar mudah diperbaiki jika ada kerusakan."
+        ],
+        correctIndex: 2,
+        explanation: "Penyusutan terjadi saat suhu turun. Jika dipasang tegang, kabel bisa putus saat udara dingin."
+    },
+    {
+        question: "22. Tokoh proklamator Indonesia yang juga dikenal sebagai 'Bapak Koperasi' adalah...",
+        options: ["Soekarno", "Mohammad Hatta", "Sutan Syahrir", "Sayuti Melik"],
+        correctIndex: 1,
+        explanation: "Bung Hatta sangat berjasa dalam mengembangkan konsep ekonomi kerakyatan melalui koperasi."
+    },
+    {
+        question: "23. Hasil dari 2,5 + 3/4 - 0,125 dalam bentuk desimal adalah...",
+        options: ["3,125", "3,25", "3,375", "3,5"],
+        correctIndex: 0,
+        explanation: "2,5 + 0,75 - 0,125 = 3,25 - 0,125 = 3,125."
+    },
+    {
+        question: "24. Apa yang membedakan teks fiksi dan teks nonfiksi?",
+        options: [
+            "Fiksi berdasarkan kenyataan, nonfiksi berdasarkan khayalan.",
+            "Fiksi menggunakan bahasa formal, nonfiksi menggunakan bahasa gaul.",
+            "Fiksi berdasarkan imajinasi, nonfiksi berdasarkan fakta dan data.",
+            "Fiksi selalu panjang, nonfiksi selalu pendek."
+        ],
+        correctIndex: 2,
+        explanation: "Fiksi adalah karya rekaan imajinatif, sedangkan nonfiksi bersifat informatif berdasarkan kenyataan objektif."
+    },
+    {
+        question: "25. Salah satu bentuk kerja sama ASEAN di bidang politik dan keamanan adalah...",
+        options: ["ZOPFAN", "AFTA", "ACT", "SEA Games"],
+        correctIndex: 0,
+        explanation: "ZOPFAN (Zone of Peace, Freedom and Neutrality) bertujuan menjaga stabilitas keamanan di Asia Tenggara."
+    },
+    {
+        question: "26. Organisasi kehidupan terkecil pada makhluk hidup disebut...",
+        options: ["Jaringan", "Organ", "Sel", "Sistem Organ"],
+        correctIndex: 2,
+        explanation: "Sel adalah unit fungsional dan struktural terkecil yang menyusun tubuh makhluk hidup."
+    },
+    {
+        question: "27. Sebuah balok memiliki volume 480 cm³. Jika panjangnya 12 cm dan lebarnya 8 cm, berapakah tinggi balok tersebut?",
+        options: ["5 cm", "6 cm", "8 cm", "10 cm"],
+        correctIndex: 0,
+        explanation: "Tinggi = Volume / (p x l) = 480 / (12 x 8) = 480 / 96 = 5 cm."
+    },
+    {
+        question: "28. Mengapa fotosintesis pada tumbuhan sangat penting bagi kehidupan manusia?",
+        options: [
+            "Karena tumbuhan menjadi indah.",
+            "Karena menghasilkan karbondioksida untuk manusia.",
+            "Karena menghasilkan oksigen yang dibutuhkan manusia untuk bernapas.",
+            "Karena menghalangi sinar matahari langsung."
+        ],
+        correctIndex: 2,
+        explanation: "Produk sampingan fotosintesis adalah O2 (oksigen), yang vital bagi sistem respirasi aerobik manusia."
+    },
+    {
+        question: "29. Kalimat utama dalam sebuah paragraf biasanya mengandung...",
+        options: ["Contoh-contoh", "Data statistik", "Ide pokok atau gagasan utama", "Penjelasan detail"],
+        correctIndex: 2,
+        explanation: "Ide pokok paragraf terangkum dalam satu kalimat utama, yang kemudian dijelaskan oleh kalimat penjelas."
+    },
+    {
+        question: "30. Siapa pahlawan wanita dari Aceh yang memimpin perjuangan melawan Belanda setelah suaminya gugur?",
+        options: ["R.A. Kartini", "Cut Nyak Dien", "Dewi Sartika", "Martha Christina Tiahahu"],
+        correctIndex: 1,
+        explanation: "Cut Nyak Dien melanjutkan perjuangan Teuku Umar di wilayah Meulaboh dengan taktik gerilya."
+    },
+    {
+        question: "31. Median dari data: 12, 15, 13, 17, 12, 18, 14 adalah...",
+        options: ["13", "14", "15", "17"],
+        correctIndex: 1,
+        explanation: "Data urut: 12, 12, 13, 14, 15, 17, 18. Nilai tengahnya adalah 14."
+    },
+    {
+        question: "32. Bagian bunga yang berfungsi sebagai alat kelamin jantan adalah...",
+        options: ["Putik", "Benang sari", "Mahkota", "Kelopak"],
+        correctIndex: 1,
+        explanation: "Benang sari menghasilkan serbuk sari (sel kelamin jantan), sedangkan putik adalah alat kelamin betina."
+    },
+    {
+        question: "33. Nilai n yang memenuhi persamaan 120 : n = 15 x 2 adalah...",
+        options: ["2", "4", "6", "8"],
+        correctIndex: 1,
+        explanation: "120 : n = 30. Maka n = 120 / 30 = 4."
+    },
+    {
+        question: "34. Pemanfaatan energi angin sebagai pembangkit listrik merupakan contoh energi...",
+        options: ["Fosil", "Tidak terbarukan", "Ramah lingkungan (terbarukan)", "Polutif"],
+        correctIndex: 2,
+        explanation: "Angin tersedia terus menerus di alam dan tidak menghasilkan emisi gas rumah kaca."
+    },
+    {
+        question: "35. Penulisan angka dalam kalimat yang benar adalah...",
+        options: [
+            "Dia membeli 3 buah apel.",
+            "3 orang anak sedang bermain.",
+            "Ada dua puluh lima peserta lomba.",
+            "Tiga orang anak sedang bermain."
+        ],
+        correctIndex: 3,
+        explanation: "Angka di awal kalimat harus ditulis dengan huruf sesuai kaidah bahasa Indonesia."
+    },
+    {
+        question: "36. Hubungan antara tanaman anggrek yang menempel pada pohon mangga adalah...",
+        options: ["Mutualisme", "Komensalisme", "Parasitisme", "Amensalisme"],
+        correctIndex: 1,
+        explanation: "Anggrek mendapat tempat hidup (untung), pohon mangga tidak dirugikan maupun diuntungkan."
+    },
+    {
+        question: "37. Berapakah 15% dari Rp200.000?",
+        options: ["Rp15.000", "Rp20.000", "Rp30.000", "Rp45.000"],
+        correctIndex: 2,
+        explanation: "15/100 x 200.000 = 15 x 2.000 = 30.000."
+    },
+    {
+        question: "38. Salah satu penyebab terjadinya kelangkaan barang di pasar adalah...",
+        options: [
+            "Jumlah permintaan lebih kecil dari jumlah barang.",
+            "Jumlah permintaan lebih besar dari jumlah barang.",
+            "Harga barang terlalu murah.",
+            "Distribusi barang sangat lancar."
+        ],
+        correctIndex: 1,
+        explanation: "Kelangkaan terjadi saat kebutuhan/keinginan manusia melampaui ketersediaan sumber daya."
+    },
+    {
+        question: "39. Lapisan ozon di atmosfer berfungsi untuk...",
+        options: [
+            "Menurunkan suhu bumi.",
+            "Menyaring radiasi ultraviolet dari matahari.",
+            "Menghasilkan oksigen.",
+            "Mencegah terjadinya hujan asam."
+        ],
+        correctIndex: 1,
+        explanation: "Ozon (O3) di stratosfer menyerap sebagian besar radiasi UV yang berbahaya bagi kulit dan mata."
+    },
+    {
+        question: "40. Kata tanya yang digunakan untuk menanyakan alasan atau penyebab adalah...",
+        options: ["Bagaimana", "Mengapa", "Di mana", "Apa"],
+        correctIndex: 1,
+        explanation: "Kata 'Mengapa' menuntut jawaban berupa penjelasan sebab-akibat."
+    },
+    {
+        question: "41. Hasil dari 2³ + 3³ - 4² adalah...",
+        options: ["19", "21", "25", "35"],
+        correctIndex: 0,
+        explanation: "8 + 27 - 16 = 35 - 16 = 19."
+    },
+    {
+        question: "42. Perkembangbiakan vegetatif alami pada bawang merah adalah dengan...",
+        options: ["Tunas", "Geragih", "Umbis lapis", "Akar tinggal"],
+        correctIndex: 2,
+        explanation: "Bawang merah memiliki tumpukan pangkal daun yang berdaging dan berlapis-lapis."
+    },
+    {
+        question: "43. Semboyan 'Bhinneka Tunggal Ika' diambil dari kitab...",
+        options: ["Negarakertagama", "Sutasoma", "Ramayana", "Mahabharata"],
+        correctIndex: 1,
+        explanation: "Istilah tersebut terdapat dalam Kakawin Sutasoma karya Mpu Tantular dari zaman Majapahit."
+    },
+    {
+        question: "44. Jika sebuah bus berangkat pukul 08.00 dan sampai pukul 10.30 dengan kecepatan 60 km/jam, berapa jarak yang ditempuh?",
+        options: ["120 km", "150 km", "180 km", "210 km"],
+        correctIndex: 1,
+        explanation: "Waktu = 2,5 jam. Jarak = Kecepatan x Waktu = 60 x 2,5 = 150 km."
+    },
+    {
+        question: "45. Urutan siklus air yang benar adalah...",
+        options: [
+            "Evaporasi - Kondensasi - Presipitasi",
+            "Presipitasi - Evaporasi - Kondensasi",
+            "Kondensasi - Presipitasi - Evaporasi",
+            "Evaporasi - Presipitasi - Kondensasi"
+        ],
+        correctIndex: 0,
+        explanation: "Air menguap (evaporasi), membentuk awan (kondensasi), lalu jatuh sebagai hujan (presipitasi)."
+    },
+    {
+        question: "46. Kerja sama ASEAN di bidang ekonomi yang bertujuan menciptakan pasar tunggal di kawasan adalah...",
+        options: ["AFTA", "MEA (Masyarakat Ekonomi ASEAN)", "ZOPFAN", "SEAMEO"],
+        correctIndex: 1,
+        explanation: "MEA dirancang untuk mengintegrasikan ekonomi negara anggota agar lebih kompetitif secara global."
+    },
+    {
+        question: "47. Antonim dari kata 'Konvergen' (memusat) adalah...",
+        options: ["Sama", "Sejajar", "Divergen (menyebar)", "Menyatu"],
+        correctIndex: 2,
+        explanation: "Konvergen berarti menuju satu titik, sedangkan divergen berarti berpencar dari satu titik."
+    },
+    {
+        question: "48. Nilai dari √144 + √169 - √100 adalah...",
+        options: ["15", "20", "25", "35"],
+        correctIndex: 0,
+        explanation: "12 + 13 - 10 = 25 - 10 = 15."
+    },
+    {
+        question: "49. Organ pencernaan manusia yang berfungsi menyerap air dari sisa makanan adalah...",
+        options: ["Lambung", "Usus halus", "Usus besar", "Kerongkongan"],
+        correctIndex: 2,
+        explanation: "Usus besar (kolon) adalah tempat utama penyerapan air dan pembentukan feses."
+    },
+    {
+        question: "50. Apa lambang Sila ke-2 Pancasila?",
+        options: ["Bintang", "Rantai", "Pohon Beringin", "Kepala Banteng"],
+        correctIndex: 1,
+        explanation: "Rantai emas yang melingkar melambangkan hubungan antarmanusia yang saling membantu secara adil dan beradab."
+    }
+];
+
+        // --- SYSTEM ENGINE ---
+        const quizArea = document.getElementById('quiz-area');
+        const scoreCorrectEl = document.getElementById('score-correct');
+        const scoreWrongEl = document.getElementById('score-wrong');
+        // Kita ambil element btnSubmit disini juga untuk logika tampilan
+        const btnSubmitGame = document.getElementById('btn-submit');
+
+        // VARIABLE GLOBAL (Agar bisa dibaca oleh script Firebase nanti)
+        var correctCount = 0;
+        var wrongCount = 0;
+        var answeredCount = 0;
+
+        function renderQuiz() {
+            quizArea.innerHTML = '';
+            dataSoal.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerText = item.question;
+                card.appendChild(qText);
+
+                const optList = document.createElement('ul');
+                optList.className = 'options';
+
+                item.options.forEach((opt, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(btn, item, optIndex, optList, explanationDiv);
+                    optList.appendChild(btn);
+                });
+                
+                card.appendChild(optList);
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.innerHTML = `<strong>Jawaban:</strong> ${item.options[item.correctIndex]}<br><em>${item.explanation}</em>`;
+                card.appendChild(explanationDiv);
+
+                quizArea.appendChild(card);
+            });
+        }
+
+        function checkAnswer(selectedBtn, dataItem, selectedIndex, optListContainer, expDiv) {
+            if (optListContainer.classList.contains('answered')) return;
+
+            optListContainer.classList.add('answered');
+            answeredCount++;
+
+            const allBtns = optListContainer.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.classList.add('disabled'));
+
+            if (selectedIndex === dataItem.correctIndex) {
+                selectedBtn.classList.add('correct');
+                correctCount++;
+                scoreCorrectEl.innerText = correctCount;
+            } else {
+                selectedBtn.classList.add('wrong');
+                wrongCount++;
+                scoreWrongEl.innerText = wrongCount;
+                allBtns[dataItem.correctIndex].classList.add('correct');
+            }
+
+            expDiv.style.display = 'block';
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            if (answeredCount === dataSoal.length) {
+                btnSubmitGame.classList.add('active');
+                btnSubmitGame.innerText = "KIRIM JAWABAN SEKARANG!";
+            }
+        }
+
+        // Render pertama kali
+        renderQuiz();
+        
+        // --- LOGIKA MATA PASSWORD ---
+        const toggleBtn = document.getElementById('btn-toggle-pass');
+        const passInput = document.getElementById('input-password');
+
+        toggleBtn.addEventListener('click', () => {
+            // Cek tipe saat ini
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            
+            // Opsional: Ubah warna icon biar user tau lagi aktif
+            toggleBtn.style.color = type === 'text' ? '#27ae60' : '#888';
+        });
+
+    </script> 
+<script type="module">
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        // --- KONFIGURASI FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrGo4oJqVPesVBDd52-OGT2sHFNdeI5jo",
+            authDomain: "mywhatitu.firebaseapp.com",
+            projectId: "mywhatitu",
+            storageBucket: "mywhatitu.firebasestorage.app",
+            messagingSenderId: "756121162482",
+            appId: "1:756121162482:web:3fbc2d0e26f70e51b6f66b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- KODE SOAL ---
+        const KODE_SOAL = "0001"; 
+        const KELAS = "6"; 
+
+        const btnSubmitFirebase = document.getElementById('btn-submit');
+
+        btnSubmitFirebase.addEventListener('click', async () => {
+            if (!btnSubmitFirebase.classList.contains('active')) return;
+
+            // 1. Ambil Input
+            const inputNamaEl = document.getElementById('input-nama');
+            const inputPassEl = document.getElementById('input-password');
+
+            let namaAsli = inputNamaEl.value.trim();
+            let passwordInput = inputPassEl.value.trim();
+
+            // --- VALIDASI DENGAN CUSTOM MODAL ---
+            if (namaAsli === "") {
+                showWarning("Nama Kosong!", "Tolong isi nama lengkapmu dulu ya, supaya nilai kamu tercatat di papan peringkat.");
+                return;
+            }
+            if (passwordInput === "") {
+                showWarning("Password Kosong!", "Silakan buat password bebas (misal: 1234). Ini berguna biar nilaimu gak dibajak orang lain.");
+                return;
+            }
+
+            // Hitung Skor
+            let finalScore = Math.round((correctCount / dataSoal.length) * 100);
+
+            // Siapkan Data Baru
+            const dataJawaban = {
+                kode_soal: KODE_SOAL,
+                kode_kelas: KELAS,
+                nama_user: namaAsli,
+                password_user: passwordInput,
+                skor: finalScore,
+                benar: correctCount,
+                salah: wrongCount,
+                waktu_terakhir: new Date().toISOString()
+            };
+
+            const originalText = btnSubmitFirebase.innerText;
+            btnSubmitFirebase.innerText = "Mengecek Data...";
+            btnSubmitFirebase.classList.add('disabled');
+
+            try {
+                const uniqueDocID = `${namaAsli.toLowerCase().replace(/\s/g, '_')}_${KODE_SOAL}`;
+                const docRef = doc(db, "hasil_kuis", uniqueDocID);
+
+                // CEK DATABASE
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    // USER LAMA
+                    const dataLama = docSnap.data();
+
+                    if (dataLama.password_user !== passwordInput) {
+                        // --- PASSWORD SALAH (CUSTOM MODAL) ---
+                        showWarning("Akses Ditolak!", `Nama "${namaAsli}" sudah pernah main, tapi password yang kamu masukkan salah. Coba ingat-ingat lagi password lamamu.`);
+                        
+                        btnSubmitFirebase.innerText = originalText;
+                        btnSubmitFirebase.classList.remove('disabled');
+                        return; 
+                    } 
+                    
+                    // PASSWORD BENAR -> UPDATE
+                    await setDoc(docRef, dataJawaban, { merge: true });
+
+                } else {
+                    // USER BARU -> CREATE
+                    await setDoc(docRef, dataJawaban);
+                }
+
+                // SUKSES
+                showModal(correctCount, wrongCount, finalScore);
+                btnSubmitFirebase.innerText = "Terkirim ✅";
+                btnSubmitFirebase.classList.remove('active');
+
+            } catch (e) {
+                console.error("Error: ", e);
+                showWarning("Error Koneksi", "Gagal menghubungi database. Cek koneksi internetmu. Detail: " + e.message);
+                btnSubmitFirebase.innerText = originalText;
+                btnSubmitFirebase.classList.remove('disabled');
+            }
+        });
+
+        // --- FUNGSI MODAL SUKSES ---
+        window.showModal = (benar, salah, skor) => {
+            document.getElementById('modal-correct').innerText = benar;
+            document.getElementById('modal-wrong').innerText = salah;
+            document.getElementById('modal-score').innerText = skor;
+            document.getElementById('custom-modal').classList.add('show');
+        }
+
+        window.closeModal = () => {
+            document.getElementById('custom-modal').classList.remove('show');
+        }
+
+        // --- FUNGSI MODAL WARNING (BARU) ---
+        // Fungsi ini dipasang ke window biar bisa dipanggil darimana saja
+        window.showWarning = (judul, pesan) => {
+            document.getElementById('warning-title').innerText = judul;
+            document.getElementById('warning-message').innerText = pesan;
+            document.getElementById('warning-modal').classList.add('show');
+        }
+
+        window.closeWarning = () => {
+            document.getElementById('warning-modal').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
