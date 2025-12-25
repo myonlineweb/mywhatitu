@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWhatituS</title>
+    <style>
+        /* --- CSS SAMA SEPERTI SEBELUMNYA (GAK PERLU UBAH) --- */
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; background-image: url('myonlineweb.github.io/basepng/malamback.png'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .container { width: 78%; max-width: 800px; margin: 40px 0; padding: 30px; background-color: rgba(255, 255, 255, 0.65); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+        .question-card { border-bottom: 2px solid #eee; padding-bottom: 25px; margin-bottom: 25px; }
+        .question-text { font-size: 1.2em; font-weight: bold; margin-bottom: 15px; color: #2c3e50; }
+        .options { list-style-type: none; padding: 0; }
+        .option-btn { display: block; width: 100%; padding: 12px 20px; margin: 8px 0; background-color: #fff; border: 2px solid #ddd; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.2s; font-size: 1em; color: #444; font-weight: 500; }
+        .option-btn:hover:not(.disabled) { background-color: #eef2f3; border-color: #bbb; transform: translateX(5px); }
+        .correct { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; }
+        .wrong { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; }
+        .disabled { cursor: no-drop; opacity: 0.7; }
+        .explanation { display: none; margin-top: 15px; padding: 15px; background-color: #e8eaf6; border-left: 5px solid #3f51b5; border-radius: 4px; font-size: 0.95em; line-height: 1.5; color: #333; }
+        .submit-container { text-align: center; margin: 40px 0 20px 0; }
+        .btn-submit { padding: 15px 50px; font-size: 1.2em; font-weight: bold; color: white; background-color: #27ae60; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.3s ease; opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
+        .btn-submit.active { opacity: 1; pointer-events: auto; filter: grayscale(0%); animation: pulse 2s infinite; }
+        .btn-submit:hover { background-color: #219150; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(39, 174, 96, 0); } 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); } }
+        .score-board { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #2c3e50; color: white; padding: 15px; text-align: center; font-size: 1.2em; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.2); z-index: 100; display: flex; justify-content: center; gap: 20px; }
+        .spacer { height: 100px; }
+        
+        /* STYLE MODAL POPUP */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-icon { font-size: 3em; margin-bottom: 10px; animation: pop 0.5s; }
+        .modal-content h2 { margin: 10px 0; color: #333; }
+        .result-summary { display: flex; justify-content: space-around; margin: 20px 0; gap: 10px; }
+        .res-box { flex: 1; padding: 10px; border-radius: 10px; color: white; display: flex; flex-direction: column; }
+        .res-box.correct { background: #27ae60; }
+        .res-box.score { background: #2980b9; transform: scale(1.1); font-weight: bold; }
+        .res-box.wrong { background: #c0392b; }
+        .res-box .label { font-size: 0.8em; opacity: 0.9; }
+        .res-box .val { font-size: 1.5em; font-weight: bold; }
+        .btn-close { margin-top: 15px; padding: 10px 30px; background: #333; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 1em; }
+        .btn-close:hover { background: #000; }
+        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        
+        /* --- STYLE KHUSUS PASSWORD EYE --- */
+        .password-wrapper {
+            position: relative; /* Kunci agar icon bisa nempel relatif ke kotak ini */
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        /* Kita pindahkan style input kesini agar lebih rapi */
+        .password-wrapper input {
+            width: 100%; 
+            padding: 15px; 
+            padding-right: 50px; /* PENTING: Kasih jarak kanan biar teks gak nabrak icon */
+            border-radius: 10px; 
+            border: 2px solid #ddd; 
+            font-size: 1.1em; 
+            box-sizing: border-box;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%); /* Biar pas di tengah vertikal */
+            cursor: pointer;
+            color: #888;
+            user-select: none; /* Biar icon gak ke-blok biru kalau diklik */
+        }
+        
+        .eye-icon:hover {
+            color: #333;
+        }
+        /* Tambahan Style untuk Warning */
+        .modal-icon.warning {
+            color: #f39c12; /* Warna Oranye/Kuning Peringatan */
+            animation: shake 0.5s; /* Animasi getar */
+        }
+
+        /* Animasi Getar biar kerasa "Error" */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+        /* --- STYLE TOMBOL KEMBALI --- */
+        .btn-back {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background-color: #e74c3c; /* Merah */
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 20px; /* Jarak ke judul */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="btn-back">⬅ Kembali</a>
+        <h1>Template MyWhatituS</h1>
+        <div style="margin-bottom: 20px; max-width: 100%;">
+    <input type="text" id="input-nama" placeholder="Ketik Username" 
+    style="width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd; font-size: 1.1em; box-sizing: border-box;">
+</div>
+<div class="password-wrapper">
+        <input type="password" id="input-password" placeholder="Ketik Password">
+        
+        <span id="btn-toggle-pass" class="eye-icon" title="Lihat Password">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </span>
+    </div>
+<div id="quiz-area"></div>
+        <div id="quiz-area"></div>
+        <div class="submit-container">
+            <button id="btn-submit" class="btn-submit">SELESAIKAN SEMUA SOAL</button>
+        </div>
+        <div class="spacer"></div>
+    </div>
+
+    <div class="score-board">
+        <span>✅ Benar: <span id="score-correct">0</span></span>
+        <span>❌ Salah: <span id="score-wrong">0</span></span>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2>Hasil Terkirim!</h2>
+            <p>Data jawabanmu sudah aman di database Firebase.</p>
+            <div class="result-summary">
+                <div class="res-box correct">
+                    <span class="label">Benar</span>
+                    <span class="val" id="modal-correct">0</span>
+                </div>
+                <div class="res-box score">
+                    <span class="label">Nilai</span>
+                    <span class="val" id="modal-score">0</span>
+                </div>
+                <div class="res-box wrong">
+                    <span class="label">Salah</span>
+                    <span class="val" id="modal-wrong">0</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="btn-close">Selesai</button>
+        </div>
+    </div>
+
+<div id="warning-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon warning">⚠️</div>
+            
+            <h2 id="warning-title" style="color: #c0392b;">Ups, Tunggu Dulu!</h2>
+            <p id="warning-message" style="color: #555; line-height: 1.6;">Ada input/password yang tidak sesuai nih!</p>
+            
+            <button onclick="closeWarning()" class="btn-close" style="background-color: #c0392b;">Perbaiki</button>
+        </div>
+    </div>
+    
+    <script>
+        // --- DATA SOAL ---
+/**
+ * TASK_ID: ANBK_SD_GRADE5_50Q
+ * SUBJECT: Literacy & Numeracy (Combined)
+ * FORMAT: JSON/JavaScript Data Object
+ */
+
+let dataSoal = [
+    // --- NUMERASI (Numbers & Geometry) ---
+    {
+        question: "1. Toko 'Suka Maju' menjual telur dalam kemasan isi 6 butir dan 10 butir. Jika Ibu ingin membeli tepat 32 butir telur, kombinasi kemasan mana yang harus dibeli?",
+        options: ["2 kemasan isi 6 dan 2 kemasan isi 10", "1 kemasan isi 6 dan 3 kemasan isi 10", "4 kemasan isi 6 dan 1 kemasan isi 10", "3 kemasan isi 6 dan 1 kemasan isi 10"],
+        correctIndex: 0,
+        explanation: "(2 x 6) + (2 x 10) = 12 + 20 = 32 butir."
+    },
+    {
+        question: "2. Suhu di puncak gunung pada pagi hari adalah -4°C. Saat siang hari, suhu naik 15°C. Berapakah suhu pada siang hari?",
+        options: ["11°C", "19°C", "-11°C", "21°C"],
+        correctIndex: 0,
+        explanation: "-4 + 15 = 11. Suhu naik berarti operasi penjumlahan."
+    },
+    {
+        question: "3. Sebuah bak mandi berbentuk kubus dengan panjang rusuk 50 cm. Berapa liter air yang dibutuhkan untuk mengisinya sampai penuh?",
+        options: ["50 Liter", "125 Liter", "250 Liter", "500 Liter"],
+        correctIndex: 1,
+        explanation: "Volume = 50x50x50 = 125.000 cm³ = 125 Desimeter kubik (Liter)."
+    },
+    {
+        question: "4. Pecahan yang senilai dengan 3/4 adalah...",
+        options: ["6/10", "9/12", "5/8", "12/20"],
+        correctIndex: 1,
+        explanation: "3/4 dikali 3/3 sama dengan 9/12."
+    },
+    {
+        question: "5. Di sebuah taman terdapat 24 baris kursi. Setiap baris berisi 15 kursi. Jika 300 kursi sudah terisi, berapa kursi yang masih kosong?",
+        options: ["40 kursi", "50 kursi", "60 kursi", "70 kursi"],
+        correctIndex: 2,
+        explanation: "Total kursi = 24 x 15 = 360. Kosong = 360 - 300 = 60."
+    },
+    {
+        question: "6. Bentuk desimal dari 2/5 adalah...",
+        options: ["0,2", "0,4", "0,5", "0,25"],
+        correctIndex: 1,
+        explanation: "2 dibagi 5 atau (2x2)/(5x2) = 4/10 = 0,4."
+    },
+    {
+        question: "7. Jarak kota A ke B adalah 120 km. Ayah berangkat pukul 08.00 dengan kecepatan 60 km/jam. Pukul berapa Ayah tiba?",
+        options: ["09.00", "10.00", "11.00", "12.00"],
+        correctIndex: 1,
+        explanation: "Waktu = Jarak / Kecepatan = 120/60 = 2 jam. 08.00 + 2 jam = 10.00."
+    },
+    {
+        question: "8. Berat sebuah truk tanpa muatan adalah 2,5 ton. Truk tersebut mengangkut 5 kuintal beras. Berapa kg berat total truk tersebut?",
+        options: ["2.505 kg", "2.550 kg", "3.000 kg", "7.500 kg"],
+        correctIndex: 2,
+        explanation: "2,5 ton = 2500 kg. 5 kuintal = 500 kg. Total = 3000 kg."
+    },
+    {
+        question: "9. Hasil dari 1.250 + 750 : 25 adalah...",
+        options: ["80", "1.280", "1.300", "50"],
+        correctIndex: 1,
+        explanation: "Kerjakan pembagian dulu. 750 : 25 = 30. Lalu 1.250 + 30 = 1.280."
+    },
+    {
+        question: "10. Manakah dari bangun datar berikut yang memiliki 4 sisi sama panjang dan sudut-sudutnya siku-siku?",
+        options: ["Persegi Panjang", "Belah Ketupat", "Persegi", "Trapesium"],
+        correctIndex: 2,
+        explanation: "Ciri utama persegi adalah semua sisi sama panjang dan semua sudut 90 derajat."
+    },
+
+    // --- LITERASI (Reading Comprehension & Logic) ---
+    {
+        question: "11. (Teks) Matahari adalah sumber energi terbesar. Cahayanya membantu tumbuhan berfotosintesis. Apa manfaat utama matahari bagi tumbuhan berdasarkan teks?",
+        options: ["Sebagai hiasan langit", "Membantu proses pembuatan makanan", "Menerangi malam hari", "Menyirami tanaman"],
+        correctIndex: 1,
+        explanation: "Fotosintesis adalah proses tumbuhan membuat makanan dengan bantuan cahaya matahari."
+    },
+    {
+        question: "12. Sinonim dari kata 'Cerdas' adalah...",
+        options: ["Rajin", "Pintar", "Baik", "Disiplin"],
+        correctIndex: 1,
+        explanation: "Cerdas memiliki makna yang sama atau mirip dengan pintar."
+    },
+    {
+        question: "13. (Teks) Andi selalu membuang sampah pada tempatnya. Ia juga rajin menyiram tanaman di sekolah. Sifat yang dimiliki Andi adalah...",
+        options: ["Sombong", "Peduli lingkungan", "Pemberani", "Hemat"],
+        correctIndex: 1,
+        explanation: "Membuang sampah dan menyiram tanaman mencerminkan kepedulian terhadap lingkungan."
+    },
+    {
+        question: "14. Kalimat yang menggunakan tanda baca yang benar adalah...",
+        options: ["Ibu membeli bayam, wortel dan tomat.", "Ibu membeli: bayam, wortel, dan tomat.", "Ibu membeli bayam, wortel, dan tomat.", "Ibu membeli bayam wortel dan tomat"],
+        correctIndex: 2,
+        explanation: "Tanda koma digunakan untuk memisahkan rincian lebih dari dua unsur."
+    },
+    {
+        question: "15. Apa ide pokok dari paragraf: 'Hutan bakau sangat penting. Akar bakau melindungi pantai dari abrasi. Selain itu, bakau menjadi tempat tinggal ikan.'?",
+        options: ["Ikan tinggal di bakau", "Pentingnya hutan bakau", "Cara menanam bakau", "Bahaya abrasi pantai"],
+        correctIndex: 1,
+        explanation: "Ide pokok mencakup keseluruhan isi paragraf tentang pentingnya hutan bakau."
+    },
+    {
+        question: "16. Antonim dari kata 'Gersang' adalah...",
+        options: ["Kering", "Panas", "Subur", "Luas"],
+        correctIndex: 2,
+        explanation: "Lawan kata dari gersang (tidak subur) adalah subur."
+    },
+    {
+        question: "17. 'Budi .... sepeda ke sekolah setiap pagi.' Kata kerja yang tepat untuk melengkapi kalimat tersebut adalah...",
+        options: ["Menarik", "Mendorong", "Mengayuh", "Membawa"],
+        correctIndex: 2,
+        explanation: "Kata kerja yang lazim digunakan untuk menjalankan sepeda adalah mengayuh."
+    },
+    {
+        question: "18. Manakah kalimat berikut yang merupakan kalimat fakta?",
+        options: ["Sepertinya hari ini akan hujan.", "Indonesia merdeka pada 17 Agustus 1945.", "Es krim ini rasanya sangat enak sekali.", "Andi adalah anak terpintar di kelas."],
+        correctIndex: 1,
+        explanation: "Fakta adalah hal yang benar-benar terjadi dan dapat dibuktikan kebenarannya secara objektif."
+    },
+    {
+        question: "19. Penggunaan huruf kapital yang tepat di bawah ini adalah...",
+        options: ["saya belajar di sd nusantara.", "Saya belajar di SD nusantara.", "Saya belajar di SD Nusantara.", "Saya Belajar Di Sd Nusantara."],
+        correctIndex: 2,
+        explanation: "Huruf kapital digunakan di awal kalimat dan nama instansi/lembaga."
+    },
+    {
+        question: "20. Mengapa kita harus menghemat air bersih?",
+        options: ["Agar tagihan listrik murah", "Agar ketersediaan air tetap terjaga", "Agar air di laut tidak habis", "Agar tanaman tumbuh liar"],
+        correctIndex: 1,
+        explanation: "Menghemat air bertujuan untuk menjaga keberlanjutan sumber daya bagi masa depan."
+    },
+
+    // --- LANJUTAN NUMERASI (Data & Logic) ---
+    {
+        question: "21. Data nilai matematika: 7, 8, 6, 9, 7. Berapakah nilai rata-ratanya?",
+        options: ["7,0", "7,2", "7,4", "8,0"],
+        correctIndex: 2,
+        explanation: "(7+8+6+9+7)/5 = 37/5 = 7,4."
+    },
+    {
+        question: "22. Sebuah lingkaran memiliki diameter 28 cm. Berapa kelilingnya? (phi = 22/7)",
+        options: ["44 cm", "88 cm", "154 cm", "616 cm"],
+        correctIndex: 1,
+        explanation: "Keliling = phi x d = 22/7 x 28 = 88 cm."
+    },
+    {
+        question: "23. 2/3 jam sama dengan berapa menit?",
+        options: ["20 menit", "30 menit", "40 menit", "50 menit"],
+        correctIndex: 2,
+        explanation: "2/3 x 60 menit = 40 menit."
+    },
+    {
+        question: "24. Hasil dari 25% dari 200.000 adalah...",
+        options: ["25.000", "50.000", "75.000", "100.000"],
+        correctIndex: 1,
+        explanation: "25/100 x 200.000 = 50.000."
+    },
+    {
+        question: "25. Jika sebuah peta memiliki skala 1 : 100.000, maka 5 cm pada peta mewakili...",
+        options: ["500 meter", "5 km", "50 km", "500 km"],
+        correctIndex: 1,
+        explanation: "5 x 100.000 = 500.000 cm = 5 km."
+    },
+    {
+        question: "26. Bilangan prima antara 10 dan 20 adalah...",
+        options: ["11, 13, 15, 17", "11, 13, 17, 19", "13, 15, 17, 19", "11, 15, 19"],
+        correctIndex: 1,
+        explanation: "15 bukan bilangan prima karena bisa dibagi 3 dan 5."
+    },
+    {
+        question: "27. FPB dari 12 dan 18 adalah...",
+        options: ["2", "3", "6", "12"],
+        correctIndex: 2,
+        explanation: "Faktor 12: 1,2,3,4,6,12. Faktor 18: 1,2,3,6,9,18. Terbesar adalah 6."
+    },
+    {
+        question: "28. KPK dari 4 dan 6 adalah...",
+        options: ["10", "12", "24", "48"],
+        correctIndex: 1,
+        explanation: "Kelipatan 4: 4, 8, 12. Kelipatan 6: 6, 12. Terkecil adalah 12."
+    },
+    {
+        question: "29. Hasil dari √144 + √81 adalah...",
+        options: ["15", "18", "21", "25"],
+        correctIndex: 2,
+        explanation: "12 + 9 = 21."
+    },
+    {
+        question: "30. Dalam sebuah kardus ada 48 apel. Dibagikan kepada 6 anak sama banyak. Berapa apel yang diterima tiap anak?",
+        options: ["6", "7", "8", "9"],
+        correctIndex: 2,
+        explanation: "48 / 6 = 8."
+    },
+
+    // --- LANJUTAN LITERASI (Etika & Sosbud) ---
+    {
+        question: "31. Apa yang harus dilakukan jika melihat teman membuang sampah sembarangan?",
+        options: ["Membiarkannya saja", "Menegur dengan sopan dan memberi tahu", "Melaporkan langsung ke polisi", "Ikut membuang sampah"],
+        correctIndex: 1,
+        explanation: "Menegur dengan sopan adalah tindakan karakter yang tepat."
+    },
+    {
+        question: "32. Pesan moral dari cerita 'Malin Kundang' adalah...",
+        options: ["Jangan pergi merantau", "Kita harus berbakti kepada orang tua", "Harta adalah segalanya", "Jangan jadi orang kaya"],
+        correctIndex: 1,
+        explanation: "Cerita tersebut memperingatkan bahaya durhaka kepada ibu."
+    },
+    {
+        question: "33. Simbol sila ke-3 Pancasila adalah...",
+        options: ["Bintang", "Rantai", "Pohon Beringin", "Padi dan Kapas"],
+        correctIndex: 2,
+        explanation: "Sila ke-3 (Persatuan Indonesia) disimbolkan dengan Pohon Beringin."
+    },
+    {
+        question: "34. Di bawah ini yang termasuk kewajiban siswa di sekolah adalah...",
+        options: ["Mendapatkan nilai bagus", "Mendapatkan uang saku", "Menjaga kebersihan kelas", "Memakai fasilitas sekolah"],
+        correctIndex: 2,
+        explanation: "Menjaga kebersihan adalah tanggung jawab atau kewajiban."
+    },
+    {
+        question: "35. Penulisan judul cerita yang benar adalah...",
+        options: ["si kancil dan buaya", "Si Kancil Dan Buaya", "Si Kancil dan Buaya", "Si kancil Dan buaya"],
+        correctIndex: 2,
+        explanation: "Kata sambung 'dan' dalam judul tidak menggunakan huruf kapital kecuali di awal."
+    },
+    {
+        question: "36. Manakah yang termasuk sumber energi alternatif?",
+        options: ["Batu bara", "Minyak bumi", "Energi Matahari", "Gas alam"],
+        correctIndex: 2,
+        explanation: "Matahari adalah energi terbarukan/alternatif."
+    },
+    {
+        question: "37. Negara Indonesia terletak di antara dua benua, yaitu...",
+        options: ["Asia dan Australia", "Asia dan Eropa", "Afrika dan Amerika", "Australia dan Antartika"],
+        correctIndex: 0,
+        explanation: "Secara geografis Indonesia diapit Benua Asia dan Australia."
+    },
+    {
+        question: "38. Alat musik tradisional yang dimainkan dengan cara dipukul adalah...",
+        options: ["Suling", "Gitar", "Gamelan", "Biola"],
+        correctIndex: 2,
+        explanation: "Gamelan terdiri dari instrumen yang mayoritas dipukul."
+    },
+    {
+        question: "39. Pahlawan nasional yang dijuluki 'Bapak Pendidikan' adalah...",
+        options: ["Ir. Soekarno", "Ki Hajar Dewantara", "Jenderal Sudirman", "Pangeran Diponegoro"],
+        correctIndex: 1,
+        explanation: "Ki Hajar Dewantara adalah pendiri Taman Siswa."
+    },
+    {
+        question: "40. Cara menjaga kesehatan tubuh yang paling tepat adalah...",
+        options: ["Tidur sepanjang hari", "Makan makanan instan setiap hari", "Olahraga teratur dan makan bergizi", "Bermain game sampai malam"],
+        correctIndex: 2,
+        explanation: "Kombinasi olahraga dan nutrisi adalah kunci kesehatan."
+    },
+
+    // --- CAMPURAN LOGIKA (Final 10) ---
+    {
+        question: "41. Hasil dari 1/2 + 0,5 adalah...",
+        options: ["0,75", "1", "1,5", "0,25"],
+        correctIndex: 1,
+        explanation: "0,5 + 0,5 = 1."
+    },
+    {
+        question: "42. Sebuah truk mengangkut 4 ton pasir. Pasir tersebut diturunkan di dua tempat sama banyak. Berapa kg pasir di tiap tempat?",
+        options: ["20 kg", "200 kg", "2.000 kg", "20.000 kg"],
+        correctIndex: 2,
+        explanation: "4 ton = 4.000 kg. Dibagi 2 = 2.000 kg."
+    },
+    {
+        question: "43. Jika hari ini hari Senin, maka 3 hari yang lalu adalah hari...",
+        options: ["Jumat", "Sabtu", "Minggu", "Selasa"],
+        correctIndex: 0,
+        explanation: "Senin -> Minggu -> Sabtu -> Jumat."
+    },
+    {
+        question: "44. Kata tanya untuk menanyakan alasan atau sebab adalah...",
+        options: ["Apa", "Bagaimana", "Mengapa", "Kapan"],
+        correctIndex: 2,
+        explanation: "'Mengapa' digunakan untuk menanyakan sebab/alasan."
+    },
+    {
+        question: "45. Lambang negara Indonesia adalah...",
+        options: ["Bendera Merah Putih", "Garuda Pancasila", "Lagu Indonesia Raya", "Bhinneka Tunggal Ika"],
+        correctIndex: 1,
+        explanation: "Garuda Pancasila adalah lambang negara kita."
+    },
+    {
+        question: "46. 1.000 gram sama dengan...",
+        options: ["0,1 kg", "1 kg", "10 kg", "100 kg"],
+        correctIndex: 1,
+        explanation: "Konversi massa: 1.000 g = 1 kg."
+    },
+    {
+        question: "47. Penulisan waktu 'pukul sembilan malam' dalam angka yang benar adalah...",
+        options: ["09.00", "19.00", "21.00", "22.00"],
+        correctIndex: 2,
+        explanation: "Format 24 jam: 9 + 12 = 21.00."
+    },
+    {
+        question: "48. Hewan yang berkembang biak dengan cara bertelur disebut...",
+        options: ["Vivipar", "Ovipar", "Ovovivipar", "Mamalia"],
+        correctIndex: 1,
+        explanation: "Ovipar berasal dari kata 'Ovum' yang berarti telur."
+    },
+    {
+        question: "49. Bhinneka Tunggal Ika artinya...",
+        options: ["Bersatu kita teguh", "Berbeda-beda tetapi tetap satu", "Majulah Indonesia", "Berbeda itu indah"],
+        correctIndex: 1,
+        explanation: "Semboyan persatuan Indonesia dari Kitab Sutasoma."
+    },
+    {
+        question: "50. Berapa jumlah provinsi di Indonesia saat ini (setelah pemekaran Papua 2022/2023)?",
+        options: ["34", "36", "38", "40"],
+        correctIndex: 2,
+        explanation: "Saat ini Indonesia memiliki 38 provinsi."
+    }
+];
+        // --- SYSTEM ENGINE ---
+        const quizArea = document.getElementById('quiz-area');
+        const scoreCorrectEl = document.getElementById('score-correct');
+        const scoreWrongEl = document.getElementById('score-wrong');
+        // Kita ambil element btnSubmit disini juga untuk logika tampilan
+        const btnSubmitGame = document.getElementById('btn-submit');
+
+        // VARIABLE GLOBAL (Agar bisa dibaca oleh script Firebase nanti)
+        var correctCount = 0;
+        var wrongCount = 0;
+        var answeredCount = 0;
+
+        function renderQuiz() {
+            quizArea.innerHTML = '';
+            dataSoal.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerText = item.question;
+                card.appendChild(qText);
+
+                const optList = document.createElement('ul');
+                optList.className = 'options';
+
+                item.options.forEach((opt, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(btn, item, optIndex, optList, explanationDiv);
+                    optList.appendChild(btn);
+                });
+                
+                card.appendChild(optList);
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.innerHTML = `<strong>Jawaban:</strong> ${item.options[item.correctIndex]}<br><em>${item.explanation}</em>`;
+                card.appendChild(explanationDiv);
+
+                quizArea.appendChild(card);
+            });
+        }
+
+        function checkAnswer(selectedBtn, dataItem, selectedIndex, optListContainer, expDiv) {
+            if (optListContainer.classList.contains('answered')) return;
+
+            optListContainer.classList.add('answered');
+            answeredCount++;
+
+            const allBtns = optListContainer.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.classList.add('disabled'));
+
+            if (selectedIndex === dataItem.correctIndex) {
+                selectedBtn.classList.add('correct');
+                correctCount++;
+                scoreCorrectEl.innerText = correctCount;
+            } else {
+                selectedBtn.classList.add('wrong');
+                wrongCount++;
+                scoreWrongEl.innerText = wrongCount;
+                allBtns[dataItem.correctIndex].classList.add('correct');
+            }
+
+            expDiv.style.display = 'block';
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            if (answeredCount === dataSoal.length) {
+                btnSubmitGame.classList.add('active');
+                btnSubmitGame.innerText = "KIRIM JAWABAN SEKARANG!";
+            }
+        }
+
+        // Render pertama kali
+        renderQuiz();
+        
+        // --- LOGIKA MATA PASSWORD ---
+        const toggleBtn = document.getElementById('btn-toggle-pass');
+        const passInput = document.getElementById('input-password');
+
+        toggleBtn.addEventListener('click', () => {
+            // Cek tipe saat ini
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            
+            // Opsional: Ubah warna icon biar user tau lagi aktif
+            toggleBtn.style.color = type === 'text' ? '#27ae60' : '#888';
+        });
+
+    </script> 
+<script type="module">
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        // --- KONFIGURASI FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrGo4oJqVPesVBDd52-OGT2sHFNdeI5jo",
+            authDomain: "mywhatitu.firebaseapp.com",
+            projectId: "mywhatitu",
+            storageBucket: "mywhatitu.firebasestorage.app",
+            messagingSenderId: "756121162482",
+            appId: "1:756121162482:web:3fbc2d0e26f70e51b6f66b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- KODE SOAL ---
+        const KODE_SOAL = "0001"; 
+        const KELAS = "5"; 
+
+        const btnSubmitFirebase = document.getElementById('btn-submit');
+
+        btnSubmitFirebase.addEventListener('click', async () => {
+            if (!btnSubmitFirebase.classList.contains('active')) return;
+
+            // 1. Ambil Input
+            const inputNamaEl = document.getElementById('input-nama');
+            const inputPassEl = document.getElementById('input-password');
+
+            let namaAsli = inputNamaEl.value.trim();
+            let passwordInput = inputPassEl.value.trim();
+
+            // --- VALIDASI DENGAN CUSTOM MODAL ---
+            if (namaAsli === "") {
+                showWarning("Nama Kosong!", "Tolong isi nama lengkapmu dulu ya, supaya nilai kamu tercatat di papan peringkat.");
+                return;
+            }
+            if (passwordInput === "") {
+                showWarning("Password Kosong!", "Silakan buat password bebas (misal: 1234). Ini berguna biar nilaimu gak dibajak orang lain.");
+                return;
+            }
+
+            // Hitung Skor
+            let finalScore = Math.round((correctCount / dataSoal.length) * 100);
+
+            // Siapkan Data Baru
+            const dataJawaban = {
+                kode_soal: KODE_SOAL,
+                kode_kelas: KELAS,
+                nama_user: namaAsli,
+                password_user: passwordInput,
+                skor: finalScore,
+                benar: correctCount,
+                salah: wrongCount,
+                waktu_terakhir: new Date().toISOString()
+            };
+
+            const originalText = btnSubmitFirebase.innerText;
+            btnSubmitFirebase.innerText = "Mengecek Data...";
+            btnSubmitFirebase.classList.add('disabled');
+
+            try {
+                const uniqueDocID = `${namaAsli.toLowerCase().replace(/\s/g, '_')}_${KODE_SOAL}`;
+                const docRef = doc(db, "hasil_kuis", uniqueDocID);
+
+                // CEK DATABASE
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    // USER LAMA
+                    const dataLama = docSnap.data();
+
+                    if (dataLama.password_user !== passwordInput) {
+                        // --- PASSWORD SALAH (CUSTOM MODAL) ---
+                        showWarning("Akses Ditolak!", `Nama "${namaAsli}" sudah pernah main, tapi password yang kamu masukkan salah. Coba ingat-ingat lagi password lamamu.`);
+                        
+                        btnSubmitFirebase.innerText = originalText;
+                        btnSubmitFirebase.classList.remove('disabled');
+                        return; 
+                    } 
+                    
+                    // PASSWORD BENAR -> UPDATE
+                    await setDoc(docRef, dataJawaban, { merge: true });
+
+                } else {
+                    // USER BARU -> CREATE
+                    await setDoc(docRef, dataJawaban);
+                }
+
+                // SUKSES
+                showModal(correctCount, wrongCount, finalScore);
+                btnSubmitFirebase.innerText = "Terkirim ✅";
+                btnSubmitFirebase.classList.remove('active');
+
+            } catch (e) {
+                console.error("Error: ", e);
+                showWarning("Error Koneksi", "Gagal menghubungi database. Cek koneksi internetmu. Detail: " + e.message);
+                btnSubmitFirebase.innerText = originalText;
+                btnSubmitFirebase.classList.remove('disabled');
+            }
+        });
+
+        // --- FUNGSI MODAL SUKSES ---
+        window.showModal = (benar, salah, skor) => {
+            document.getElementById('modal-correct').innerText = benar;
+            document.getElementById('modal-wrong').innerText = salah;
+            document.getElementById('modal-score').innerText = skor;
+            document.getElementById('custom-modal').classList.add('show');
+        }
+
+        window.closeModal = () => {
+            document.getElementById('custom-modal').classList.remove('show');
+        }
+
+        // --- FUNGSI MODAL WARNING (BARU) ---
+        // Fungsi ini dipasang ke window biar bisa dipanggil darimana saja
+        window.showWarning = (judul, pesan) => {
+            document.getElementById('warning-title').innerText = judul;
+            document.getElementById('warning-message').innerText = pesan;
+            document.getElementById('warning-modal').classList.add('show');
+        }
+
+        window.closeWarning = () => {
+            document.getElementById('warning-modal').classList.remove('show');
+        }
+    </script>
+    
+</body>
+</html>
