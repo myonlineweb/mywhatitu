@@ -660,30 +660,50 @@
 
     <script>
         /* ============================
-           1. MODERN CANVAS ANIMATION
+           1. OPTIMIZED CANVAS ANIMATION (OffscreenCanvas)
            ============================ */
         const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true });
+
+        // Use OffscreenCanvas for better performance if supported
+        let offscreenCanvas = null;
+        let offscreenCtx = null;
+        const useOffscreen = typeof OffscreenCanvas !== 'undefined';
+
         let particlesArray = [];
-        let mouse = { x: null, y: null, radius: 150 };
+        let mouse = { x: null, y: null, radius: 120 };
+        let animationId = null;
+        let lastFrameTime = 0;
+        const targetFPS = 30; // Limit to 30 FPS for performance
+        const frameInterval = 1000 / targetFPS;
 
         // Set ukuran canvas
         function setCanvasSize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+
+            // Setup offscreen canvas
+            if (useOffscreen) {
+                offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
+                offscreenCtx = offscreenCanvas.getContext('2d', { alpha: true });
+            }
         }
         setCanvasSize();
 
-        // Track mouse position
+        // Track mouse position with throttling
+        let mouseThrottle = false;
         window.addEventListener('mousemove', (e) => {
+            if (mouseThrottle) return;
+            mouseThrottle = true;
             mouse.x = e.x;
             mouse.y = e.y;
-        });
+            setTimeout(() => mouseThrottle = false, 50);
+        }, { passive: true });
 
         window.addEventListener('mouseout', () => {
             mouse.x = null;
             mouse.y = null;
-        });
+        }, { passive: true });
 
         // Resize handler with debounce
         let resizeTimeout;
@@ -692,48 +712,59 @@
             resizeTimeout = setTimeout(() => {
                 setCanvasSize();
                 init();
-            }, 200);
+            }, 300);
+        }, { passive: true });
+
+        // Pause animation when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            } else {
+                if (!animationId) animate();
+            }
         });
 
-        // Warna partikel berdasarkan tema
-        function getParticleColors() {
-            const isDark = document.body.classList.contains('dark-mode');
-            return isDark ?
-                ['rgba(255,95,139,0.6)', 'rgba(177,156,217,0.6)', 'rgba(0,210,252,0.5)', 'rgba(255,159,28,0.5)'] :
-                ['rgba(255,95,139,0.5)', 'rgba(177,156,217,0.5)', 'rgba(128,237,153,0.4)', 'rgba(255,183,3,0.4)'];
-        }
+        // Warna partikel berdasarkan tema (pre-cached)
+        let cachedColors = null;
+        let cachedLineColor = null;
 
-        // Modern Particle Class
+        function updateCachedColors() {
+            const isDark = document.body.classList.contains('dark-mode');
+            cachedColors = isDark ?
+                ['rgba(255,95,139,0.5)', 'rgba(177,156,217,0.5)', 'rgba(0,210,252,0.4)', 'rgba(255,159,28,0.4)'] :
+                ['rgba(255,95,139,0.4)', 'rgba(177,156,217,0.4)', 'rgba(128,237,153,0.3)', 'rgba(255,183,3,0.3)'];
+            cachedLineColor = isDark ? 'rgba(255,95,139,' : 'rgba(177,156,217,';
+        }
+        updateCachedColors();
+
+        // Optimized Particle Class
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.baseX = this.x;
                 this.baseY = this.y;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
-                this.density = (Math.random() * 30) + 1;
-
-                const colors = getParticleColors();
-                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.size = Math.random() * 2.5 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.25;
+                this.speedY = (Math.random() - 0.5) * 0.25;
+                this.density = (Math.random() * 20) + 5;
+                this.color = cachedColors[Math.floor(Math.random() * cachedColors.length)];
             }
 
             update() {
-                // Mouse interaction
+                // Mouse interaction (simplified)
                 if (mouse.x != null && mouse.y != null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distSq = dx * dx + dy * dy;
+                    const radiusSq = mouse.radius * mouse.radius;
 
-                    if (distance < mouse.radius) {
-                        let forceDirectionX = dx / distance;
-                        let forceDirectionY = dy / distance;
-                        let maxDistance = mouse.radius;
-                        let force = (maxDistance - distance) / maxDistance;
-                        let directionX = forceDirectionX * force * this.density * 0.5;
-                        let directionY = forceDirectionY * force * this.density * 0.5;
-
+                    if (distSq < radiusSq) {
+                        const distance = Math.sqrt(distSq);
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        const directionX = (dx / distance) * force * this.density * 0.3;
+                        const directionY = (dy / distance) * force * this.density * 0.3;
                         this.x -= directionX;
                         this.y -= directionY;
                     }
@@ -744,102 +775,94 @@
                 this.y += this.speedY;
 
                 // Bounce off edges
-                if (this.x > canvas.width || this.x < 0) {
-                    this.speedX = -this.speedX;
-                }
-                if (this.y > canvas.height || this.y < 0) {
-                    this.speedY = -this.speedY;
-                }
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
 
                 // Return to base position slowly
-                let dx = this.baseX - this.x;
-                let dy = this.baseY - this.y;
-                this.x += dx * 0.01;
-                this.y += dy * 0.01;
+                this.x += (this.baseX - this.x) * 0.008;
+                this.y += (this.baseY - this.y) * 0.008;
             }
 
-            draw() {
-                // Glow effect
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
-
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-
-                ctx.shadowBlur = 0;
+            draw(context) {
+                context.beginPath();
+                context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                context.fillStyle = this.color;
+                context.fill();
             }
         }
 
         function init() {
             particlesArray = [];
-            // Responsive particle count
+            updateCachedColors();
+
+            // Much lower particle count for performance
             const isMobile = window.innerWidth < 600;
             let numberOfParticles = isMobile ?
-                (canvas.width * canvas.height) / 20000 :
-                (canvas.width * canvas.height) / 12000;
+                Math.floor((canvas.width * canvas.height) / 40000) :
+                Math.floor((canvas.width * canvas.height) / 25000);
 
-            numberOfParticles = Math.min(numberOfParticles, 100); // Cap maximum
+            numberOfParticles = Math.min(Math.max(numberOfParticles, 15), 50); // Cap between 15-50
 
             for (let i = 0; i < numberOfParticles; i++) {
                 particlesArray.push(new Particle());
             }
         }
 
-        // Connect particles with gradient lines
-        function connect() {
-            const isDark = document.body.classList.contains('dark-mode');
-            const maxDistance = 120;
+        // Simplified connect function (no gradient for performance)
+        function connect(context) {
+            const maxDistanceSq = 100 * 100; // Use squared distance to avoid sqrt
+            const len = particlesArray.length;
 
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a + 1; b < particlesArray.length; b++) {
-                    let dx = particlesArray[a].x - particlesArray[b].x;
-                    let dy = particlesArray[a].y - particlesArray[b].y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
+            context.lineWidth = 0.5;
 
-                    if (distance < maxDistance) {
-                        let opacity = (1 - distance / maxDistance) * 0.3;
+            for (let a = 0; a < len; a++) {
+                const pA = particlesArray[a];
+                for (let b = a + 1; b < len; b++) {
+                    const pB = particlesArray[b];
+                    const dx = pA.x - pB.x;
+                    const dy = pA.y - pB.y;
+                    const distSq = dx * dx + dy * dy;
 
-                        // Gradient line
-                        let gradient = ctx.createLinearGradient(
-                            particlesArray[a].x, particlesArray[a].y,
-                            particlesArray[b].x, particlesArray[b].y
-                        );
-
-                        if (isDark) {
-                            gradient.addColorStop(0, `rgba(255,95,139,${opacity})`);
-                            gradient.addColorStop(1, `rgba(177,156,217,${opacity})`);
-                        } else {
-                            gradient.addColorStop(0, `rgba(255,95,139,${opacity * 0.7})`);
-                            gradient.addColorStop(1, `rgba(177,156,217,${opacity * 0.7})`);
-                        }
-
-                        ctx.strokeStyle = gradient;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
+                    if (distSq < maxDistanceSq) {
+                        const opacity = (1 - distSq / maxDistanceSq) * 0.2;
+                        context.strokeStyle = cachedLineColor + opacity + ')';
+                        context.beginPath();
+                        context.moveTo(pA.x, pA.y);
+                        context.lineTo(pB.x, pB.y);
+                        context.stroke();
                     }
                 }
             }
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function animate(currentTime) {
+            animationId = requestAnimationFrame(animate);
 
+            // Throttle to target FPS
+            const elapsed = currentTime - lastFrameTime;
+            if (elapsed < frameInterval) return;
+            lastFrameTime = currentTime - (elapsed % frameInterval);
+
+            const renderCtx = useOffscreen ? offscreenCtx : ctx;
+            renderCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw particles
             for (let i = 0; i < particlesArray.length; i++) {
                 particlesArray[i].update();
-                particlesArray[i].draw();
+                particlesArray[i].draw(renderCtx);
             }
-            connect();
+            connect(renderCtx);
+
+            // Copy offscreen to main canvas
+            if (useOffscreen) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(offscreenCanvas, 0, 0);
+            }
         }
 
         // Initialize & Start
         init();
-        animate();
+        animate(0);
 
 
         /* ============================
@@ -874,12 +897,12 @@
 
         /* DATABASE MENU */
         const dataMenu = [
-            { id: 1, judul: "Semgart", icon: "🖼️", deskripsi: "Desainer Gambar baik poster, logo, dan banner.", gambar: "myonlineweb.github.io/basepng/semart.jpg", linkEmbed: "https://www.instagram.com/markus_leo13" },
-            { id: 2, judul: "Undangan Nikah", icon: "✨", deskripsi: "Pembuatan undangan pernikahan berbasis digital.", gambar: "myonlineweb.github.io/basepng/undangannkh.pngg", linkEmbed: "sedang_pengembangan.html" },
-            { id: 3, judul: "Whatitu Study", icon: "📘", deskripsi: "Belajar Bersama Secara Gratis disini", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "study_index.html" },
-            { id: 4, judul: "Whatitu Creativity", icon: "🎆", deskripsi: "Dimana Kreatifitas dan Pengembangan Bertumbuh", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
-            { id: 5, judul: "Whatitu MySite", icon: "💻", deskripsi: "Pemesanan Promosi dalam Website", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
-            { id: 6, judul: "Whatitu Store", icon: "🛍️", deskripsi: "Pemesanan dalam Website Whatitu", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" }
+            { id: 1, judul: "Semgart", icon: "🖼️", deskripsi: "Desainer Gambar baik poster, logo, dan banner.", gambar: "https://myonlineweb.github.io/basepng/semart.jpg", linkEmbed: "https://www.instagram.com/markus_leo13" },
+            { id: 2, judul: "Undangan Nikah", icon: "✨", deskripsi: "Pembuatan undangan pernikahan berbasis digital.", gambar: "https://myonlineweb.github.io/basepng/undangannkh.png", linkEmbed: "sedang_pengembangan.html" },
+            { id: 3, judul: "Whatitu Study", icon: "📘", deskripsi: "Belajar Bersama Secara Gratis disini", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "study_index.html" },
+            { id: 4, judul: "Whatitu Creativity", icon: "🎆", deskripsi: "Dimana Kreatifitas dan Pengembangan Bertumbuh", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
+            { id: 5, judul: "Whatitu MySite", icon: "💻", deskripsi: "Pemesanan Promosi dalam Website", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
+            { id: 6, judul: "Whatitu Store", icon: "🛍️", deskripsi: "Pemesanan dalam Website Whatitu", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" }
         ];
 
         /* RENDER MENU */
