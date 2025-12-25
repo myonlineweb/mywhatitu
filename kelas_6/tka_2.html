@@ -89,11 +89,31 @@
             75% { transform: translateX(-10px); }
             100% { transform: translateX(0); }
         }
+        /* --- STYLE TOMBOL KEMBALI --- */
+        .btn-back {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background-color: #e74c3c; /* Merah */
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 20px; /* Jarak ke judul */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <a href="study_index.html" class="btn-back">⬅ Kembali</a>
         <h1>Template MyWhatituS</h1>
         <div style="margin-bottom: 20px; max-width: 100%;">
     <input type="text" id="input-nama" placeholder="Ketik Username" 

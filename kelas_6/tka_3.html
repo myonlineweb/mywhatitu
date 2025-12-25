@@ -89,11 +89,31 @@
             75% { transform: translateX(-10px); }
             100% { transform: translateX(0); }
         }
+        /* --- STYLE TOMBOL KEMBALI --- */
+        .btn-back {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background-color: #e74c3c; /* Merah */
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 20px; /* Jarak ke judul */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <a href="study_index.html" class="btn-back">⬅ Kembali</a>
         <h1>Template MyWhatituS</h1>
         <div style="margin-bottom: 20px; max-width: 100%;">
     <input type="text" id="input-nama" placeholder="Ketik Username" 
@@ -712,53 +732,26 @@ let dataSoal = [
                         
                         btnSubmitFirebase.innerText = originalText;
                         btnSubmitFirebase.classList.remove('disabled');
-                        return; 
-                    } 
-                    
-                    // PASSWORD BENAR -> UPDATE
-                    await setDoc(docRef, dataJawaban, { merge: true });
-
-                } else {
-                    // USER BARU -> CREATE
-                    await setDoc(docRef, dataJawaban);
-                }
-
-                // SUKSES
-                showModal(correctCount, wrongCount, finalScore);
-                btnSubmitFirebase.innerText = "Terkirim ✅";
-                btnSubmitFirebase.classList.remove('active');
-
-            } catch (e) {
-                console.error("Error: ", e);
-                showWarning("Error Koneksi", "Gagal menghubungi database. Cek koneksi internetmu. Detail: " + e.message);
-                btnSubmitFirebase.innerText = originalText;
-                btnSubmitFirebase.classList.remove('disabled');
-            }
-        });
-
-        // --- FUNGSI MODAL SUKSES ---
-        window.showModal = (benar, salah, skor) => {
-            document.getElementById('modal-correct').innerText = benar;
-            document.getElementById('modal-wrong').innerText = salah;
-            document.getElementById('modal-score').innerText = skor;
-            document.getElementById('custom-modal').classList.add('show');
-        }
-
-        window.closeModal = () => {
-            document.getElementById('custom-modal').classList.remove('show');
-        }
-
-        // --- FUNGSI MODAL WARNING (BARU) ---
-        // Fungsi ini dipasang ke window biar bisa dipanggil darimana saja
-        window.showWarning = (judul, pesan) => {
-            document.getElementById('warning-title').innerText = judul;
-            document.getElementById('warning-message').innerText = pesan;
-            document.getElementById('warning-modal').classList.add('show');
-        }
-
-        window.closeWarning = () => {
-            document.getElementById('warning-modal').classList.remove('show');
-        }
-    </script>
-</body>
-</html>
+ H�e.aU��w�x/(����,��;�Vң���ڡ	�/0��C������<n>
+���׺�cݒ {�h�N�q)7�XX�
+�ks�V�k�g�Q��~t��e�{�>p.y�Bt��ֿ�������H�/A_��T��z�����@����Q��_�)4�a�a^�'�
+�ņ6�u� ~�I[f�b�X����OG��  ?�z�_�0��W|:��(; D�M�s�M�o�}��̥����Q�h��,��P�9��F�(�� }~�����H��#���'xζΦ��#�V�l��� �O�O|*NX�9��m_k <L�&Z���i�ҟV/'��U[c\?������dR��SbW���f������
+j{��i�Z�q�O:��Y
+�����'��]Q����o��~�O��yz�йr�q������@�d��t��5���<*I���C#YN{�(�/~��[���=�����_!B���y.z�#�m@v��mo����n}0ȜiQ��ms��T׵��i����C Dm�< _�F�U ���x�ԹtB�<��G"8��"�+Qn�r$��z�E�a�u4G�ȈT �����i����ְ����9����B�*�	�81E�H��Z�I
+�Ҝ�k��b.�=Y[0��\�>�
+�$�x$U�̑א�L?Ƴ�ªcT��o	7�O@�?Г��-̰c�e�E�lo/WS0�+�;��N`m�v΄B�U%���z�52@��N��]Û��S��ǘ��ݧ2�!��_�*�I��S'�g,�D�ׁI�]�B�@�N[��-L�|@:�aTI��$[�j����xs�'��8��H�I�S
+��x(�A���$��S��HT���9^J��k����2�CC,
+HOC�T�ѪD�*o��ӕ��[�}�U��b�v��c43=8��"Z��^�C"ofrs��	����b䵛�eAL߮3�隍�dc�o��g+�OMg��;<�gW��_���GI$�G�~��&Eݘ���� �V$����T��2HT�r����*#a��br	o��ɕlrM�7���E����Lg������-O��������lM�t�	�RD�]f����]�g�T��ir����lx�E?
+Y�w�Y����ѝ�טQT(2(�gc�L�x�R]M �^�A������X$P�( pdQ�QSV�+�>!~q*8y4KT�Ģ�cX�[�O�V�[}��ka˛�Q`<��u[
+t=:*���u��Hn�Q]Ni�yK>XҾ�:cu�������
+���=^��n�|���#����Q0�j��q�8����?{6w{5���ߧ�(��6���%S�v^M�~@�Y$�k�ِB�;����x,k� 9��?x-�Վ�8��
+�R7�������lJ���Moc������Ӵ����*<0	��1e�=b��r�}б4zz�ʚ-؂rHΫ��M�8ٟ��yǫ��Pˊ��'C���c
+1ꐌI�+X��1�˭��8�Z��k��Ý�J���a�2n�3�j�7ǖ(����Nʂ�5Q��-�����}�#j7��A�+Aߦ"�@R�wHٔ�����QtE�E�s'�%B���b���q�<\��vP}2�D���"��Q#s{
+"FXg_|��@Cw �A1������sc��6�
+j�ny��l# dt�����:�U����cТ��'H�F�G�%I�OD���U���TU�_f.IT����C���9 ��1���c���4�|���qiZo?/ʧ�e��#�}-��p����-���6����Y�O� m�/��ņ
+��o��6	� !Hm|���V��{Ϩ4=u�廹��b_�L5p��Fg��L�I*�j��d��g]�q|���	/Z�G�5u� �[tu�0n��
+[�+�0�.f:K�^���K�Zj�
+ `Bq
+D��{AB� �M�?M����t�%�Rn��
+����݀���b @,Y�?`1�K��S�Zª�U��
+�?ܶ{I�L�Q
