@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Whatitu Website</title>
-    
+    <title>My Whatitu - Modern</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
 
     <style>
         /* === BAGIAN 1: DATABASE WARNA (THEMING) === */
@@ -15,26 +17,59 @@
             /* Warna Default (Light Mode) */
             --bg-color: #FFF8E7;
             --text-color: #4A4A4A;
-            --card-bg: #FFFFFF;
-            --modal-bg: #FFFBEB;
-            --subtitle-color: #888;
-            --shadow-color: rgba(200, 180, 180, 0.15);
-            --icon-bg: #F3F3F3;
+            /* Glassmorphism Variables */
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --modal-bg: rgba(255, 255, 255, 0.9);
+
+            --subtitle-color: #666;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --icon-bg: rgba(255, 255, 255, 0.8);
+
             --toggle-bg: #FFC2D1;
             --toggle-icon: #fff;
+
+            /* Warna Canvas Gradient */
+            --gradient-1: #FFE5EC;
+            --gradient-2: #FFF0F5;
+            --gradient-3: #E8F4FD;
+            --gradient-4: #FFF8DC;
+
+            /* Orb Colors */
+            --orb-1: rgba(255, 95, 139, 0.4);
+            --orb-2: rgba(177, 156, 217, 0.4);
+            --orb-3: rgba(128, 237, 153, 0.3);
+            --orb-4: rgba(255, 183, 3, 0.3);
         }
 
         /* Warna Dark Mode (Override) */
         body.dark-mode {
-            --bg-color: #121212; /* Hitam Matte (bukan hitam pekat) */
-            --text-color: #E0E0E0; /* Putih tulang */
-            --card-bg: #1E1E1E; /* Abu Gelap */
-            --modal-bg: #1E1E1E;
-            --subtitle-color: #A0A0A0;
+            --bg-color: #0a0a0f;
+            --text-color: #f0f0f0;
+
+            /* Dark Glassmorphism */
+            --card-bg: rgba(30, 30, 40, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --modal-bg: rgba(25, 25, 35, 0.95);
+
+            --subtitle-color: #aaa;
             --shadow-color: rgba(0, 0, 0, 0.5);
-            --icon-bg: #2D2D2D;
-            --toggle-bg: #333;
-            --toggle-icon: #FFD700; /* Warna kuning untuk bulan/bintang */
+            --icon-bg: rgba(255, 255, 255, 0.1);
+
+            --toggle-bg: #2a2a3a;
+            --toggle-icon: #FFD700;
+
+            /* Dark Gradient */
+            --gradient-1: #1a1a2e;
+            --gradient-2: #16213e;
+            --gradient-3: #0f3460;
+            --gradient-4: #1a1a2e;
+
+            /* Dark Orb Colors */
+            --orb-1: rgba(255, 95, 139, 0.2);
+            --orb-2: rgba(147, 112, 219, 0.25);
+            --orb-3: rgba(0, 210, 252, 0.2);
+            --orb-4: rgba(255, 159, 28, 0.15);
         }
 
         /* --- RESET & DASAR --- */
@@ -43,67 +78,188 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Transisi halus saat ganti mode */
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color); /* Panggil Variabel */
+            background-color: var(--bg-color);
             font-family: 'Poppins', sans-serif;
-            color: var(--text-color); /* Panggil Variabel */
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* === CANVAS BACKGROUND === */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- FLOATING ORBS LAYER (CSS) --- */
+        .floating-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: floatOrb 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--orb-1);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: var(--orb-2);
+            top: 50%;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--orb-3);
+            bottom: -50px;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        .orb-4 {
+            width: 250px;
+            height: 250px;
+            background: var(--orb-4);
+            top: 30%;
+            left: 50%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatOrb {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(30px, -40px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-20px, 20px) scale(0.95);
+            }
+
+            75% {
+                transform: translate(40px, 30px) scale(1.05);
+            }
+        }
+
+        /* --- MESH GRADIENT OVERLAY --- */
+        .mesh-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 20% 20%, var(--gradient-1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, var(--gradient-2) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 70%, var(--gradient-3) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, var(--gradient-4) 0%, transparent 50%);
+            opacity: 0.6;
         }
 
         /* --- TOMBOL TOGGLE DARK MODE --- */
         .theme-switch {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
             background: var(--toggle-bg);
             color: var(--toggle-icon);
-            width: 45px;
-            height: 45px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border: none;
-            z-index: 100; /* Supaya selalu di atas */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 2px solid var(--card-border);
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
         }
 
-        /* --- HEADER MODERN --- */
+        .theme-switch:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-switch:active {
+            transform: scale(0.9);
+        }
+
+        /* --- HEADER (PERTAHANKAN SESUAI REQUEST) --- */
         header {
             text-align: center;
             margin-bottom: 40px;
-            margin-top: 50px; /* Turun dikit biar ga nabrak tombol toggle */
+            margin-top: 50px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         header::before {
             content: '';
             position: absolute;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 150px; height: 150px;
+            width: 150px;
+            height: 150px;
             background: #FFC2D1;
             filter: blur(60px);
             z-index: -1;
             opacity: 0.6;
         }
 
-        /* Di Dark mode, glownya dikurangi opacity-nya biar ga norak */
         body.dark-mode header::before {
-            opacity: 0.2; 
+            opacity: 0.2;
         }
 
+        /* CSS HEADER YANG ANDA MINTA PERTAHANKAN */
         h1.brand-logo {
             font-family: 'Outfit', sans-serif;
             font-weight: 900;
@@ -112,7 +268,7 @@
             background: linear-gradient(135deg, #FF5F8B 0%, #B19CD9 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            drop-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            drop-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 5px;
             line-height: 1;
         }
@@ -124,96 +280,188 @@
         }
 
         p.subtitle {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--subtitle-color);
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-weight: 500;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-top: 10px;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(2px);
         }
 
-        /* --- CONTAINER MENU --- */
+        /* --- CONTAINER MENU (GRID SYSTEM) --- */
         #menu-container {
             width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
             padding-bottom: 50px;
+            z-index: 2;
         }
 
-        /* --- TOMBOL MENU (CARD) --- */
+        /* Tampilan Laptop/Tablet (Lebar > 600px) */
+        @media (min-width: 600px) {
+            #menu-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* --- KARTU MODERN (GLASSMORPHISM) --- */
         .menu-card {
-            background: var(--card-bg); /* Panggil Variabel */
-            padding: 22px;
-            border-radius: 18px;
-            box-shadow: 0 10px 20px var(--shadow-color); 
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 22px 25px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow:
+                0 8px 32px 0 var(--shadow-color),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
             display: flex;
             align-items: center;
             justify-content: space-between;
-            animation: munculSatuSatu 0.6s ease forwards;
+
+            /* Animasi Masuk */
+            animation: fadeInCard 0.6s ease-out forwards;
             opacity: 0;
-            border: 1px solid rgba(255,255,255,0.05); /* Border tipis halus */
+            transform: translateY(20px);
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Shimmer Effect */
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent);
+            transition: left 0.6s ease;
+        }
+
+        .menu-card:hover::before {
+            left: 100%;
+        }
+
+        @keyframes fadeInCard {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px var(--shadow-color);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.12),
+                0 0 0 1px rgba(255, 95, 139, 0.3);
         }
 
         .menu-card:active {
             transform: scale(0.97);
         }
 
-        .menu-card:nth-child(1) { animation-delay: 0.1s; border-left: 5px solid #FF5F8B; }
-        .menu-card:nth-child(2) { animation-delay: 0.2s; border-left: 5px solid #B19CD9; }
-        .menu-card:nth-child(3) { animation-delay: 0.3s; border-left: 5px solid #80ED99; }
-        .menu-card:nth-child(4) { animation-delay: 0.4s; border-left: 5px solid #FFB703; }
-        .menu-card:nth-child(5) { animation-delay: 0.4s; border-left: 5px solid #FFB703; }
-        
+        /* Delay Animasi dan Border Accent */
+        .menu-card:nth-child(1) {
+            animation-delay: 0.1s;
+            border-left: 4px solid #FF5F8B;
+        }
+
+        .menu-card:nth-child(2) {
+            animation-delay: 0.2s;
+            border-left: 4px solid #B19CD9;
+        }
+
+        .menu-card:nth-child(3) {
+            animation-delay: 0.3s;
+            border-left: 4px solid #80ED99;
+        }
+
+        .menu-card:nth-child(4) {
+            animation-delay: 0.4s;
+            border-left: 4px solid #FFB703;
+        }
+
+        .menu-card:nth-child(5) {
+            animation-delay: 0.5s;
+            border-left: 4px solid #FF9F1C;
+        }
+
+        .menu-card:nth-child(6) {
+            animation-delay: 0.6s;
+            border-left: 4px solid #00D2FC;
+        }
+
         .menu-title {
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--text-color); /* Ikut berubah saat dark mode */
+            font-size: 1.1rem;
+            color: var(--text-color);
         }
 
         .menu-icon {
             font-size: 1.4rem;
             background: var(--icon-bg);
-            width: 45px;
-            height: 45px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            border-radius: 16px;
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .menu-card:hover .menu-icon {
+            transform: rotate(10deg) scale(1.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         /* --- POP UP (MODAL) --- */
         #modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            backdrop-filter: blur(8px);
         }
 
         #modal-content {
             background: var(--modal-bg);
+            backdrop-filter: blur(25px);
             width: 100%;
-            max-width: 360px;
-            border-radius: 30px;
-            padding: 30px;
+            max-width: 380px;
+            border-radius: 28px;
+            padding: 28px;
             text-align: center;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow:
+                0 25px 60px -15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--card-border);
             animation: popUpNaik 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -221,24 +469,24 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-radius: 20px;
-            background-color: #333;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
         }
 
         #modal-title {
             font-family: 'Outfit', sans-serif;
             color: var(--text-color);
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             line-height: 1.2;
         }
 
         #modal-desc {
             font-size: 0.95rem;
-            line-height: 1.6;
+            line-height: 1.7;
             color: var(--subtitle-color);
             margin-bottom: 25px;
         }
@@ -246,57 +494,150 @@
         .btn-action {
             display: block;
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(90deg, #FF5F8B 0%, #FF8FAB 100%);
+            padding: 16px;
+            background: linear-gradient(135deg, #FF5F8B 0%, #FF8FAB 50%, #B19CD9 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
             color: white;
             text-decoration: none;
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
             font-size: 1rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(255, 95, 139, 0.3);
-            transition: 0.3s;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(255, 95, 139, 0.35);
+            transition: all 0.3s ease;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
         .btn-action:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 95, 139, 0.4);
+            box-shadow: 0 15px 40px rgba(255, 95, 139, 0.45);
         }
 
         .btn-close {
             position: absolute;
             top: 15px;
-            right: 20px;
-            background: var(--card-bg); /* Warna ngikut mode */
-            width: 35px; height: 35px;
+            right: 18px;
+            background: rgba(100, 100, 100, 0.1);
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: none;
             font-size: 1.5rem;
             color: var(--text-color);
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
-        .btn-close:active { transform: scale(0.9); }
-
-        @keyframes munculSatuSatu {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .btn-close:hover {
+            background: rgba(255, 80, 80, 0.15);
+            color: #ff5050;
+            transform: rotate(90deg);
         }
 
         @keyframes popUpNaik {
-            from { transform: scale(0.8) translateY(20px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
+            from {
+                transform: scale(0.85) translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 400px) {
+            h1.brand-logo {
+                font-size: 2.8rem;
+            }
+
+            p.subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 1.5px;
+            }
+
+            .menu-card {
+                padding: 18px 20px;
+            }
+
+            .menu-title {
+                font-size: 1rem;
+            }
+
+            .menu-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .orb-1,
+            .orb-2,
+            .orb-3,
+            .orb-4 {
+                filter: blur(60px);
+            }
+
+            .orb-1 {
+                width: 250px;
+                height: 250px;
+            }
+
+            .orb-2 {
+                width: 200px;
+                height: 200px;
+            }
+
+            .orb-3 {
+                width: 180px;
+                height: 180px;
+            }
+
+            .orb-4 {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        /* Safe area for notched phones */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            body {
+                padding-top: calc(20px + env(safe-area-inset-top));
+                padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            }
         }
     </style>
 </head>
+
 <body>
+
+    <!-- BACKGROUND LAYERS -->
+    <div class="mesh-gradient"></div>
+    <div class="floating-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+    </div>
+    <canvas id="bgCanvas"></canvas>
 
     <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">☀️</button>
 
@@ -310,105 +651,243 @@
     <div id="modal-overlay" onclick="tutupPopup(event)">
         <div id="modal-content">
             <button class="btn-close" onclick="tutupPopup(null)">&times;</button>
-            
             <img id="modal-img" src="" alt="Preview">
-            
             <h2 id="modal-title">Judul</h2>
             <p id="modal-desc">Deskripsi</p>
-            
             <a id="modal-btn" href="#" class="btn-action" target="_blank">Cek Disini</a>
         </div>
     </div>
 
     <script>
-        /* === LOGIKA DARK MODE/LIGHT MODE === */
+        /* ============================
+           1. MODERN CANVAS ANIMATION
+           ============================ */
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        // Set ukuran canvas
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        setCanvasSize();
+
+        // Track mouse position
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Resize handler with debounce
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                setCanvasSize();
+                init();
+            }, 200);
+        });
+
+        // Warna partikel berdasarkan tema
+        function getParticleColors() {
+            const isDark = document.body.classList.contains('dark-mode');
+            return isDark ?
+                ['rgba(255,95,139,0.6)', 'rgba(177,156,217,0.6)', 'rgba(0,210,252,0.5)', 'rgba(255,159,28,0.5)'] :
+                ['rgba(255,95,139,0.5)', 'rgba(177,156,217,0.5)', 'rgba(128,237,153,0.4)', 'rgba(255,183,3,0.4)'];
+        }
+
+        // Modern Particle Class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.density = (Math.random() * 30) + 1;
+
+                const colors = getParticleColors();
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                // Mouse interaction
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < mouse.radius) {
+                        let forceDirectionX = dx / distance;
+                        let forceDirectionY = dy / distance;
+                        let maxDistance = mouse.radius;
+                        let force = (maxDistance - distance) / maxDistance;
+                        let directionX = forceDirectionX * force * this.density * 0.5;
+                        let directionY = forceDirectionY * force * this.density * 0.5;
+
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
+                }
+
+                // Slow drift movement
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Bounce off edges
+                if (this.x > canvas.width || this.x < 0) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.speedY = -this.speedY;
+                }
+
+                // Return to base position slowly
+                let dx = this.baseX - this.x;
+                let dy = this.baseY - this.y;
+                this.x += dx * 0.01;
+                this.y += dy * 0.01;
+            }
+
+            draw() {
+                // Glow effect
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            // Responsive particle count
+            const isMobile = window.innerWidth < 600;
+            let numberOfParticles = isMobile ?
+                (canvas.width * canvas.height) / 20000 :
+                (canvas.width * canvas.height) / 12000;
+
+            numberOfParticles = Math.min(numberOfParticles, 100); // Cap maximum
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        // Connect particles with gradient lines
+        function connect() {
+            const isDark = document.body.classList.contains('dark-mode');
+            const maxDistance = 120;
+
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a + 1; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        let opacity = (1 - distance / maxDistance) * 0.3;
+
+                        // Gradient line
+                        let gradient = ctx.createLinearGradient(
+                            particlesArray[a].x, particlesArray[a].y,
+                            particlesArray[b].x, particlesArray[b].y
+                        );
+
+                        if (isDark) {
+                            gradient.addColorStop(0, `rgba(255,95,139,${opacity})`);
+                            gradient.addColorStop(1, `rgba(177,156,217,${opacity})`);
+                        } else {
+                            gradient.addColorStop(0, `rgba(255,95,139,${opacity * 0.7})`);
+                            gradient.addColorStop(1, `rgba(177,156,217,${opacity * 0.7})`);
+                        }
+
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            connect();
+        }
+
+        // Initialize & Start
+        init();
+        animate();
+
+
+        /* ============================
+           2. LOGIKA WEB UTAMA
+           ============================ */
         const body = document.body;
         const themeBtn = document.getElementById('themeBtn');
-        const currentTheme = localStorage.getItem('theme'); // Cek apakah user pernah milih sebelumnya?
+        const currentTheme = localStorage.getItem('theme');
 
-        // 1. Cek Settingan Awal
         if (currentTheme === 'dark') {
             body.classList.add('dark-mode');
-            themeBtn.innerText = '🌙'; // Icon Bulan
+            themeBtn.innerText = '🌙';
         } else if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            // Kalau user belum pernah milih, tapi HP-nya mode gelap, kita ikutin HP-nya
             body.classList.add('dark-mode');
             themeBtn.innerText = '🌙';
         }
 
-        // 2. Fungsi Tombol Ganti Mode
         function toggleTheme() {
             body.classList.toggle('dark-mode');
-            
+
+            // Reinitialize particles with new colors
+            init();
+
             if (body.classList.contains('dark-mode')) {
                 themeBtn.innerText = '🌙';
-                localStorage.setItem('theme', 'dark'); // Simpan pilihan user "Saya suka gelap"
+                localStorage.setItem('theme', 'dark');
             } else {
                 themeBtn.innerText = '☀️';
-                localStorage.setItem('theme', 'light'); // Simpan pilihan user "Saya suka terang"
+                localStorage.setItem('theme', 'light');
             }
         }
 
-        /* === DATABASE MENU === */
+        /* DATABASE MENU */
         const dataMenu = [
-            {
-                id: 1,
-                judul: "Semgart",
-                icon: "🖼️",
-                deskripsi: "Desainer Gambar baik poster, logo, dan banner. Menghadirkan desain yang indah dan modern.",
-                gambar: "myonlineweb.github.io/basepng/semart.jpg", // Pastikan nama file di Github huruf kecil semua
-                linkEmbed: "https://www.instagram.com/markus_leo13"
-            },
-            {
-                id: 2,
-                judul: "Undangan Nikah Online",
-                icon: "✨",
-                deskripsi: "Pembuatan undangan pernikahan berbasis digital/online dengan tampilan menarik. Mulai dari 50k.",
-                gambar: "myonlineweb.github.io/basepng/undangannkh.pngg", // Pastikan nama file di Github huruf kecil semua
-                linkEmbed: "sedang_pengembangan.html"
-            },
-            {
-                id: 3,
-                judul: "Whatitu Study",
-                icon: "📘",
-                deskripsi: "Belajar Bersama Secara Gratis disini",
-                gambar: "myonlineweb.github.io/basepng/pagiback.png", // Pastikan nama file di Github huruf kecil semua
-                linkEmbed: "study_index.html"
-            },
-            {
-                id: 4,
-                judul: "Whatitu Creativity",
-                icon: "🎆",
-                deskripsi: "Dimana Kreatifitas dan Pengembangan Bertumbuh",
-                gambar: "myonlineweb.github.io/basepng/pagiback.png", // Pastikan nama file di Github huruf kecil semua
-                linkEmbed: "sedang_pengemangan.html"
-            },
-            {
-                id: 5,
-                judul: "Whatitu MySite",
-                icon: "👌",
-                deskripsi: "Pemesanan Promosi dalam Website",
-                gambar: "myonlineweb.github.io/basepng/pagiback.png", // Pastikan nama file di Github huruf kecil semua
-                linkEmbed: "sedang_pengemangan.html"
-            },
-            {
-                id: 6,
-                judul: "Whatitu Store",
-                icon: "👌",
-                deskripsi: "Pemesanan dalam Website Whatitu",
-                gambar: "myonlineweb.github.io/basepng/pagiback.png", // Pastikan nama file di Github huruf kecil semua
-                linkEmbed: "sedang_pengemangan.html"
-            }
+            { id: 1, judul: "Semgart", icon: "🖼️", deskripsi: "Desainer Gambar baik poster, logo, dan banner.", gambar: "myonlineweb.github.io/basepng/semart.jpg", linkEmbed: "https://www.instagram.com/markus_leo13" },
+            { id: 2, judul: "Undangan Nikah", icon: "✨", deskripsi: "Pembuatan undangan pernikahan berbasis digital.", gambar: "myonlineweb.github.io/basepng/undangannkh.pngg", linkEmbed: "sedang_pengembangan.html" },
+            { id: 3, judul: "Whatitu Study", icon: "📘", deskripsi: "Belajar Bersama Secara Gratis disini", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "study_index.html" },
+            { id: 4, judul: "Whatitu Creativity", icon: "🎆", deskripsi: "Dimana Kreatifitas dan Pengembangan Bertumbuh", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
+            { id: 5, judul: "Whatitu MySite", icon: "💻", deskripsi: "Pemesanan Promosi dalam Website", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
+            { id: 6, judul: "Whatitu Store", icon: "🛍️", deskripsi: "Pemesanan dalam Website Whatitu", gambar: "myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" }
         ];
 
-        /* === LOGIKA RENDER & POPUP === */
+        /* RENDER MENU */
         const container = document.getElementById('menu-container');
-
         dataMenu.forEach(item => {
             const box = document.createElement('div');
             box.className = 'menu-card';
             box.onclick = () => bukaPopup(item);
-
             box.innerHTML = `
                 <span class="menu-title">${item.judul}</span>
                 <span class="menu-icon">${item.icon}</span>
@@ -416,6 +895,7 @@
             container.appendChild(box);
         });
 
+        /* POPUP LOGIC */
         const modalOverlay = document.getElementById('modal-overlay');
         const modalImg = document.getElementById('modal-img');
         const modalTitle = document.getElementById('modal-title');
@@ -424,17 +904,32 @@
 
         function bukaPopup(data) {
             modalTitle.innerText = data.judul;
-            modalDesc.innerHTML = data.deskripsi; 
+            modalDesc.innerHTML = data.deskripsi;
+
             modalImg.src = data.gambar;
+            modalImg.onerror = function () {
+                this.src = 'https://via.placeholder.com/400x200/FF5F8B/ffffff?text=' + encodeURIComponent(data.judul);
+            };
+
             modalBtn.href = data.linkEmbed;
             modalOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scroll
         }
 
         function tutupPopup(event) {
             if (event === null || event.target === modalOverlay) {
                 modalOverlay.style.display = 'none';
+                document.body.style.overflow = ''; // Re-enable scroll
             }
         }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+                tutupPopup(null);
+            }
+        });
     </script>
 </body>
+
 </html>
