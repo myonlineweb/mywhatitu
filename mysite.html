@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whatitu MySite - Website Promosi Murah 50K | Terima Jadi!</title>
+    <meta name="description" content="Buat website promosi profesional hanya Rp 50.000. Terima jadi, terintegrasi MyWhatitu Store. Pesan sekarang!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #05080f;
+            --bg-card: rgba(15, 23, 42, 0.6);
+            --neon-cyan: #00f5ff;
+            --neon-purple: #a855f7;
+            --neon-pink: #ec4899;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Canvas Background */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Logo / Brand */
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo::before {
+            content: '◆';
+            -webkit-text-fill-color: var(--neon-cyan);
+            font-size: 0.8rem;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 100px -20px rgba(0, 245, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(50%); }
+        }
+
+        /* Headlines */
+        .headline {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .headline .highlight {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subheadline {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 35px;
+            font-weight: 400;
+        }
+
+        /* Price Section */
+        .price-section {
+            text-align: center;
+            padding: 30px 20px;
+            margin: 30px 0;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.08), rgba(168, 85, 247, 0.08));
+            border-radius: 16px;
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            position: relative;
+        }
+
+        .price-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .price-main {
+            font-size: clamp(3rem, 10vw, 4.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            text-shadow: 0 0 60px rgba(0, 245, 255, 0.5);
+            position: relative;
+        }
+
+        .price-suffix {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--neon-purple);
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Benefits */
+        .benefits {
+            margin: 30px 0;
+        }
+
+        .benefits-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .benefits-title::before {
+            content: '✦';
+            color: var(--neon-cyan);
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            background: rgba(0, 245, 255, 0.05);
+            border-color: rgba(0, 245, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(168, 85, 247, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .benefit-text h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .benefit-text p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .benefit-link {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 245, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--neon-cyan);
+            font-size: 0.8rem;
+        }
+
+        /* Terms Section */
+        .terms {
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .terms-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--neon-purple);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terms-list {
+            list-style: none;
+        }
+
+        .terms-list li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .terms-list li:last-child {
+            border-bottom: none;
+        }
+
+        .terms-list li::before {
+            content: '→';
+            color: var(--neon-purple);
+            flex-shrink: 0;
+        }
+
+        .revision-highlight {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(168, 85, 247, 0.15));
+            border: 1px dashed rgba(236, 72, 153, 0.4);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .revision-highlight p {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .revision-highlight strong {
+            color: var(--neon-pink);
+        }
+
+        /* CTA Button */
+        .cta-container {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+            background: linear-gradient(135deg, var(--neon-cyan), #00d4ff);
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 10px 40px rgba(0, 245, 255, 0.4),
+                0 0 0 0 rgba(0, 245, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 20px 60px rgba(0, 245, 255, 0.5),
+                0 0 0 4px rgba(0, 245, 255, 0.2);
+        }
+
+        .cta-button:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .wa-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .cta-subtext {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        .footer p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .footer a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--neon-purple);
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+        }
+
+        .floating-element.cyan {
+            width: 400px;
+            height: 400px;
+            background: var(--neon-cyan);
+            top: -200px;
+            right: -100px;
+            animation: float-slow 20s ease-in-out infinite;
+        }
+
+        .floating-element.purple {
+            width: 350px;
+            height: 350px;
+            background: var(--neon-purple);
+            bottom: -150px;
+            left: -100px;
+            animation: float-slow 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -30px) rotate(5deg); }
+            50% { transform: translate(-20px, 20px) rotate(-5deg); }
+            75% { transform: translate(20px, 10px) rotate(3deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .glass-card {
+                padding: 35px 25px;
+                border-radius: 20px;
+            }
+
+            .price-section {
+                padding: 25px 15px;
+            }
+
+            .benefit-item {
+                padding: 12px;
+            }
+
+            .cta-button {
+                padding: 16px 35px;
+                font-size: 1rem;
+                width: 100%;
+            }
+
+            .floating-element.cyan {
+                width: 250px;
+                height: 250px;
+            }
+
+            .floating-element.purple {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 30px 20px;
+            }
+
+            .benefit-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .benefit-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Selection Style */
+        ::selection {
+            background: rgba(0, 245, 255, 0.3);
+            color: white;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--neon-cyan), var(--neon-purple));
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Background -->
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- Floating Ambient Elements -->
+    <div class="floating-element cyan"></div>
+    <div class="floating-element purple"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Brand -->
+        <div class="brand">
+            <span class="brand-logo">Whatitu MySite</span>
+        </div>
+
+        <!-- Main Card -->
+        <div class="glass-card">
+            <!-- Headlines -->
+            <h1 class="headline">
+                Punya Website Promosi Sendiri <span class="highlight">Bukan Lagi Mimpi.</span>
+            </h1>
+            <p class="subheadline">
+                Solusi Website Instan, Murah, dan Terintegrasi Ekosistem MyWhatitu.
+            </p>
+
+            <!-- Price Section -->
+            <div class="price-section">
+                <p class="price-label">Mulai Dari</p>
+                <p class="price-main">Rp 50.000,-</p>
+                <span class="price-suffix">🎯 Terima Jadi!</span>
+                <span class="badge">Harga Promo Terbatas</span>
+            </div>
+
+            <!-- Benefits -->
+            <div class="benefits">
+                <h3 class="benefits-title">Yang Kamu Dapatkan</h3>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">🌐</div>
+                    <div class="benefit-text">
+                        <h4>Link Website Eksklusif</h4>
+                        <p>Dapatkan alamat profesional: <span class="benefit-link">whatitumysite.github.io/nama_usaha_anda</span></p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🚀</div>
+                    <div class="benefit-text">
+                        <h4>Auto-Listing di MyWhatitu Store</h4>
+                        <p>Usahamu otomatis terdaftar & dipromosikan ke Whatitu Store. <strong>Resmi Milik Whatitu Secara Gratis!</strong></p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-text">
+                        <h4>Proses Cepat & Profesional</h4>
+                        <p>Website jadi dalam waktu kurang dari 3 hari dengan desain modern & responsif di semua perangkat.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms -->
+            <div class="terms">
+                <h4 class="terms-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4M12 8h.01"></path>
+                    </svg>
+                    Ketentuan Layanan
+                </h4>
+                <ul class="terms-list">
+                    <li>Harga Rp 50.000 adalah untuk 1x Hasil Final — langsung jadi, tanpa proses bolak-balik.</li>
+                    <li>Kami memberikan hasil terbaik dari awal, jadi tidak ada sistem revisi di paket ini.</li>
+                    <li>Kamu cukup kirimkan brief singkat, kami yang eksekusi sepenuhnya!</li>
+                </ul>
+
+                <div class="revision-highlight">
+                    <p>💎 <strong>Butuh Penyesuaian?</strong><br>
+                    Upgrade ke <strong>Layanan Prioritas +Rp 30.000</strong> untuk revisi & konsultasi desain.</p>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-container">
+                <a href="https://wa.me/6281252401253" class="cta-button" target="_blank" rel="noopener noreferrer">
+                    <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Pesan Website Sekarang
+                </a>
+                <p class="cta-subtext">📲 Balas cepat via WhatsApp</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2025 <a href="#">MyWhatitu</a> — Empowering Local Business Online</p>
+        </footer>
+    </div>
+
+    <!-- Canvas Animation Script -->
+    <script>
+        // Canvas Constellation Effect
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        // Particle settings
+        const particleCount = Math.min(80, Math.floor((width * height) / 15000));
+        const particles = [];
+        const connectionDistance = 150;
+        const mouseRadius = 180;
+
+        // Mouse tracking
+        let mouse = {
+            x: null,
+            y: null
+        };
+
+        // Colors
+        const colors = {
+            particle: 'rgba(0, 245, 255, 0.8)',
+            connection: 'rgba(0, 245, 255, 0.15)',
+            mouseConnection: 'rgba(168, 85, 247, 0.3)'
+        };
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+                this.baseRadius = this.radius;
+            }
+
+            update() {
+                // Move particle
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Mouse interaction
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < mouseRadius) {
+                        const force = (mouseRadius - distance) / mouseRadius;
+                        this.radius = this.baseRadius + force * 2;
+                    } else {
+                        this.radius = this.baseRadius;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = colors.particle;
+                ctx.fill();
+
+                // Glow effect
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = colors.particle;
+            }
+        }
+
+        // Initialize particles
+        function initParticles() {
+            particles.length = 0;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // Draw connections between particles
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        const opacity = 1 - (distance / connectionDistance);
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(0, 245, 255, ${opacity * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+
+                // Connect to mouse
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = particles[i].x - mouse.x;
+                    const dy = particles[i].y - mouse.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < mouseRadius) {
+                        const opacity = 1 - (distance / mouseRadius);
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = `rgba(168, 85, 247, ${opacity * 0.4})`;
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Reset shadow for performance
+            ctx.shadowBlur = 0;
+
+            // Draw connections first
+            drawConnections();
+
+            // Update and draw particles
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Touch support for mobile
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Start animation
+        initParticles();
+        animate();
+
+        // Button click effect
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            // Create ripple effect
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                background: rgba(255, 255, 255, 0.4);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.6s ease-out;
+                pointer-events: none;
+                left: ${e.clientX - rect.left - size/2}px;
+                top: ${e.clientY - rect.top - size/2}px;
+            `;
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Add ripple animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
