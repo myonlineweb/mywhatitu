@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Whatitu Website</title>
+    <title>My Whatitu - Modern</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,17 +29,10 @@
             --toggle-bg: #FFC2D1;
             --toggle-icon: #fff;
 
-            /* Warna Canvas Gradient */
-            --gradient-1: #FFE5EC;
-            --gradient-2: #FFF0F5;
-            --gradient-3: #E8F4FD;
-            --gradient-4: #FFF8DC;
-
-            /* Orb Colors */
-            --orb-1: rgba(255, 95, 139, 0.4);
-            --orb-2: rgba(177, 156, 217, 0.4);
-            --orb-3: rgba(128, 237, 153, 0.3);
-            --orb-4: rgba(255, 183, 3, 0.3);
+            /* Orb Colors - Optimized */
+            --orb-1: rgba(255, 95, 139, 0.35);
+            --orb-2: rgba(177, 156, 217, 0.35);
+            --orb-3: rgba(128, 237, 153, 0.25);
         }
 
         /* Warna Dark Mode (Override) */
@@ -59,17 +52,10 @@
             --toggle-bg: #2a2a3a;
             --toggle-icon: #FFD700;
 
-            /* Dark Gradient */
-            --gradient-1: #1a1a2e;
-            --gradient-2: #16213e;
-            --gradient-3: #0f3460;
-            --gradient-4: #1a1a2e;
-
             /* Dark Orb Colors */
-            --orb-1: rgba(255, 95, 139, 0.2);
-            --orb-2: rgba(147, 112, 219, 0.25);
-            --orb-3: rgba(0, 210, 252, 0.2);
-            --orb-4: rgba(255, 159, 28, 0.15);
+            --orb-1: rgba(255, 95, 139, 0.18);
+            --orb-2: rgba(147, 112, 219, 0.2);
+            --orb-3: rgba(0, 210, 252, 0.15);
         }
 
         /* --- RESET & DASAR --- */
@@ -78,7 +64,6 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
         }
 
         html {
@@ -96,20 +81,10 @@
             padding: 20px;
             overflow-x: hidden;
             position: relative;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* === CANVAS BACKGROUND === */
-        #bgCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* --- FLOATING ORBS LAYER (CSS) --- */
+        /* --- FLOATING ORBS LAYER (CSS ONLY - OPTIMIZED) --- */
         .floating-orbs {
             position: fixed;
             top: 0;
@@ -119,86 +94,78 @@
             z-index: 0;
             pointer-events: none;
             overflow: hidden;
+            will-change: transform;
         }
 
         .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            animation: floatOrb 20s infinite ease-in-out;
+            filter: blur(50px);
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .orb-1 {
-            width: 400px;
-            height: 400px;
+            width: 350px;
+            height: 350px;
             background: var(--orb-1);
-            top: -100px;
-            left: -100px;
-            animation-delay: 0s;
+            top: -80px;
+            left: -80px;
+            animation: floatOrb1 18s infinite ease-in-out;
         }
 
         .orb-2 {
-            width: 350px;
-            height: 350px;
+            width: 300px;
+            height: 300px;
             background: var(--orb-2);
-            top: 50%;
-            right: -100px;
-            animation-delay: -5s;
+            top: 45%;
+            right: -80px;
+            animation: floatOrb2 20s infinite ease-in-out;
         }
 
         .orb-3 {
-            width: 300px;
-            height: 300px;
+            width: 280px;
+            height: 280px;
             background: var(--orb-3);
             bottom: -50px;
-            left: 30%;
-            animation-delay: -10s;
+            left: 25%;
+            animation: floatOrb3 22s infinite ease-in-out;
         }
 
-        .orb-4 {
-            width: 250px;
-            height: 250px;
-            background: var(--orb-4);
-            top: 30%;
-            left: 50%;
-            animation-delay: -15s;
-        }
-
-        @keyframes floatOrb {
+        @keyframes floatOrb1 {
 
             0%,
             100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            25% {
-                transform: translate(30px, -40px) scale(1.1);
+                transform: translate(0, 0) scale(1) translateZ(0);
             }
 
             50% {
-                transform: translate(-20px, 20px) scale(0.95);
-            }
-
-            75% {
-                transform: translate(40px, 30px) scale(1.05);
+                transform: translate(25px, 20px) scale(1.05) translateZ(0);
             }
         }
 
-        /* --- MESH GRADIENT OVERLAY --- */
-        .mesh-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            background:
-                radial-gradient(ellipse at 20% 20%, var(--gradient-1) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 30%, var(--gradient-2) 0%, transparent 50%),
-                radial-gradient(ellipse at 40% 70%, var(--gradient-3) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 80%, var(--gradient-4) 0%, transparent 50%);
-            opacity: 0.6;
+        @keyframes floatOrb2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1) translateZ(0);
+            }
+
+            50% {
+                transform: translate(-20px, -25px) scale(0.95) translateZ(0);
+            }
+        }
+
+        @keyframes floatOrb3 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1) translateZ(0);
+            }
+
+            50% {
+                transform: translate(30px, -15px) scale(1.03) translateZ(0);
+            }
         }
 
         /* --- TOMBOL TOGGLE DARK MODE --- */
@@ -219,8 +186,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             border: 2px solid var(--card-border);
             z-index: 100;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
         }
 
         .theme-switch:hover {
@@ -232,7 +198,7 @@
             transform: scale(0.9);
         }
 
-        /* --- HEADER (PERTAHANKAN SESUAI REQUEST) --- */
+        /* --- HEADER --- */
         header {
             text-align: center;
             margin-bottom: 40px;
@@ -247,19 +213,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
+            width: 130px;
+            height: 130px;
             background: #FFC2D1;
-            filter: blur(60px);
+            filter: blur(50px);
             z-index: -1;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         body.dark-mode header::before {
-            opacity: 0.2;
+            opacity: 0.15;
         }
 
-        /* CSS HEADER YANG ANDA MINTA PERTAHANKAN */
         h1.brand-logo {
             font-family: 'Outfit', sans-serif;
             font-weight: 900;
@@ -268,7 +233,7 @@
             background: linear-gradient(135deg, #FF5F8B 0%, #B19CD9 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            drop-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-clip: text;
             margin-bottom: 5px;
             line-height: 1;
         }
@@ -289,7 +254,7 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 5px 15px;
             border-radius: 20px;
-            backdrop-filter: blur(2px);
+            transition: color 0.4s ease;
         }
 
         /* --- CONTAINER MENU (GRID SYSTEM) --- */
@@ -310,51 +275,25 @@
             }
         }
 
-        /* --- KARTU MODERN (GLASSMORPHISM) --- */
+        /* --- KARTU MODERN (GLASSMORPHISM - OPTIMIZED) --- */
         .menu-card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 22px 25px;
             border-radius: 20px;
             border: 1px solid var(--card-border);
-            box-shadow:
-                0 8px 32px 0 var(--shadow-color),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: space-between;
-
-            /* Animasi Masuk */
-            animation: fadeInCard 0.6s ease-out forwards;
+            animation: fadeInCard 0.5s ease-out forwards;
             opacity: 0;
-            transform: translateY(20px);
-
+            transform: translateY(15px);
             position: relative;
             overflow: hidden;
-        }
-
-        /* Shimmer Effect */
-        .menu-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg,
-                    transparent,
-                    rgba(255, 255, 255, 0.1),
-                    transparent);
-            transition: left 0.6s ease;
-        }
-
-        .menu-card:hover::before {
-            left: 100%;
         }
 
         @keyframes fadeInCard {
@@ -365,44 +304,42 @@
         }
 
         .menu-card:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.12),
-                0 0 0 1px rgba(255, 95, 139, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
 
         .menu-card:active {
-            transform: scale(0.97);
+            transform: scale(0.98);
         }
 
         /* Delay Animasi dan Border Accent */
         .menu-card:nth-child(1) {
-            animation-delay: 0.1s;
+            animation-delay: 0.05s;
             border-left: 4px solid #FF5F8B;
         }
 
         .menu-card:nth-child(2) {
-            animation-delay: 0.2s;
+            animation-delay: 0.1s;
             border-left: 4px solid #B19CD9;
         }
 
         .menu-card:nth-child(3) {
-            animation-delay: 0.3s;
+            animation-delay: 0.15s;
             border-left: 4px solid #80ED99;
         }
 
         .menu-card:nth-child(4) {
-            animation-delay: 0.4s;
+            animation-delay: 0.2s;
             border-left: 4px solid #FFB703;
         }
 
         .menu-card:nth-child(5) {
-            animation-delay: 0.5s;
+            animation-delay: 0.25s;
             border-left: 4px solid #FF9F1C;
         }
 
         .menu-card:nth-child(6) {
-            animation-delay: 0.6s;
+            animation-delay: 0.3s;
             border-left: 4px solid #00D2FC;
         }
 
@@ -411,6 +348,7 @@
             font-weight: 700;
             font-size: 1.1rem;
             color: var(--text-color);
+            transition: color 0.4s ease;
         }
 
         .menu-icon {
@@ -422,18 +360,15 @@
             align-items: center;
             justify-content: center;
             border-radius: 16px;
-            box-shadow:
-                0 4px 15px rgba(0, 0, 0, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, background-color 0.4s ease;
         }
 
         .menu-card:hover .menu-icon {
-            transform: rotate(10deg) scale(1.15);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: rotate(8deg) scale(1.1);
         }
 
-        /* --- POP UP (MODAL) --- */
+        /* --- POP UP (MODAL - OPTIMIZED) --- */
         #modal-overlay {
             display: none;
             position: fixed;
@@ -442,7 +377,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(5px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -451,18 +386,16 @@
 
         #modal-content {
             background: var(--modal-bg);
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(15px);
             width: 100%;
             max-width: 380px;
             border-radius: 28px;
             padding: 28px;
             text-align: center;
             position: relative;
-            box-shadow:
-                0 25px 60px -15px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--card-border);
-            animation: popUpNaik 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: popUpNaik 0.35s ease-out;
         }
 
         #modal-img {
@@ -482,6 +415,7 @@
             font-weight: 700;
             margin-bottom: 10px;
             line-height: 1.2;
+            transition: color 0.4s ease;
         }
 
         #modal-desc {
@@ -489,15 +423,14 @@
             line-height: 1.7;
             color: var(--subtitle-color);
             margin-bottom: 25px;
+            transition: color 0.4s ease;
         }
 
         .btn-action {
             display: block;
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #FF5F8B 0%, #FF8FAB 50%, #B19CD9 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 3s ease infinite;
+            background: linear-gradient(135deg, #FF5F8B 0%, #B19CD9 100%);
             color: white;
             text-decoration: none;
             font-family: 'Outfit', sans-serif;
@@ -505,21 +438,9 @@
             font-size: 1rem;
             border-radius: 14px;
             box-shadow: 0 8px 25px rgba(255, 95, 139, 0.35);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             letter-spacing: 1px;
             text-transform: uppercase;
-        }
-
-        @keyframes gradientShift {
-
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
         }
 
         .btn-action:hover {
@@ -542,8 +463,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
         }
 
         .btn-close:hover {
@@ -554,7 +474,7 @@
 
         @keyframes popUpNaik {
             from {
-                transform: scale(0.85) translateY(30px);
+                transform: scale(0.9) translateY(20px);
                 opacity: 0;
             }
 
@@ -591,29 +511,23 @@
 
             .orb-1,
             .orb-2,
-            .orb-3,
-            .orb-4 {
-                filter: blur(60px);
+            .orb-3 {
+                filter: blur(40px);
             }
 
             .orb-1 {
-                width: 250px;
-                height: 250px;
+                width: 220px;
+                height: 220px;
             }
 
             .orb-2 {
-                width: 200px;
-                height: 200px;
-            }
-
-            .orb-3 {
                 width: 180px;
                 height: 180px;
             }
 
-            .orb-4 {
-                width: 150px;
-                height: 150px;
+            .orb-3 {
+                width: 160px;
+                height: 160px;
             }
         }
 
@@ -624,20 +538,34 @@
                 padding-bottom: calc(20px + env(safe-area-inset-bottom));
             }
         }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            .orb {
+                animation: none;
+            }
+
+            .menu-card {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+
+            * {
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- BACKGROUND LAYERS -->
-    <div class="mesh-gradient"></div>
+    <!-- BACKGROUND LAYERS (OPTIMIZED - CSS ONLY) -->
     <div class="floating-orbs">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
-        <div class="orb orb-4"></div>
     </div>
-    <canvas id="bgCanvas"></canvas>
 
     <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">☀️</button>
 
@@ -660,232 +588,20 @@
 
     <script>
         /* ============================
-           1. OPTIMIZED CANVAS ANIMATION (OffscreenCanvas)
-           ============================ */
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d', { alpha: true });
-
-        // Use OffscreenCanvas for better performance if supported
-        let offscreenCanvas = null;
-        let offscreenCtx = null;
-        const useOffscreen = typeof OffscreenCanvas !== 'undefined';
-
-        let particlesArray = [];
-        let mouse = { x: null, y: null, radius: 120 };
-        let animationId = null;
-        let lastFrameTime = 0;
-        const targetFPS = 30; // Limit to 30 FPS for performance
-        const frameInterval = 1000 / targetFPS;
-
-        // Set ukuran canvas
-        function setCanvasSize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            // Setup offscreen canvas
-            if (useOffscreen) {
-                offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
-                offscreenCtx = offscreenCanvas.getContext('2d', { alpha: true });
-            }
-        }
-        setCanvasSize();
-
-        // Track mouse position with throttling
-        let mouseThrottle = false;
-        window.addEventListener('mousemove', (e) => {
-            if (mouseThrottle) return;
-            mouseThrottle = true;
-            mouse.x = e.x;
-            mouse.y = e.y;
-            setTimeout(() => mouseThrottle = false, 50);
-        }, { passive: true });
-
-        window.addEventListener('mouseout', () => {
-            mouse.x = null;
-            mouse.y = null;
-        }, { passive: true });
-
-        // Resize handler with debounce
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                setCanvasSize();
-                init();
-            }, 300);
-        }, { passive: true });
-
-        // Pause animation when tab is not visible
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-            } else {
-                if (!animationId) animate();
-            }
-        });
-
-        // Warna partikel berdasarkan tema (pre-cached)
-        let cachedColors = null;
-        let cachedLineColor = null;
-
-        function updateCachedColors() {
-            const isDark = document.body.classList.contains('dark-mode');
-            cachedColors = isDark ?
-                ['rgba(255,95,139,0.5)', 'rgba(177,156,217,0.5)', 'rgba(0,210,252,0.4)', 'rgba(255,159,28,0.4)'] :
-                ['rgba(255,95,139,0.4)', 'rgba(177,156,217,0.4)', 'rgba(128,237,153,0.3)', 'rgba(255,183,3,0.3)'];
-            cachedLineColor = isDark ? 'rgba(255,95,139,' : 'rgba(177,156,217,';
-        }
-        updateCachedColors();
-
-        // Optimized Particle Class
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.baseX = this.x;
-                this.baseY = this.y;
-                this.size = Math.random() * 2.5 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.25;
-                this.speedY = (Math.random() - 0.5) * 0.25;
-                this.density = (Math.random() * 20) + 5;
-                this.color = cachedColors[Math.floor(Math.random() * cachedColors.length)];
-            }
-
-            update() {
-                // Mouse interaction (simplified)
-                if (mouse.x != null && mouse.y != null) {
-                    const dx = mouse.x - this.x;
-                    const dy = mouse.y - this.y;
-                    const distSq = dx * dx + dy * dy;
-                    const radiusSq = mouse.radius * mouse.radius;
-
-                    if (distSq < radiusSq) {
-                        const distance = Math.sqrt(distSq);
-                        const force = (mouse.radius - distance) / mouse.radius;
-                        const directionX = (dx / distance) * force * this.density * 0.3;
-                        const directionY = (dy / distance) * force * this.density * 0.3;
-                        this.x -= directionX;
-                        this.y -= directionY;
-                    }
-                }
-
-                // Slow drift movement
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                // Bounce off edges
-                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
-                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
-
-                // Return to base position slowly
-                this.x += (this.baseX - this.x) * 0.008;
-                this.y += (this.baseY - this.y) * 0.008;
-            }
-
-            draw(context) {
-                context.beginPath();
-                context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                context.fillStyle = this.color;
-                context.fill();
-            }
-        }
-
-        function init() {
-            particlesArray = [];
-            updateCachedColors();
-
-            // Much lower particle count for performance
-            const isMobile = window.innerWidth < 600;
-            let numberOfParticles = isMobile ?
-                Math.floor((canvas.width * canvas.height) / 40000) :
-                Math.floor((canvas.width * canvas.height) / 25000);
-
-            numberOfParticles = Math.min(Math.max(numberOfParticles, 15), 50); // Cap between 15-50
-
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        // Simplified connect function (no gradient for performance)
-        function connect(context) {
-            const maxDistanceSq = 100 * 100; // Use squared distance to avoid sqrt
-            const len = particlesArray.length;
-
-            context.lineWidth = 0.5;
-
-            for (let a = 0; a < len; a++) {
-                const pA = particlesArray[a];
-                for (let b = a + 1; b < len; b++) {
-                    const pB = particlesArray[b];
-                    const dx = pA.x - pB.x;
-                    const dy = pA.y - pB.y;
-                    const distSq = dx * dx + dy * dy;
-
-                    if (distSq < maxDistanceSq) {
-                        const opacity = (1 - distSq / maxDistanceSq) * 0.2;
-                        context.strokeStyle = cachedLineColor + opacity + ')';
-                        context.beginPath();
-                        context.moveTo(pA.x, pA.y);
-                        context.lineTo(pB.x, pB.y);
-                        context.stroke();
-                    }
-                }
-            }
-        }
-
-        function animate(currentTime) {
-            animationId = requestAnimationFrame(animate);
-
-            // Throttle to target FPS
-            const elapsed = currentTime - lastFrameTime;
-            if (elapsed < frameInterval) return;
-            lastFrameTime = currentTime - (elapsed % frameInterval);
-
-            const renderCtx = useOffscreen ? offscreenCtx : ctx;
-            renderCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Update and draw particles
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw(renderCtx);
-            }
-            connect(renderCtx);
-
-            // Copy offscreen to main canvas
-            if (useOffscreen) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(offscreenCanvas, 0, 0);
-            }
-        }
-
-        // Initialize & Start
-        init();
-        animate(0);
-
-
-        /* ============================
-           2. LOGIKA WEB UTAMA
+           LOGIKA WEB UTAMA (OPTIMIZED)
            ============================ */
         const body = document.body;
         const themeBtn = document.getElementById('themeBtn');
         const currentTheme = localStorage.getItem('theme');
 
-        if (currentTheme === 'dark') {
-            body.classList.add('dark-mode');
-            themeBtn.innerText = '🌙';
-        } else if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // Initialize theme
+        if (currentTheme === 'dark' || (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             body.classList.add('dark-mode');
             themeBtn.innerText = '🌙';
         }
 
         function toggleTheme() {
             body.classList.toggle('dark-mode');
-
-            // Reinitialize particles with new colors
-            init();
-
             if (body.classList.contains('dark-mode')) {
                 themeBtn.innerText = '🌙';
                 localStorage.setItem('theme', 'dark');
@@ -900,9 +616,9 @@
             { id: 1, judul: "Semgart", icon: "🖼️", deskripsi: "Desainer Gambar baik poster, logo, dan banner.", gambar: "https://myonlineweb.github.io/basepng/semart.jpg", linkEmbed: "https://www.instagram.com/markus_leo13" },
             { id: 2, judul: "Undangan Nikah", icon: "✨", deskripsi: "Pembuatan undangan pernikahan berbasis digital.", gambar: "https://myonlineweb.github.io/basepng/undangannkh.png", linkEmbed: "sedang_pengembangan.html" },
             { id: 3, judul: "Whatitu Study", icon: "📘", deskripsi: "Belajar Bersama Secara Gratis disini", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "study_index.html" },
-            { id: 4, judul: "Whatitu Creativity", icon: "🎆", deskripsi: "Dimana Kreatifitas dan Pengembangan Bertumbuh", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengembangan.html" },
-            { id: 5, judul: "Whatitu MySite", icon: "💻", deskripsi: "Buat dan Promosikan Websitemu Disini", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengembangan.html" },
-            { id: 6, judul: "Whatitu Store", icon: "🛍️", deskripsi: "Pemesanan dalam Website Whatitu", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengembangan.html" }
+            { id: 4, judul: "Whatitu Creativity", icon: "🎆", deskripsi: "Dimana Kreatifitas dan Pengembangan Bertumbuh", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
+            { id: 5, judul: "Whatitu MySite", icon: "💻", deskripsi: "Pemesanan Promosi dalam Website", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" },
+            { id: 6, judul: "Whatitu Store", icon: "🛍️", deskripsi: "Pemesanan dalam Website Whatitu", gambar: "https://myonlineweb.github.io/basepng/pagiback.png", linkEmbed: "sedang_pengemangan.html" }
         ];
 
         /* RENDER MENU */
@@ -928,21 +644,19 @@
         function bukaPopup(data) {
             modalTitle.innerText = data.judul;
             modalDesc.innerHTML = data.deskripsi;
-
             modalImg.src = data.gambar;
             modalImg.onerror = function () {
                 this.src = 'https://via.placeholder.com/400x200/FF5F8B/ffffff?text=' + encodeURIComponent(data.judul);
             };
-
             modalBtn.href = data.linkEmbed;
             modalOverlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Prevent scroll
+            document.body.style.overflow = 'hidden';
         }
 
         function tutupPopup(event) {
             if (event === null || event.target === modalOverlay) {
                 modalOverlay.style.display = 'none';
-                document.body.style.overflow = ''; // Re-enable scroll
+                document.body.style.overflow = '';
             }
         }
 
