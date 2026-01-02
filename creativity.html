@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Morning Vibes ☀️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Vibes ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         /* ==================== CSS RESET ==================== */
         * {
@@ -13,7 +15,8 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             height: 100%;
             overflow: hidden;
         }
@@ -42,11 +45,11 @@
             background: #000;
             border-radius: 55px;
             padding: 14px;
-            box-shadow: 
+            box-shadow:
                 0 0 0 2px #1a1a1a,
                 0 0 0 5px #0d0d0d,
-                0 30px 60px rgba(0,0,0,0.5),
-                inset 0 0 20px rgba(255,255,255,0.02);
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.02);
         }
 
         .phone-screen {
@@ -121,6 +124,191 @@
             display: none;
         }
 
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            top: 55px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-4px);
+        }
+
+        .back-button .back-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover .back-icon {
+            transform: translateX(-3px);
+        }
+
+        /* Mode Toggle Button */
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .mode-toggle .mode-icon {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .mode-toggle:hover .mode-icon {
+            transform: rotate(15deg);
+        }
+
+        .mode-toggle .mode-label {
+            display: none;
+        }
+
+        @media (min-width: 600px) {
+            .mode-toggle .mode-label {
+                display: inline;
+            }
+        }
+
+        /* ==================== LAPTOP MODE ==================== */
+        body.laptop-mode .phone-wrapper {
+            padding: 0;
+        }
+
+        body.laptop-mode .phone-frame {
+            max-width: 100%;
+            width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        body.laptop-mode .phone-screen {
+            border-radius: 0;
+        }
+
+        body.laptop-mode #morningCanvas {
+            border-radius: 0;
+        }
+
+        body.laptop-mode .dynamic-island {
+            display: none;
+        }
+
+        body.laptop-mode .status-bar {
+            padding-top: 30px;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+
+        body.laptop-mode .back-button {
+            top: 30px;
+            left: 40px;
+        }
+
+        body.laptop-mode .glass-card {
+            margin: 8px 40px 20px;
+            max-width: 600px;
+        }
+
+        body.laptop-mode .section-header {
+            padding: 0 44px;
+            max-width: 700px;
+        }
+
+        body.laptop-mode .buttons-container {
+            padding: 0 40px 30px;
+            max-width: 700px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        body.laptop-mode .btn-3d {
+            margin: 0;
+        }
+
+        body.laptop-mode .greeting-text h1 {
+            font-size: 32px;
+        }
+
+        body.laptop-mode .temp-display .temp {
+            font-size: 52px;
+        }
+
+        body.laptop-mode .quote-box p {
+            font-size: 15px;
+        }
+
+        /* Laptop mode - center content for wide screens */
+        @media (min-width: 1200px) {
+            body.laptop-mode .app-content {
+                align-items: center;
+            }
+
+            body.laptop-mode .status-bar {
+                width: 100%;
+                max-width: 900px;
+            }
+
+            body.laptop-mode .glass-card {
+                width: 100%;
+                max-width: 800px;
+            }
+
+            body.laptop-mode .section-header {
+                width: 100%;
+                max-width: 900px;
+            }
+
+            body.laptop-mode .buttons-container {
+                width: 100%;
+                max-width: 900px;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         /* Header / Status Bar */
         .status-bar {
             display: flex;
@@ -146,16 +334,16 @@
         .glass-card {
             margin: 8px 20px 20px;
             padding: 24px;
-            background: linear-gradient(135deg, 
-                rgba(255,255,255,0.12) 0%, 
-                rgba(255,255,255,0.05) 100%);
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.12) 0%,
+                    rgba(255, 255, 255, 0.05) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 28px;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 
-                0 10px 40px rgba(0,0,0,0.2),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             opacity: 0;
             transform: translateY(-20px);
         }
@@ -182,7 +370,7 @@
         }
 
         .greeting-text p {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 14px;
             font-weight: 400;
         }
@@ -205,7 +393,7 @@
 
         .temp-display .condition {
             font-size: 12px;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
             margin-top: 4px;
         }
 
@@ -213,18 +401,18 @@
         .quote-box {
             margin-top: 20px;
             padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .quote-box p {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 13px;
             font-style: italic;
             line-height: 1.6;
         }
 
         .quote-box .author {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
             margin-top: 8px;
             font-style: normal;
@@ -238,7 +426,7 @@
         }
 
         .section-header h2 {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
@@ -252,7 +440,7 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
         }
 
         /* ==================== 3D BUTTONS ==================== */
@@ -288,122 +476,130 @@
         /* ===== Button Variants ===== */
         .btn-google {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #0891b2,
                 0 15px 25px rgba(79, 172, 254, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-google:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #0891b2,
                 0 5px 15px rgba(79, 172, 254, 0.3),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
         }
 
         .btn-youtube {
             background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #b91c1c,
                 0 15px 25px rgba(255, 65, 108, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-youtube:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #b91c1c,
                 0 5px 15px rgba(255, 65, 108, 0.3),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
         }
 
         .btn-github {
             background: linear-gradient(135deg, #434343 0%, #1a1a1a 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #000,
                 0 15px 25px rgba(0, 0, 0, 0.4),
-                inset 0 2px 0 rgba(255,255,255,0.15),
-                inset 0 -2px 4px rgba(0,0,0,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2);
         }
+
         .btn-github:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #000,
                 0 5px 15px rgba(0, 0, 0, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.15);
+                inset 0 2px 0 rgba(255, 255, 255, 0.15);
         }
 
         .btn-twitter {
             background: linear-gradient(135deg, #1DA1F2 0%, #0d8bd9 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #0369a1,
                 0 15px 25px rgba(29, 161, 242, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-twitter:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #0369a1,
                 0 5px 15px rgba(29, 161, 242, 0.3),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
         }
 
         .btn-instagram {
             background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #86198f,
                 0 15px 25px rgba(188, 24, 136, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-instagram:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #86198f,
                 0 5px 15px rgba(188, 24, 136, 0.3),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
         }
 
         .btn-linkedin {
             background: linear-gradient(135deg, #0077B5 0%, #005885 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #1e3a5f,
                 0 15px 25px rgba(0, 119, 181, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-linkedin:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #1e3a5f,
                 0 5px 15px rgba(0, 119, 181, 0.3),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
         }
 
         .btn-spotify {
             background: linear-gradient(135deg, #1ed760 0%, #1db954 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #14532d,
                 0 15px 25px rgba(30, 215, 96, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-spotify:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #14532d,
                 0 5px 15px rgba(30, 215, 96, 0.3),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
         }
 
         .btn-discord {
             background: linear-gradient(135deg, #7289da 0%, #5865F2 100%);
-            box-shadow: 
+            box-shadow:
                 0 8px 0 #3730a3,
                 0 15px 25px rgba(88, 101, 242, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .btn-discord:active {
-            box-shadow: 
+            box-shadow:
                 0 2px 0 #3730a3,
                 0 5px 15px rgba(88, 101, 242, 0.3),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
         }
 
         /* Button Inner Elements */
@@ -413,13 +609,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 14px;
             font-size: 24px;
             flex-shrink: 0;
-            box-shadow: 
-                inset 0 2px 4px rgba(255,255,255,0.1),
-                inset 0 -2px 4px rgba(0,0,0,0.1);
+            box-shadow:
+                inset 0 2px 4px rgba(255, 255, 255, 0.1),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .btn-info {
@@ -444,7 +640,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 50%;
             font-size: 16px;
             flex-shrink: 0;
@@ -453,7 +649,7 @@
 
         .btn-3d:hover .btn-arrow {
             transform: translateX(4px);
-            background: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         /* ==================== HOME INDICATOR ==================== */
@@ -465,7 +661,7 @@
         .home-indicator {
             width: 134px;
             height: 5px;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 3px;
             margin: 0 auto;
         }
@@ -475,7 +671,7 @@
             .phone-wrapper {
                 padding: 0;
             }
-            
+
             .phone-frame {
                 border-radius: 0;
                 padding: 0;
@@ -483,26 +679,33 @@
                 height: 100vh;
                 box-shadow: none;
             }
-            
+
             .phone-screen {
                 border-radius: 0;
             }
-            
+
             #morningCanvas {
                 border-radius: 0;
             }
-            
+
             .dynamic-island {
                 display: none;
             }
-            
+
             .status-bar {
                 padding-top: 50px;
             }
         }
     </style>
 </head>
+
 <body>
+    <!-- Mode Toggle Button -->
+    <button class="mode-toggle" id="modeToggle" onclick="toggleMode()">
+        <span class="mode-icon" id="modeIcon">📱</span>
+        <span class="mode-label" id="modeLabel">Mode HP</span>
+    </button>
+
     <div class="phone-wrapper">
         <div class="phone-frame">
             <div class="phone-screen">
@@ -513,6 +716,12 @@
 
                 <!-- Canvas Background -->
                 <canvas id="morningCanvas"></canvas>
+
+                <!-- Back Button -->
+                <a href="index.html" class="back-button" id="backBtn">
+                    <span class="back-icon">←</span>
+                    <span>Home</span>
+                </a>
 
                 <!-- App Content -->
                 <div class="app-content">
@@ -530,17 +739,18 @@
                     <div class="glass-card">
                         <div class="greeting">
                             <div class="greeting-text">
-                                <h1>Selamat Pagi <span class="wave">👋</span></h1>
+                                <h1 id="greetingText">Selamat Pagi <span class="wave">👋</span></h1>
                                 <p id="dateDisplay">Senin, 1 Januari 2025</p>
                             </div>
                             <div class="temp-display">
                                 <div class="temp">26<sup>°C</sup></div>
-                                <div class="condition">☀️ Cerah</div>
+                                <div class="condition" id="weatherCondition">☀️ Cerah</div>
                             </div>
                         </div>
                         <div class="quote-box">
-                            <p>"Setiap pagi adalah kesempatan baru untuk menjadi versi terbaik dari dirimu."</p>
-                            <div class="author">— Inspirasi Pagi</div>
+                            <p id="quoteText">"Setiap pagi adalah kesempatan baru untuk menjadi versi terbaik dari
+                                dirimu."</p>
+                            <div class="author" id="quoteAuthor">— Inspirasi Pagi</div>
                         </div>
                     </div>
 
@@ -657,7 +867,7 @@
         // ==================== CANVAS SETUP ====================
         const canvas = document.getElementById('morningCanvas');
         const ctx = canvas.getContext('2d');
-        
+
         let width, height, time = 0;
         let clouds = [], birds = [], stars = [], particles = [];
 
@@ -670,7 +880,7 @@
 
         function initObjects() {
             // Stars
-            stars = Array.from({length: 60}, () => ({
+            stars = Array.from({ length: 60 }, () => ({
                 x: Math.random() * width,
                 y: Math.random() * height * 0.5,
                 size: 0.5 + Math.random() * 1.5,
@@ -679,7 +889,7 @@
             }));
 
             // Clouds
-            clouds = Array.from({length: 5}, () => ({
+            clouds = Array.from({ length: 5 }, () => ({
                 x: Math.random() * width,
                 y: height * 0.12 + Math.random() * height * 0.15,
                 size: 30 + Math.random() * 40,
@@ -688,7 +898,7 @@
             }));
 
             // Birds
-            birds = Array.from({length: 6}, () => ({
+            birds = Array.from({ length: 6 }, () => ({
                 x: Math.random() * width,
                 y: height * 0.15 + Math.random() * height * 0.1,
                 size: 4 + Math.random() * 6,
@@ -697,7 +907,7 @@
             }));
 
             // Particles (dust/pollen)
-            particles = Array.from({length: 40}, () => ({
+            particles = Array.from({ length: 40 }, () => ({
                 x: Math.random() * width,
                 y: Math.random() * height * 0.6,
                 size: 0.5 + Math.random() * 2,
@@ -713,44 +923,44 @@
             const style = getComputedStyle(canvas);
             let sunY = parseFloat(style.getPropertyValue('--sun-y'));
             let skyProgress = parseFloat(style.getPropertyValue('--sky-progress'));
-            
+
             if (isNaN(sunY)) sunY = 120;
             if (isNaN(skyProgress)) skyProgress = 0;
-            
+
             return { sunY, skyProgress };
         }
 
         function drawSky(progress) {
             const gradient = ctx.createLinearGradient(0, 0, 0, height);
-            
+
             // Night colors
             const nightTop = [15, 23, 42];
             const nightBot = [30, 41, 59];
-            
+
             // Day colors
             const dayTop = [135, 206, 235];
             const dayMid = [255, 183, 120];
             const dayBot = [255, 218, 185];
-            
+
             // Interpolate colors
             const lerp = (a, b, t) => a + (b - a) * t;
-            
+
             const topR = lerp(nightTop[0], dayTop[0], progress);
             const topG = lerp(nightTop[1], dayTop[1], progress);
             const topB = lerp(nightTop[2], dayTop[2], progress);
-            
+
             const midR = lerp(nightBot[0], dayMid[0], progress);
             const midG = lerp(nightBot[1], dayMid[1], progress);
             const midB = lerp(nightBot[2], dayMid[2], progress);
-            
+
             const botR = lerp(nightBot[0], dayBot[0], progress);
             const botG = lerp(nightBot[1], dayBot[1], progress);
             const botB = lerp(nightBot[2], dayBot[2], progress);
-            
+
             gradient.addColorStop(0, `rgb(${topR}, ${topG}, ${topB})`);
             gradient.addColorStop(0.5, `rgb(${midR}, ${midG}, ${midB})`);
             gradient.addColorStop(1, `rgb(${botR}, ${botG}, ${botB})`);
-            
+
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, width, height);
         }
@@ -758,7 +968,7 @@
         function drawStars(progress) {
             const opacity = Math.max(0, 1 - progress * 1.5);
             if (opacity <= 0) return;
-            
+
             stars.forEach(star => {
                 const twinkle = 0.4 + Math.sin(time * star.speed + star.twinkle) * 0.6;
                 ctx.fillStyle = `rgba(255, 255, 255, ${opacity * twinkle})`;
@@ -772,19 +982,19 @@
             const sunX = width * 0.75;
             const sunY = (height * sunYPercent) / 100;
             const baseRadius = Math.min(width, height) * 0.09;
-            
+
             if (sunY > height * 1.2) return;
 
             // Multiple glow layers
             for (let i = 5; i > 0; i--) {
                 const glowRadius = baseRadius * (1 + i * 0.6);
                 const glowOpacity = (0.12 / i) * progress;
-                
+
                 const glow = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, glowRadius);
                 glow.addColorStop(0, `rgba(255, 200, 100, ${glowOpacity})`);
                 glow.addColorStop(0.5, `rgba(255, 150, 80, ${glowOpacity * 0.5})`);
                 glow.addColorStop(1, 'transparent');
-                
+
                 ctx.fillStyle = glow;
                 ctx.beginPath();
                 ctx.arc(sunX, sunY, glowRadius, 0, Math.PI * 2);
@@ -795,12 +1005,12 @@
             ctx.save();
             ctx.translate(sunX, sunY);
             ctx.rotate(time * 0.003);
-            
+
             for (let i = 0; i < 12; i++) {
                 ctx.rotate(Math.PI / 6);
                 const rayLength = baseRadius * 0.3 + Math.sin(time * 0.04 + i) * baseRadius * 0.1;
                 const rayOpacity = (0.4 + Math.sin(time * 0.03 + i) * 0.2) * progress;
-                
+
                 ctx.strokeStyle = `rgba(255, 220, 100, ${rayOpacity})`;
                 ctx.lineWidth = 2.5;
                 ctx.beginPath();
@@ -812,16 +1022,16 @@
 
             // Sun body
             const sunGrad = ctx.createRadialGradient(
-                sunX - baseRadius * 0.25, 
-                sunY - baseRadius * 0.25, 
-                0, 
+                sunX - baseRadius * 0.25,
+                sunY - baseRadius * 0.25,
+                0,
                 sunX, sunY, baseRadius
             );
             sunGrad.addColorStop(0, '#fffef8');
             sunGrad.addColorStop(0.3, '#ffee88');
             sunGrad.addColorStop(0.6, '#ffcc33');
             sunGrad.addColorStop(1, '#ff9900');
-            
+
             ctx.fillStyle = sunGrad;
             ctx.beginPath();
             ctx.arc(sunX, sunY, baseRadius, 0, Math.PI * 2);
@@ -873,7 +1083,7 @@
             const hill1Grad = ctx.createLinearGradient(0, height * 0.5, 0, height * 0.65);
             hill1Grad.addColorStop(0, `rgb(${60 + 40 * progress}, ${130 + 30 * progress}, ${70 + 30 * progress})`);
             hill1Grad.addColorStop(1, `rgb(${50 + 30 * progress}, ${110 + 30 * progress}, ${60 + 25 * progress})`);
-            
+
             ctx.fillStyle = hill1Grad;
             ctx.beginPath();
             ctx.moveTo(-10, height * 0.58);
@@ -887,7 +1097,7 @@
             const hill2Grad = ctx.createLinearGradient(0, height * 0.55, 0, height);
             hill2Grad.addColorStop(0, `rgb(${80 + 50 * progress}, ${160 + 40 * progress}, ${80 + 40 * progress})`);
             hill2Grad.addColorStop(1, `rgb(${60 + 40 * progress}, ${130 + 35 * progress}, ${60 + 35 * progress})`);
-            
+
             ctx.fillStyle = hill2Grad;
             ctx.beginPath();
             ctx.moveTo(-10, height * 0.62);
@@ -902,7 +1112,7 @@
             const lakeGrad = ctx.createLinearGradient(0, height * 0.55, 0, height * 0.65);
             lakeGrad.addColorStop(0, `rgba(${100 + 80 * progress}, ${180 + 40 * progress}, ${220 + 35 * progress}, 0.7)`);
             lakeGrad.addColorStop(1, `rgba(${80 + 60 * progress}, ${150 + 35 * progress}, ${190 + 30 * progress}, 0.5)`);
-            
+
             ctx.fillStyle = lakeGrad;
             ctx.beginPath();
             ctx.ellipse(width * 0.5, height * 0.58, width * 0.35, height * 0.035, 0, 0, Math.PI * 2);
@@ -963,7 +1173,7 @@
         function drawClouds(progress) {
             clouds.forEach(cloud => {
                 ctx.fillStyle = `rgba(255, 255, 255, ${cloud.opacity * (0.5 + 0.5 * progress)})`;
-                
+
                 const puffs = [
                     { dx: 0, dy: 0, r: 0.4 },
                     { dx: 0.3, dy: -0.12, r: 0.5 },
@@ -985,7 +1195,7 @@
 
         function drawBirds(progress) {
             if (progress < 0.4) return;
-            
+
             const birdOpacity = Math.min(1, (progress - 0.4) * 2.5);
             ctx.strokeStyle = `rgba(50, 50, 50, ${birdOpacity * 0.7})`;
             ctx.lineWidth = 1.5;
@@ -1011,9 +1221,9 @@
 
         function drawParticles(progress) {
             if (progress < 0.5) return;
-            
+
             const particleOpacity = (progress - 0.5) * 2;
-            
+
             particles.forEach(p => {
                 ctx.fillStyle = `rgba(255, 255, 220, ${p.opacity * particleOpacity})`;
                 ctx.beginPath();
@@ -1034,7 +1244,7 @@
 
         function drawFlowers(progress) {
             if (progress < 0.6) return;
-            
+
             const flowerOpacity = (progress - 0.6) * 2.5;
             const colors = ['#ff6b6b', '#feca57', '#ff9ff3', '#ffffff', '#a29bfe'];
 
@@ -1057,7 +1267,7 @@
                 const color = colors[i % colors.length];
                 ctx.fillStyle = color;
                 ctx.globalAlpha = flowerOpacity;
-                
+
                 for (let p = 0; p < 5; p++) {
                     const angle = (p / 5) * Math.PI * 2;
                     const px = x + sway + Math.cos(angle) * size * 0.7;
@@ -1072,7 +1282,7 @@
                 ctx.beginPath();
                 ctx.arc(x + sway, y - 10, size * 0.3, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 ctx.globalAlpha = 1;
             }
         }
@@ -1080,11 +1290,11 @@
         // ==================== MAIN ANIMATION LOOP ====================
         function animate() {
             time++;
-            
+
             const { sunY, skyProgress } = getAnimatedValues();
-            
+
             ctx.clearRect(0, 0, width, height);
-            
+
             drawSky(skyProgress);
             drawStars(skyProgress);
             drawSun(sunY, skyProgress);
@@ -1100,31 +1310,72 @@
             requestAnimationFrame(animate);
         }
 
-        // ==================== TRIGGER SUNRISE WITH WAAPI ====================
+        // ==================== TRIGGER SUNRISE/NIGHT WITH WAAPI ====================
         function triggerSunrise() {
-            // Animate sun position
-            canvas.animate([
-                { '--sun-y': 120 },
-                { '--sun-y': 28 }
-            ], {
-                duration: 4000,
-                fill: 'forwards',
-                easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
-            });
+            const isNight = isNightTime();
 
-            // Animate sky color progress
-            canvas.animate([
-                { '--sky-progress': 0 },
-                { '--sky-progress': 1 }
-            ], {
-                duration: 5000,
-                fill: 'forwards',
-                easing: 'ease-in-out'
-            });
+            if (isNight) {
+                // Mode Malam - matahari tetap di bawah, langit malam
+                canvas.animate([
+                    { '--sun-y': 120 },
+                    { '--sun-y': 130 } // Matahari tetap tersembunyi
+                ], {
+                    duration: 2000,
+                    fill: 'forwards',
+                    easing: 'ease-out'
+                });
+
+                canvas.animate([
+                    { '--sky-progress': 0 },
+                    { '--sky-progress': 0.15 } // Langit tetap gelap dengan sedikit cahaya
+                ], {
+                    duration: 2000,
+                    fill: 'forwards',
+                    easing: 'ease-out'
+                });
+            } else {
+                // Mode Siang - animasi sunrise normal
+                canvas.animate([
+                    { '--sun-y': 120 },
+                    { '--sun-y': 28 }
+                ], {
+                    duration: 4000,
+                    fill: 'forwards',
+                    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+                });
+
+                canvas.animate([
+                    { '--sky-progress': 0 },
+                    { '--sky-progress': 1 }
+                ], {
+                    duration: 5000,
+                    fill: 'forwards',
+                    easing: 'ease-in-out'
+                });
+            }
+        }
+
+        function isNightTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentTime = hours * 60 + minutes;
+            return currentTime >= 1050 || currentTime < 300;
         }
 
         // ==================== UI ANIMATIONS WITH WAAPI ====================
         function initUIAnimations() {
+            // Back button animation
+            document.getElementById('backBtn').animate([
+                { opacity: 0, transform: 'translateX(-20px)' },
+                { opacity: 1, transform: 'translateX(0)' }
+            ], {
+                duration: 500,
+                delay: 200,
+                fill: 'forwards',
+                easing: 'ease-out'
+            });
+
             // Status bar
             document.querySelector('.status-bar').animate([
                 { opacity: 0, transform: 'translateY(-20px)' },
@@ -1226,6 +1477,82 @@
         }
 
         // ==================== TIME & DATE ====================
+        function isNightTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentTime = hours * 60 + minutes; // Total menit dari tengah malam
+
+            // 17:30 = 17*60+30 = 1050 menit
+            // 05:00 = 5*60 = 300 menit
+            return currentTime >= 1050 || currentTime < 300;
+        }
+
+        function getGreeting() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentTime = hours * 60 + minutes;
+
+            // Malam: 17:30 - 05:00
+            if (currentTime >= 1050 || currentTime < 300) {
+                return {
+                    greeting: 'Selamat Malam',
+                    emoji: '🌙',
+                    wave: '✨',
+                    weather: '🌙 Malam Hari',
+                    quote: '"Malam adalah waktu terbaik untuk merenung dan bersyukur atas hari yang telah berlalu."',
+                    author: '— Inspirasi Malam'
+                };
+            }
+            // Pagi: 05:00 - 11:00
+            else if (currentTime >= 300 && currentTime < 660) {
+                return {
+                    greeting: 'Selamat Pagi',
+                    emoji: '☀️',
+                    wave: '👋',
+                    weather: '☀️ Cerah',
+                    quote: '"Setiap pagi adalah kesempatan baru untuk menjadi versi terbaik dari dirimu."',
+                    author: '— Inspirasi Pagi'
+                };
+            }
+            // Siang: 11:00 - 15:00
+            else if (currentTime >= 660 && currentTime < 900) {
+                return {
+                    greeting: 'Selamat Siang',
+                    emoji: '🌤️',
+                    wave: '👋',
+                    weather: '🌤️ Cerah Berawan',
+                    quote: '"Tetap semangat di tengah hari! Kesuksesan menunggu mereka yang tidak menyerah."',
+                    author: '— Inspirasi Siang'
+                };
+            }
+            // Sore: 15:00 - 17:30
+            else {
+                return {
+                    greeting: 'Selamat Sore',
+                    emoji: '🌅',
+                    wave: '👋',
+                    weather: '🌅 Sore Hari',
+                    quote: '"Nikmati sore ini dengan penuh rasa syukur. Hari yang produktif adalah hadiah terbaik."',
+                    author: '— Inspirasi Sore'
+                };
+            }
+        }
+
+        function updateGreeting() {
+            const greetingData = getGreeting();
+            const greetingEl = document.getElementById('greetingText');
+            const weatherEl = document.getElementById('weatherCondition');
+            const quoteEl = document.getElementById('quoteText');
+            const authorEl = document.getElementById('quoteAuthor');
+
+            greetingEl.innerHTML = `${greetingData.greeting} <span class="wave">${greetingData.wave}</span>`;
+            weatherEl.textContent = greetingData.weather;
+            quoteEl.textContent = greetingData.quote;
+            authorEl.textContent = greetingData.author;
+        }
+
         function updateDateTime() {
             const now = new Date();
             const hours = now.getHours();
@@ -1233,26 +1560,69 @@
             document.getElementById('timeDisplay').textContent = `${hours}:${minutes}`;
 
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
-                           'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            document.getElementById('dateDisplay').textContent = 
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            document.getElementById('dateDisplay').textContent =
                 `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+            // Update greeting berdasarkan waktu
+            updateGreeting();
+        }
+
+        // ==================== MODE TOGGLE (HP / LAPTOP) ====================
+        let isLaptopMode = false;
+
+        function toggleMode() {
+            isLaptopMode = !isLaptopMode;
+            const body = document.body;
+            const modeIcon = document.getElementById('modeIcon');
+            const modeLabel = document.getElementById('modeLabel');
+
+            if (isLaptopMode) {
+                body.classList.add('laptop-mode');
+                modeIcon.textContent = '💻';
+                modeLabel.textContent = 'Mode Laptop';
+            } else {
+                body.classList.remove('laptop-mode');
+                modeIcon.textContent = '📱';
+                modeLabel.textContent = 'Mode HP';
+            }
+
+            // Simpan preferensi ke localStorage
+            localStorage.setItem('viewMode', isLaptopMode ? 'laptop' : 'phone');
+
+            // Resize canvas untuk menyesuaikan ukuran baru
+            setTimeout(resizeCanvas, 100);
+        }
+
+        function loadSavedMode() {
+            const savedMode = localStorage.getItem('viewMode');
+            if (savedMode === 'laptop') {
+                isLaptopMode = true;
+                document.body.classList.add('laptop-mode');
+                document.getElementById('modeIcon').textContent = '💻';
+                document.getElementById('modeLabel').textContent = 'Mode Laptop';
+            }
         }
 
         // ==================== INITIALIZATION ====================
         window.addEventListener('resize', resizeCanvas);
-        
+
+        // Load saved mode preference
+        loadSavedMode();
+
         resizeCanvas();
         animate();
-        
+
         // Start sunrise animation after a short delay
         setTimeout(() => {
             triggerSunrise();
             initUIAnimations();
         }, 500);
-        
+
         updateDateTime();
         setInterval(updateDateTime, 1000);
     </script>
 </body>
+
 </html>
