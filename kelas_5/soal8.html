@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Matematika Kelas 5 (Paket 8) - MyWhatituS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            background-image: url('https://myonlineweb.github.io/basepng/malamback.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 78%;
+            max-width: 800px;
+            margin: 40px 0;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.65);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .question-card {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1em;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background-color: #eef2f3;
+            border-color: #bbb;
+            transform: translateX(5px);
+        }
+
+        .correct {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724 !important;
+        }
+
+        .wrong {
+            background-color: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24 !important;
+        }
+
+        .disabled {
+            cursor: no-drop;
+            opacity: 0.7;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8eaf6;
+            border-left: 5px solid #3f51b5;
+            border-radius: 4px;
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin: 40px 0 20px 0;
+        }
+
+        .btn-submit {
+            padding: 15px 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #27ae60;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(100%);
+        }
+
+        .btn-submit.active {
+            opacity: 1;
+            pointer-events: auto;
+            filter: grayscale(0%);
+            animation: pulse 2s infinite;
+        }
+
+        .btn-submit:hover {
+            background-color: #219150;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 20px rgba(39, 174, 96, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(39, 174, 96, 0);
+            }
+        }
+
+        .score-board {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .spacer {
+            height: 100px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            animation: pop 0.5s;
+        }
+
+        .modal-content h2 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .result-summary {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .res-box {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .res-box.correct {
+            background: #27ae60;
+        }
+
+        .res-box.score {
+            background: #2980b9;
+            transform: scale(1.1);
+            font-weight: bold;
+        }
+
+        .res-box.wrong {
+            background: #c0392b;
+        }
+
+        .res-box .label {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .res-box .val {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .btn-close {
+            margin-top: 15px;
+            padding: 10px 30px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .btn-close:hover {
+            background: #000;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0);
+            }
+
+            80% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding: 15px;
+            padding-right: 50px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            user-select: none;
+        }
+
+        .eye-icon:hover {
+            color: #333;
+        }
+
+        .modal-icon.warning {
+            color: #f39c12;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .btn-back {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background-color: #e74c3c;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <a href="index.html" class="btn-back">⬅ Kembali</a>
+        <h1>Kuis Matematika Kelas 5 (Paket 8)</h1>
+        <div style="margin-bottom: 20px; max-width: 100%;">
+            <input type="text" id="input-nama" placeholder="Ketik Username"
+                style="width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd; font-size: 1.1em; box-sizing: border-box;">
+        </div>
+        <div class="password-wrapper">
+            <input type="password" id="input-password" placeholder="Ketik Password">
+            <span id="btn-toggle-pass" class="eye-icon" title="Lihat Password">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            </span>
+        </div>
+        <div id="quiz-area"></div>
+        <div class="submit-container">
+            <button id="btn-submit" class="btn-submit">SELESAIKAN SEMUA SOAL</button>
+        </div>
+        <div class="spacer"></div>
+    </div>
+
+    <div class="score-board">
+        <span>✅ Benar: <span id="score-correct">0</span></span>
+        <span>❌ Salah: <span id="score-wrong">0</span></span>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2>Hasil Terkirim!</h2>
+            <p>Data jawabanmu sudah aman di database Firebase.</p>
+            <div class="result-summary">
+                <div class="res-box correct">
+                    <span class="label">Benar</span>
+                    <span class="val" id="modal-correct">0</span>
+                </div>
+                <div class="res-box score">
+                    <span class="label">Nilai</span>
+                    <span class="val" id="modal-score">0</span>
+                </div>
+                <div class="res-box wrong">
+                    <span class="label">Salah</span>
+                    <span class="val" id="modal-wrong">0</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="btn-close">Selesai</button>
+        </div>
+    </div>
+
+    <div id="warning-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon warning">⚠️</div>
+            <h2 id="warning-title" style="color: #c0392b;">Ups, Tunggu Dulu!</h2>
+            <p id="warning-message" style="color: #555; line-height: 1.6;">Ada input/password yang tidak sesuai nih!</p>
+            <button onclick="closeWarning()" class="btn-close" style="background-color: #c0392b;">Perbaiki</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA SOAL MATEMATIKA PAKET 8 ---
+        let soal = [
+            {
+                "id": "0005",
+                "pertanyaan": "Sebuah es batu berbentuk kubus dengan rusuk 4 cm mencair menjadi 1/8 bagian. Berapa cm³ volume es yang tersisa?",
+                "pilihan": [
+                    "8 cm³",
+                    "48 cm³",
+                    "56 cm³",
+                    "64 cm³"
+                ],
+                "jawaban": "56 cm³",
+                "pembahasan": "Volume awal = 4³ = 64 cm³. Mencair 1/8 = 8 cm³. Tersisa = 64 - 8 = 56 cm³.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 5: Bangun Ruang"
+            },
+            {
+                "id": "0006",
+                "pertanyaan": "Sebuah kotak berbentuk balok dengan volume 2.400 cm³. Jika panjang 20 cm dan tinggi 8 cm, berapa lebar kotak tersebut?",
+                "pilihan": [
+                    "12 cm",
+                    "15 cm",
+                    "16 cm",
+                    "18 cm"
+                ],
+                "jawaban": "15 cm",
+                "pembahasan": "Lebar = Volume / (panjang × tinggi) = 2.400 / (20 × 8) = 2.400 / 160 = 15 cm.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 5: Bangun Ruang"
+            },
+            {
+                "id": "0007",
+                "pertanyaan": "Perbandingan uang tabungan Dina, Eka, dan Fani adalah 2 : 3 : 5. Jika total tabungan mereka Rp500.000, berapa tabungan Eka?",
+                "pilihan": [
+                    "Rp100.000",
+                    "Rp150.000",
+                    "Rp200.000",
+                    "Rp250.000"
+                ],
+                "jawaban": "Rp150.000",
+                "pembahasan": "Total bagian = 2+3+5 = 10. Eka = 3/10 × 500.000 = Rp150.000.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 6: Perbandingan dan Skala"
+            },
+            {
+                "id": "0008",
+                "pertanyaan": "Sebuah pesawat terbang dengan kecepatan 720 km/jam. Berapa km jarak yang ditempuh dalam 45 menit?",
+                "pilihan": [
+                    "480 km",
+                    "540 km",
+                    "600 km",
+                    "720 km"
+                ],
+                "jawaban": "540 km",
+                "pembahasan": "45 menit = 3/4 jam. Jarak = 720 × 3/4 = 540 km.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 6: Perbandingan dan Skala"
+            },
+            {
+                "id": "0009",
+                "pertanyaan": "Data penjualan buku dalam seminggu: Senin 12, Selasa 15, Rabu 10, Kamis 18, Jumat 20. Berapa selisih penjualan tertinggi dan terendah?",
+                "pilihan": [
+                    "8 buku",
+                    "10 buku",
+                    "12 buku",
+                    "15 buku"
+                ],
+                "jawaban": "10 buku",
+                "pembahasan": "Tertinggi = 20 (Jumat), Terendah = 10 (Rabu). Selisih = 20 - 10 = 10 buku.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 7: Pengolahan Data"
+            },
+            {
+                "id": "0010",
+                "pertanyaan": "Dari 40 siswa, 15 siswa memilih warna biru sebagai favorit. Berapa derajat juring untuk warna biru pada diagram lingkaran?",
+                "pilihan": [
+                    "120°",
+                    "125°",
+                    "130°",
+                    "135°"
+                ],
+                "jawaban": "135°",
+                "pembahasan": "Derajat = (15/40) × 360° = 135°.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 7: Pengolahan Data"
+            },
+            {
+                "id": "0011",
+                "pertanyaan": "Prisma segitiga memiliki alas berbentuk segitiga siku-siku dengan panjang sisi 6 cm dan 8 cm. Jika tinggi prisma 12 cm, berapa volumenya?",
+                "pilihan": [
+                    "144 cm³",
+                    "288 cm³",
+                    "576 cm³",
+                    "720 cm³"
+                ],
+                "jawaban": "288 cm³",
+                "pembahasan": "Luas alas = ½ × 6 × 8 = 24 cm². Volume = 24 × 12 = 288 cm³.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 5: Bangun Ruang"
+            },
+            {
+                "id": "0012",
+                "pertanyaan": "Jika 4 pekerja dapat menyelesaikan proyek dalam 12 hari, berapa hari yang dibutuhkan 6 pekerja untuk menyelesaikan proyek yang sama?",
+                "pilihan": [
+                    "6 hari",
+                    "8 hari",
+                    "9 hari",
+                    "10 hari"
+                ],
+                "jawaban": "8 hari",
+                "pembahasan": "Perbandingan berbalik nilai. 4 × 12 = 6 × x. x = 48/6 = 8 hari.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "Bab 6: Perbandingan dan Skala"
+            },
+            {
+                "id": "0013",
+                "pertanyaan": "Hasil dari 5¼ : 1¾ adalah ...",
+                "pilihan": [
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                "jawaban": "3",
+                "pembahasan": "5¼ : 1¾ = 21/4 : 7/4 = 21/4 × 4/7 = 21/7 = 3.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "UTS (Pecahan)"
+            },
+            {
+                "id": "0014",
+                "pertanyaan": "Ibu membeli kain 2,5 meter. Jika 3/5 bagian digunakan untuk membuat baju, berapa cm kain yang tersisa?",
+                "pilihan": [
+                    "100 cm",
+                    "150 cm",
+                    "200 cm",
+                    "250 cm"
+                ],
+                "jawaban": "100 cm",
+                "pembahasan": "Sisa = 2/5 × 2,5 m = 1 m = 100 cm.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "UTS (Pecahan)"
+            },
+            {
+                "id": "0015",
+                "pertanyaan": "Tiga lampu menyala bersamaan pada pukul 18.00. Lampu A menyala setiap 4 menit, B setiap 6 menit, C setiap 8 menit. Kapan ketiganya menyala bersamaan lagi?",
+                "pilihan": [
+                    "18.12",
+                    "18.24",
+                    "18.36",
+                    "18.48"
+                ],
+                "jawaban": "18.24",
+                "pembahasan": "KPK dari 4, 6, 8 = 24. Menyala bersamaan setelah 24 menit = 18.24.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "UTS (FPB dan KPK)"
+            },
+            {
+                "id": "0016",
+                "pertanyaan": "Air dalam bak berkurang 5 liter setiap menit karena ada kebocoran. Jika bak berisi 200 liter, berapa menit sampai bak kosong?",
+                "pilihan": [
+                    "35 menit",
+                    "40 menit",
+                    "45 menit",
+                    "50 menit"
+                ],
+                "jawaban": "40 menit",
+                "pembahasan": "Waktu = Volume / Debit = 200 / 5 = 40 menit.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "UAS (Debit)"
+            },
+            {
+                "id": "0017",
+                "pertanyaan": "Sebuah kubus memiliki luas permukaan 294 cm². Berapa panjang rusuk kubus tersebut?",
+                "pilihan": [
+                    "6 cm",
+                    "7 cm",
+                    "8 cm",
+                    "9 cm"
+                ],
+                "jawaban": "7 cm",
+                "pembahasan": "Luas permukaan = 6s². s² = 294/6 = 49. s = 7 cm.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "UAS (Bangun Ruang)"
+            },
+            {
+                "id": "0018",
+                "pertanyaan": "Median dari data: 45, 52, 48, 55, 60, 42, 50 adalah ...",
+                "pilihan": [
+                    "48",
+                    "50",
+                    "52",
+                    "55"
+                ],
+                "jawaban": "50",
+                "pembahasan": "Data diurutkan: 42, 45, 48, 50, 52, 55, 60. Median (nilai tengah) = 50.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "UAS (Statistika)"
+            },
+            {
+                "id": "0019",
+                "pertanyaan": "Sebuah toko memberikan diskon 20%. Jika harga awal baju Rp125.000, berapa yang harus dibayar setelah diskon?",
+                "pilihan": [
+                    "Rp95.000",
+                    "Rp100.000",
+                    "Rp105.000",
+                    "Rp110.000"
+                ],
+                "jawaban": "Rp100.000",
+                "pembahasan": "Diskon = 20% × 125.000 = 25.000. Harga bayar = 125.000 - 25.000 = Rp100.000.",
+                "kelas": "5",
+                "mapel": "Matematika",
+                "kategori": "UAS (Soal Cerita)"
+            }
+        ];
+
+        let dataSoal = soal;
+
+        const quizArea = document.getElementById('quiz-area');
+        const scoreCorrectEl = document.getElementById('score-correct');
+        const scoreWrongEl = document.getElementById('score-wrong');
+        const btnSubmitGame = document.getElementById('btn-submit');
+
+        var correctCount = 0;
+        var wrongCount = 0;
+        var answeredCount = 0;
+
+        function renderQuiz() {
+            quizArea.innerHTML = '';
+            dataSoal.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerText = (index + 1) + ". " + item.pertanyaan;
+                card.appendChild(qText);
+
+                const optList = document.createElement('ul');
+                optList.className = 'options';
+
+                item.pilihan.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(btn, item, opt, optList, explanationDiv);
+                    optList.appendChild(btn);
+                });
+
+                card.appendChild(optList);
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.innerHTML = `<strong>Jawaban Benar:</strong> ${item.jawaban}<br><em>${item.pembahasan}</em>`;
+                card.appendChild(explanationDiv);
+
+                quizArea.appendChild(card);
+            });
+        }
+
+        function checkAnswer(selectedBtn, dataItem, selectedText, optListContainer, expDiv) {
+            if (optListContainer.classList.contains('answered')) return;
+
+            optListContainer.classList.add('answered');
+            answeredCount++;
+
+            const allBtns = optListContainer.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.classList.add('disabled'));
+
+            if (selectedText === dataItem.jawaban) {
+                selectedBtn.classList.add('correct');
+                correctCount++;
+                scoreCorrectEl.innerText = correctCount;
+            } else {
+                selectedBtn.classList.add('wrong');
+                wrongCount++;
+                scoreWrongEl.innerText = wrongCount;
+                const correctBtn = Array.from(allBtns).find(b => b.innerText === dataItem.jawaban);
+                if (correctBtn) correctBtn.classList.add('correct');
+            }
+
+            expDiv.style.display = 'block';
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            if (answeredCount === dataSoal.length) {
+                btnSubmitGame.classList.add('active');
+                btnSubmitGame.innerText = "KIRIM JAWABAN SEKARANG!";
+            }
+        }
+
+        renderQuiz();
+
+        const toggleBtn = document.getElementById('btn-toggle-pass');
+        const passInput = document.getElementById('input-password');
+
+        toggleBtn.addEventListener('click', () => {
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            toggleBtn.style.color = type === 'text' ? '#27ae60' : '#888';
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrGo4oJqVPesVBDd52-OGT2sHFNdeI5jo",
+            authDomain: "mywhatitu.firebaseapp.com",
+            projectId: "mywhatitu",
+            storageBucket: "mywhatitu.firebasestorage.app",
+            messagingSenderId: "756121162482",
+            appId: "1:756121162482:web:3fbc2d0e26f70e51b6f66b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const KODE_SOAL = "soal8_mtk_kls5";
+        const KELAS = "5";
+        const MAPEL = "Matematika";
+
+        const btnSubmitFirebase = document.getElementById('btn-submit');
+
+        btnSubmitFirebase.addEventListener('click', async () => {
+            if (!btnSubmitFirebase.classList.contains('active')) return;
+
+            const nama = document.getElementById('input-nama').value.trim();
+            const password = document.getElementById('input-password').value.trim();
+
+            if (!nama || !password) {
+                showWarning("Nama dan Password Kosong!", "Mohon isi Username dan Password terlebih dahulu.");
+                return;
+            }
+
+            const userRef = doc(db, "users", nama);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                showWarning("User Tidak Ditemukan!", "Username yang kamu masukkan tidak terdaftar.");
+                return;
+            }
+
+            if (userSnap.data().password !== password) {
+                showWarning("Password Salah!", "Password yang kamu masukkan tidak sesuai.");
+                return;
+            }
+
+            const totalSoal = dataSoal.length;
+            const nilaiAkhir = Math.round((correctCount / totalSoal) * 100);
+
+            const hasilRef = doc(db, "hasil_kuis", `${nama}_${KODE_SOAL}`);
+            await setDoc(hasilRef, {
+                nama: nama,
+                kelas: KELAS,
+                mapel: MAPEL,
+                kode_soal: KODE_SOAL,
+                benar: correctCount,
+                salah: wrongCount,
+                nilai: nilaiAkhir,
+                waktu_submit: new Date().toISOString()
+            });
+
+            document.getElementById('modal-correct').innerText = correctCount;
+            document.getElementById('modal-wrong').innerText = wrongCount;
+            document.getElementById('modal-score').innerText = nilaiAkhir;
+            document.getElementById('custom-modal').classList.add('show');
+
+            btnSubmitFirebase.classList.remove('active');
+            btnSubmitFirebase.innerText = "SUDAH TERKIRIM ✓";
+            btnSubmitFirebase.style.backgroundColor = "#7f8c8d";
+        });
+
+        window.showWarning = function (title, message) {
+            document.getElementById('warning-title').innerText = title;
+            document.getElementById('warning-message').innerText = message;
+            document.getElementById('warning-modal').classList.add('show');
+        }
+
+        window.closeWarning = function () {
+            document.getElementById('warning-modal').classList.remove('show');
+        }
+
+        window.closeModal = function () {
+            document.getElementById('custom-modal').classList.remove('show');
+        }
+    </script>
+
+</body>
+
+</html>
