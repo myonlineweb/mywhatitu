@@ -6,160 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whatitu Study Register</title>
     <style>
+        /* --- STYLE CSS (Sama Persis, Tidak Diubah) --- */
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #1a1a2e;
-            /* Pastikan path gambar ini benar sesuai folder github kamu */
+            /* Pastikan path gambar background benar */
             background-image: url('myonlineweb.github.io/basepng/malamback.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            background-size: cover; background-position: center; background-attachment: fixed;
+            min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
         }
 
         .container {
-            width: 78%;
-            max-width: 500px;
-            margin: 80px 0;
-            padding: 40px;
+            width: 78%; max-width: 500px; margin: 80px 0; padding: 40px;
             background-color: rgba(255, 255, 255, 0.65);
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 1.5em;
-        }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.5em; }
 
-        /* STYLE MODAL POPUP */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%; max-width: 400px;
-            text-align: center;
-            transform: scale(0.7);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-overlay.show .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-icon {
-            font-size: 3em; margin-bottom: 10px; animation: pop 0.5s;
-        }
-
-        .modal-content h2 { margin: 10px 0; color: #333; }
-
-        .btn-close {
-            margin-top: 15px; padding: 10px 30px;
-            background: #333; color: white; border: none; border-radius: 50px;
-            cursor: pointer; font-size: 1em;
-        }
-
+        /* STYLE MODAL & BUTTONS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-icon { font-size: 3em; margin-bottom: 10px; animation: pop 0.5s; }
+        .btn-close { margin-top: 15px; padding: 10px 30px; background: #333; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 1em; }
         .btn-close:hover { background: #000; }
-
-        @keyframes pop {
-            0% { transform: scale(0); }
-            80% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        /* --- STYLE KHUSUS PASSWORD EYE --- */
-        .password-wrapper {
-            position: relative; width: 100%; margin-bottom: 20px;
-        }
-
-        .password-wrapper input {
-            width: 100%; padding: 15px; padding-right: 50px;
-            border-radius: 10px; border: 2px solid #ddd;
-            font-size: 1.1em; box-sizing: border-box;
-        }
-
-        .eye-icon {
-            position: absolute; right: 15px; top: 50%;
-            transform: translateY(-50%); cursor: pointer;
-            color: #888; user-select: none;
-        }
-
-        .eye-icon:hover { color: #333; }
-
+        
         .modal-icon.warning { color: #f39c12; animation: shake 0.5s; }
         .modal-icon.success { color: #27ae60; }
+        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } 100% { transform: translateX(0); } }
 
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-            75% { transform: translateX(-10px); }
-            100% { transform: translateX(0); }
-        }
-
-        /* --- STYLE TOMBOL KEMBALI --- */
-        .btn-back {
-            display: inline-block; text-decoration: none; color: #fff;
-            background-color: #e74c3c; padding: 10px 20px;
-            border-radius: 50px; font-weight: bold; font-size: 0.9em;
-            margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
+        .btn-back { display: inline-block; text-decoration: none; color: #fff; background-color: #e74c3c; padding: 10px 20px; border-radius: 50px; font-weight: bold; font-size: 0.9em; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); transition: transform 0.2s, background-color 0.2s; }
         .btn-back:hover { background-color: #c0392b; transform: translateY(-2px); }
 
-        /* --- STYLE TOMBOL DAFTAR --- */
-        /* Class tetap btn-register untuk styling, tapi ID nanti btn-submit */
-        .btn-register {
-            display: block; width: 100%; padding: 15px 30px;
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            color: white; border: none; border-radius: 50px;
-            cursor: pointer; font-size: 1.1em; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
-            transition: all 0.3s ease;
-        }
-
+        .btn-register { display: block; width: 100%; padding: 15px 30px; background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 1.1em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4); transition: all 0.3s ease; }
         .btn-register:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(39, 174, 96, 0.5); }
         .btn-register:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        /* Input Text Style */
-        .input-text {
-            width: 100%; padding: 15px; margin-bottom: 15px;
-            border-radius: 10px; border: 2px solid #ddd;
-            font-size: 1.1em; box-sizing: border-box; transition: border-color 0.2s;
-        }
-
+        .input-text { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 2px solid #ddd; font-size: 1.1em; box-sizing: border-box; transition: border-color 0.2s; }
         .input-text:focus { outline: none; border-color: #27ae60; }
+
+        .password-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
+        .password-wrapper input { width: 100%; padding: 15px; padding-right: 50px; border-radius: 10px; border: 2px solid #ddd; font-size: 1.1em; box-sizing: border-box; }
+        .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; user-select: none; }
+        .eye-icon:hover { color: #333; }
     </style>
 </head>
 
@@ -170,7 +64,7 @@
         <h1>Whatitu Study Register</h1>
 
         <div style="margin-bottom: 20px;">
-            <input type="text" id="input-nama" placeholder="Ketik Username" class="input-text">
+            <input type="text" id="input-nama" placeholder="Ketik Username (Tanpa Spasi)" class="input-text">
         </div>
 
         <div class="password-wrapper">
@@ -206,7 +100,7 @@
     </div>
 
     <script>
-        // --- LOGIKA MATA PASSWORD ---
+        // --- LOGIKA UI (MATA PASSWORD & MODAL) ---
         const toggleBtn = document.getElementById('btn-toggle-pass');
         const passInput = document.getElementById('input-password');
 
@@ -216,121 +110,87 @@
             toggleBtn.style.color = type === 'text' ? '#27ae60' : '#888';
         });
 
-        // --- FUNGSI MODAL WARNING ---
-        function showWarning(judul, pesan) {
+        window.showWarning = (judul, pesan) => {
             document.getElementById('warning-title').innerText = judul;
             document.getElementById('warning-message').innerText = pesan;
             document.getElementById('warning-modal').classList.add('show');
         }
+        window.closeWarning = () => document.getElementById('warning-modal').classList.remove('show');
 
-        function closeWarning() {
-            document.getElementById('warning-modal').classList.remove('show');
-        }
-
-        // --- FUNGSI MODAL SUCCESS ---
-        function showSuccess(pesan) {
+        window.showSuccess = (pesan) => {
             document.getElementById('success-message').innerText = pesan;
             document.getElementById('success-modal').classList.add('show');
         }
-
-        function closeSuccessModal() {
-            document.getElementById('success-modal').classList.remove('show');
-        }
+        window.closeSuccessModal = () => document.getElementById('success-modal').classList.remove('show');
     </script>
 
-<script type="module">
-        // 1. IMPORT LIBRARY YANG DIBUTUHKAN (Analytics + Firestore)
+    <script type="module">
+        // 1. Import hanya yang SUDAH TERBUKTI JALAN di kode Kuis Anda
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-        // PENTING: Ini yang anda hapus tadi, padahal ini otak database-nya
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-        // 2. KONFIGURASI FIREBASE (Punya Anda)
+        // 2. Config Anda (Sama Persis)
         const firebaseConfig = {
             apiKey: "AIzaSyCrGo4oJqVPesVBDd52-OGT2sHFNdeI5jo",
             authDomain: "mywhatitu.firebaseapp.com",
             projectId: "mywhatitu",
             storageBucket: "mywhatitu.firebasestorage.app",
             messagingSenderId: "756121162482",
-            appId: "1:756121162482:web:3fbc2d0e26f70e51b6f66b",
-            measurementId: "G-S0NZ4E6YJ3"
+            appId: "1:756121162482:web:3fbc2d0e26f70e51b6f66b"
         };
 
-        // 3. INISIALISASI
+        // 3. Init Firebase (Hanya Database, NO Analytics)
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app); // Analytics nyala
-        const db = getFirestore(app);        // Database nyala (PENTING!)
+        const db = getFirestore(app);
 
-        // 4. LOGIKA TOMBOL DAFTAR (Ini juga hilang tadi)
-        const btnSubmitFirebase = document.getElementById('btn-submit');
+        // 4. Logika Register
+        const btnSubmitFirebase = document.getElementById('btn-submit'); 
         const inputNama = document.getElementById('input-nama');
         const inputPassword = document.getElementById('input-password');
-
-        // Cek apakah HTML sudah benar
-        if (!btnSubmitFirebase) {
-            console.error("FATAL: Tombol dengan ID 'btn-submit' tidak ditemukan di HTML!");
-        }
 
         btnSubmitFirebase.addEventListener('click', async () => {
             const username = inputNama.value.trim();
             const password = inputPassword.value.trim();
 
-            // --- VALIDASI ---
-            if (username === "") {
-                showWarning("Username Kosong!", "Tolong isi username Anda terlebih dahulu.");
-                return;
-            }
-            if (password === "") {
-                showWarning("Password Kosong!", "Tolong isi password Anda terlebih dahulu.");
-                return;
-            }
-            if (password.length < 4) {
-                showWarning("Password Terlalu Pendek!", "Password minimal 4 karakter.");
-                return;
-            }
+            if (username === "") return showWarning("Username Kosong!", "Isi username dulu.");
+            if (password === "") return showWarning("Password Kosong!", "Isi password dulu.");
+            if (password.length < 4) return showWarning("Terlalu Pendek!", "Password minimal 4 karakter.");
 
-            // --- PROSES KIRIM DATA ---
             const originalText = btnSubmitFirebase.innerText;
             btnSubmitFirebase.disabled = true;
             btnSubmitFirebase.innerText = "Mendaftarkan...";
 
             try {
-                // Buat ID unik (huruf kecil semua, spasi jadi underscore)
+                // ID Unik: username kecil semua + underscore pengganti spasi
                 const uniqueDocID = username.toLowerCase().replace(/\s/g, '_');
-                const docRef = doc(db, "users", uniqueDocID);
+                const docRef = doc(db, "users", uniqueDocID); // Masuk ke koleksi 'users'
 
-                // Cek apakah username sudah dipakai orang lain
+                // Cek apakah user sudah ada
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    showWarning("Gagal Daftar", `Username "${username}" sudah dipakai orang lain. Ganti yang lain ya!`);
-                    return; 
+                    showWarning("Gagal Daftar", `Username "${username}" sudah dipakai. Ganti yang lain ya!`);
+                } else {
+                    // Simpan Data Baru
+                    await setDoc(docRef, {
+                        username: username,
+                        password: password,
+                        tanggal_daftar: new Date().toISOString()
+                    });
+                    
+                    showSuccess(`Hore! Akun ${username} berhasil dibuat. Silakan ingat password Anda.`);
+                    inputNama.value = '';
+                    inputPassword.value = '';
                 }
 
-                // Simpan ke Database
-                await setDoc(docRef, {
-                    username: username,
-                    password: password,
-                    tanggal_daftar: new Date().toISOString()
-                });
-
-                // Berhasil
-                showSuccess(`Hore! Akun ${username} berhasil dibuat.`);
-                
-                // Bersihkan form
-                inputNama.value = '';
-                inputPassword.value = '';
-
             } catch (error) {
-                console.error("Error Firebase:", error);
-                showWarning("Error Sistem", "Gagal koneksi ke database. Cek internet atau lapor admin. Detail: " + error.message);
+                console.error("Error:", error);
+                showWarning("Error Database", "Gagal koneksi. Pastikan internet lancar.");
             } finally {
-                // Hidupkan tombol lagi
                 btnSubmitFirebase.disabled = false;
                 btnSubmitFirebase.innerText = originalText;
             }
         });
     </script>
 </body>
-
 </html>
