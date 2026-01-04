@@ -238,40 +238,44 @@
         }
     </script>
 
-    <script type="module">
+<script type="module">
+        // 1. IMPORT LIBRARY YANG DIBUTUHKAN (Analytics + Firestore)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+        // PENTING: Ini yang anda hapus tadi, padahal ini otak database-nya
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-        // --- KONFIGURASI FIREBASE ---
+        // 2. KONFIGURASI FIREBASE (Punya Anda)
         const firebaseConfig = {
             apiKey: "AIzaSyCrGo4oJqVPesVBDd52-OGT2sHFNdeI5jo",
             authDomain: "mywhatitu.firebaseapp.com",
             projectId: "mywhatitu",
             storageBucket: "mywhatitu.firebasestorage.app",
             messagingSenderId: "756121162482",
-            appId: "1:756121162482:web:3fbc2d0e26f70e51b6f66b"
+            appId: "1:756121162482:web:3fbc2d0e26f70e51b6f66b",
+            measurementId: "G-S0NZ4E6YJ3"
         };
 
+        // 3. INISIALISASI
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const analytics = getAnalytics(app); // Analytics nyala
+        const db = getFirestore(app);        // Database nyala (PENTING!)
 
-        // --- LOGIKA TOMBOL DAFTAR ---
-        // ID DISINI: 'btn-submit' (Sudah sinkron dengan HTML di atas)
-        const btnSubmitFirebase = document.getElementById('btn-submit'); 
-        
+        // 4. LOGIKA TOMBOL DAFTAR (Ini juga hilang tadi)
+        const btnSubmitFirebase = document.getElementById('btn-submit');
         const inputNama = document.getElementById('input-nama');
         const inputPassword = document.getElementById('input-password');
 
-        // Cek Debugging
+        // Cek apakah HTML sudah benar
         if (!btnSubmitFirebase) {
-            console.error("ERROR: Tombol dengan ID 'btn-submit' tidak ditemukan!");
+            console.error("FATAL: Tombol dengan ID 'btn-submit' tidak ditemukan di HTML!");
         }
 
         btnSubmitFirebase.addEventListener('click', async () => {
             const username = inputNama.value.trim();
             const password = inputPassword.value.trim();
 
-            // Validasi input
+            // --- VALIDASI ---
             if (username === "") {
                 showWarning("Username Kosong!", "Tolong isi username Anda terlebih dahulu.");
                 return;
@@ -285,44 +289,43 @@
                 return;
             }
 
-            // Disable button sementara
+            // --- PROSES KIRIM DATA ---
             const originalText = btnSubmitFirebase.innerText;
             btnSubmitFirebase.disabled = true;
             btnSubmitFirebase.innerText = "Mendaftarkan...";
 
             try {
-                // Buat Document ID dari username
+                // Buat ID unik (huruf kecil semua, spasi jadi underscore)
                 const uniqueDocID = username.toLowerCase().replace(/\s/g, '_');
                 const docRef = doc(db, "users", uniqueDocID);
 
-                // Cek apakah username sudah ada
+                // Cek apakah username sudah dipakai orang lain
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    showWarning("Username Sudah Terdaftar!", `Username "${username}" sudah digunakan. Silakan pilih username lain.`);
-                    // Button akan di-enable lagi di blok finally
+                    showWarning("Gagal Daftar", `Username "${username}" sudah dipakai orang lain. Ganti yang lain ya!`);
                     return; 
                 }
 
-                // Simpan data ke Firestore
+                // Simpan ke Database
                 await setDoc(docRef, {
                     username: username,
                     password: password,
                     tanggal_daftar: new Date().toISOString()
                 });
 
-                // Sukses
-                showSuccess(`Selamat ${username}! Akun Anda telah berhasil didaftarkan.`);
-
-                // Reset form
+                // Berhasil
+                showSuccess(`Hore! Akun ${username} berhasil dibuat.`);
+                
+                // Bersihkan form
                 inputNama.value = '';
                 inputPassword.value = '';
 
             } catch (error) {
-                console.error("Error:", error);
-                showWarning("Error Koneksi!", "Gagal menghubungi database. Periksa koneksi internet Anda. Detail: " + error.message);
+                console.error("Error Firebase:", error);
+                showWarning("Error Sistem", "Gagal koneksi ke database. Cek internet atau lapor admin. Detail: " + error.message);
             } finally {
-                // Enable button kembali (Wajib jalan apapun yang terjadi)
+                // Hidupkan tombol lagi
                 btnSubmitFirebase.disabled = false;
                 btnSubmitFirebase.innerText = originalText;
             }
