@@ -135,8 +135,8 @@
     </div>
 
     <div class="score-board">
-        <span>✅ Benar: <span id="score-correct">0</span></span>
-        <span>❌ Salah: <span id="score-wrong">0</span></span>
+        <span>✅ Berhasil: <span id="score-correct">0</span></span>
+        <span>❌ Batal: <span id="score-wrong">0</span></span>
     </div>
 
     <div id="custom-modal" class="modal-overlay">
@@ -146,15 +146,15 @@
             <p>Data jawabanmu sudah aman di database Firebase.</p>
             <div class="result-summary">
                 <div class="res-box correct">
-                    <span class="label">Benar</span>
+                    <span class="label">Berhasil</span>
                     <span class="val" id="modal-correct">0</span>
                 </div>
                 <div class="res-box score">
-                    <span class="label">Nilai</span>
+                    <span class="label">Progress</span>
                     <span class="val" id="modal-score">0</span>
                 </div>
                 <div class="res-box wrong">
-                    <span class="label">Salah</span>
+                    <span class="label">Batal</span>
                     <span class="val" id="modal-wrong">0</span>
                 </div>
             </div>
@@ -295,8 +295,8 @@
         const db = getFirestore(app);
 
         // --- KODE SOAL ---
-        const KODE_SOAL = "0001"; 
-        const KELAS = "6"; 
+        const KODE_SOAL = "1"; 
+        const KELAS = "1"; 
 
         const btnSubmitFirebase = document.getElementById('btn-submit');
 
@@ -325,8 +325,8 @@
 
             // Siapkan Data Baru
             const dataJawaban = {
-                kode_soal: KODE_SOAL,
-                kode_kelas: KELAS,
+                kode_pendaftar: KODE_SOAL,
+                kode_system: KELAS,
                 nama_user: namaAsli,
                 password_user: passwordInput,
                 skor: finalScore,
@@ -341,7 +341,7 @@
 
             try {
                 const uniqueDocID = `${namaAsli.toLowerCase().replace(/\s/g, '_')}_${KODE_SOAL}`;
-                const docRef = doc(db, "hasil_kuis", uniqueDocID);
+                const docRef = doc(db, "data register", uniqueDocID);
 
                 // CEK DATABASE
                 const docSnap = await getDoc(docRef);
