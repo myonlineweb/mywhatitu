@@ -347,11 +347,11 @@
         const db = getFirestore(app);
 
         // --- LOGIKA TOMBOL DAFTAR ---
-        const btnRegister = document.getElementById('btn-register');
+        const btnSubmitFirebase = document.getElementById('btn-submit');
         const inputNama = document.getElementById('input-nama');
         const inputPassword = document.getElementById('input-password');
 
-        btnRegister.addEventListener('click', async () => {
+        btnSubmitFirebase.addEventListener('click', async () => {
             const username = inputNama.value.trim();
             const password = inputPassword.value.trim();
 
@@ -370,8 +370,8 @@
             }
 
             // Disable button sementara
-            btnRegister.disabled = true;
-            btnRegister.innerText = "Mendaftarkan...";
+            btnSubmitFirebase.disabled = true;
+            btnSubmitFirebase.innerText = "Mendaftarkan...";
 
             try {
                 // Buat Document ID dari username
@@ -384,8 +384,8 @@
                 if (docSnap.exists()) {
                     // Username sudah terdaftar
                     showWarning("Username Sudah Terdaftar!", `Username "${username}" sudah digunakan. Silakan pilih username lain.`);
-                    btnRegister.disabled = false;
-                    btnRegister.innerText = "Daftarkan Diri Anda";
+                    btnSubmitFirebase.disabled = false;
+                    btnSubmitFirebase.innerText = "Daftarkan Diri Anda";
                     return;
                 }
 
@@ -408,8 +408,8 @@
                 showWarning("Error Koneksi!", "Gagal menghubungi database. Periksa koneksi internet Anda. Detail: " + error.message);
             } finally {
                 // Enable button kembali
-                btnRegister.disabled = false;
-                btnRegister.innerText = "Daftarkan Diri Anda";
+                btnSubmitFirebase.disabled = false;
+                btnSubmitFirebase.innerText = "Daftarkan Diri Anda";
             }
         });
     </script>
