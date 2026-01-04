@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whatitu WebDesg - Jasa Desain Grafis Profesional</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS Reset & Base ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #0a0a0f;
+            --color-primary: #6366f1;
+            --color-accent: #a855f7;
+            --color-gold: #fbbf24;
+            --color-gold-light: #fcd34d;
+            --color-whatsapp: #25D366;
+            --color-whatsapp-dark: #128C7E;
+            --color-text: #ffffff;
+            --color-text-muted: #9ca3af;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ===== Canvas Background ===== */
+        #constellation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
+        /* ===== Navigation ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(10, 10, 15, 0.9) 0%, transparent 100%);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--color-text);
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-5px);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        /* ===== Main Container ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 100px;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #a855f7 50%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            text-shadow: 0 0 60px rgba(168, 85, 247, 0.5);
+        }
+
+        .header .tagline {
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: var(--color-text-muted);
+            font-weight: 300;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ===== Cards Grid ===== */
+        .cards-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        /* ===== Glassmorphism Card Base ===== */
+        .card {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.25);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* ===== Basic Tier Card ===== */
+        .card-basic {
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .card-basic .card-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--color-text);
+        }
+
+        .card-description {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .card-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-icon {
+            font-size: 1rem;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .detail-label {
+            color: var(--color-text-muted);
+        }
+
+        .detail-value {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .price-section {
+            text-align: center;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .price-label {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--color-text);
+        }
+
+        .price-note {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .payment-notice {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .payment-notice .notice-icon {
+            font-size: 1.25rem;
+        }
+
+        .payment-notice strong {
+            color: var(--color-gold);
+        }
+
+        /* ===== Instagram Button ===== */
+        .btn-instagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(225, 48, 108, 0.4);
+        }
+
+        .btn-instagram:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 25px rgba(225, 48, 108, 0.6);
+        }
+
+        .btn-instagram svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ===== Premium Card - Semgart Studio ===== */
+        .card-premium {
+            animation: fadeInUp 1s ease 0.4s both;
+            position: relative;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .card-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light), var(--color-gold));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .card-premium::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 50%);
+            animation: premiumGlow 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes premiumGlow {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .card-premium:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 25px 50px -12px rgba(251, 191, 36, 0.3),
+                0 0 60px rgba(251, 191, 36, 0.2);
+        }
+
+        .card-premium .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #0a0a0f;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .card-premium .card-badge .crown {
+            font-size: 1rem;
+        }
+
+        .studio-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--color-gold) 0%, #fff 50%, var(--color-gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
+        }
+
+        .studio-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            opacity: 0.9;
+        }
+
+        .card-premium .price-value {
+            background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .premium-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .feature-item .check {
+            color: var(--color-gold);
+            font-size: 1rem;
+        }
+
+        /* ===== WhatsApp Button ===== */
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--color-whatsapp) 0%, var(--color-whatsapp-dark) 100%);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-whatsapp:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
+        }
+
+        .btn-whatsapp svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .footer span {
+            color: var(--color-accent);
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                padding-top: 90px;
+            }
+
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+
+            .cards-wrapper {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .card {
+                padding: 2rem;
+            }
+
+            .studio-title {
+                font-size: 1.75rem;
+                letter-spacing: 2px;
+            }
+
+            .premium-features {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                letter-spacing: -1px;
+            }
+
+            .price-value {
+                font-size: 1.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .studio-title {
+                font-size: 1.5rem;
+            }
+
+            .detail-item {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
+
+        /* ===== Scroll Animation Reveal ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Background -->
+    <canvas id="constellation"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="back-btn">
+            <span>⬅</span>
+            <span>Kembali</span>
+        </a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Whatitu WebDesg</h1>
+            <p class="tagline">Solusi visual untuk kebutuhan promosi Anda.</p>
+        </header>
+
+        <!-- Cards Section -->
+        <div class="cards-wrapper">
+            <!-- Basic Tier Card -->
+            <article class="card card-basic">
+                <span class="card-badge"></span>
+                
+                <h2 class="card-title">Whatitu Desain</h2>
+                <p class="card-description">
+                    Melayani pembuatan desain visual profesional untuk berbagai kebutuhan promosi bisnis dan personal Anda.
+                </p>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-icon">📋</span>
+                        <div>
+                            <span class="detail-label">Layanan:</span>
+                            <span class="detail-value"> Poster, Flyer Promosi, Cover Buku</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">📁</span>
+                        <div>
+                            <span class="detail-label">Format File:</span>
+                            <span class="detail-value"> JPG atau PDF (High Quality)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="price-section">
+                    <p class="price-label">Mulai dari</p>
+                    <p class="price-value">Rp 30.000,-</p>
+                    <p class="price-note">*Tergantung tingkat kesulitan & revisi - Negotiable</p>
+                </div>
+
+                <div class="payment-notice">
+                    <span class="notice-icon">⚠️</span>
+                    <p><strong>Wajib Bayar Di Awal</strong> (Full Payment) sebelum pengerjaan dimulai.</p>
+                </div>
+
+                <a href="https://ig.me/m/mywhatitu" target="_blank" class="btn-instagram">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    Pesan via Instagram
+                </a>
+            </article>
+
+            <!-- Premium Tier Card - Semgart Studio -->
+            <article class="card card-premium">
+                <span class="card-badge">
+                    <span class="crown">👑</span>
+                    Premium Tier
+                </span>
+
+                <h2 class="studio-title">SEMGART STUDIO</h2>
+                <p class="studio-tagline">✦ Specialist Logo & Text Maker ✦</p>
+                
+                <p class="card-description">
+                    Layanan khusus branding profesional dengan detail tinggi. Cocok untuk bisnis yang ingin tampil eksklusif dan memorable.
+                </p>
+
+                <div class="premium-features">
+                    <div class="feature-item">
+                        <span class="check">✓</span>
+                        <span>Logo Design</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="check">✓</span>
+                        <span>Typography Art</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="check">✓</span>
+                        <span>Brand Identity</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="check">✓</span>
+                        <span>High Detail Work</span>
+                    </div>
+                </div>
+
+                <div class="price-section">
+                    <p class="price-label">Mulai dari</p>
+                    <p class="price-value">Rp 500.000,-</p>
+                    <p class="price-note">*Tergantung kesulitan, jumlah revisi & request khusus</p>
+                </div>
+
+                <div class="payment-notice">
+                    <span class="notice-icon">💎</span>
+                    <p><strong>Konsultasi Gratis</strong> sebelum deal. Pembayaran bertahap tersedia.</p>
+                </div>
+
+                <a href="https://wa.me/6288888888" target="_blank" class="btn-whatsapp">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Konsultasi via WhatsApp
+                </a>
+            </article>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 <span>Whatitu WebDesg</span> & <span>Semgart Studio</span>. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript: Constellation Animation -->
+    <script>
+        // ===== Constellation Canvas Animation =====
+        const canvas = document.getElementById('constellation');
+        const ctx = canvas.getContext('2d');
+
+        // Canvas sizing
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                
+                // Color variation
+                const colors = [
+                    'rgba(99, 102, 241, ',   // Primary purple
+                    'rgba(168, 85, 247, ',   // Accent purple
+                    'rgba(251, 191, 36, ',   // Gold
+                    'rgba(255, 255, 255, '   // White
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Wrap around edges
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + this.opacity + ')';
+                ctx.fill();
+            }
+        }
+
+        // Create particles
+        const particleCount = Math.min(100, Math.floor((canvas.width * canvas.height) / 15000));
+        let particles = [];
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(100, Math.floor((canvas.width * canvas.height) / 15000));
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        // Mouse interaction
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 150
+        };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Draw connections between particles
+        function drawConnections() {
+            const maxDistance = 150;
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        const opacity = (1 - distance / maxDistance) * 0.3;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        
+                        // Gradient line
+                        const gradient = ctx.createLinearGradient(
+                            particles[i].x, particles[i].y,
+                            particles[j].x, particles[j].y
+                        );
+                        gradient.addColorStop(0, `rgba(99, 102, 241, ${opacity})`);
+                        gradient.addColorStop(1, `rgba(168, 85, 247, ${opacity})`);
+                        
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+
+                // Mouse connection
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = particles[i].x - mouse.x;
+                    const dy = particles[i].y - mouse.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < mouse.radius) {
+                        const opacity = (1 - distance / mouse.radius) * 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = `rgba(251, 191, 36, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+
+                        // Push particles away from mouse
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        particles[i].x += dx * force * 0.02;
+                        particles[i].y += dy * force * 0.02;
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw particles
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            // Draw connections
+            drawConnections();
+
+            requestAnimationFrame(animate);
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+
+        // Start animation
+        animate();
+
+        // ===== Scroll Reveal Animation =====
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== Smooth hover effect for cards =====
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
+  
