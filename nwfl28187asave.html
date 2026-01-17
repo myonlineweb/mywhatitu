@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project mywhatitu: Analisis Pola Tren Data</title>
+
+    <!-- Chart.js Library via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* ============================================
+           CSS RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #dc2626;
+            --success-color: #16a34a;
+            --warning-color: #f59e0b;
+            --neutral-color: #6b7280;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --border-color: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           LAYOUT CONTAINER
+           ============================================ */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================
+           HEADER SECTION
+           ============================================ */
+        .header {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header .highlight-up {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .header .highlight-down {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           CARD COMPONENT (Reusable)
+           ============================================ */
+        .card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .icon {
+            font-size: 1.4rem;
+        }
+
+        /* ============================================
+           INPUT SECTION
+           ============================================ */
+        .description-input-wrapper {
+            margin-bottom: 24px;
+        }
+
+        .description-input-wrapper label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .description-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .description-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Data Input Container */
+        .data-input-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .data-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 20px;
+            background: var(--bg-light);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            min-height: 100px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .data-input-container.drag-over {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .data-input-container.paste-active {
+            border-color: var(--success-color);
+            background: rgba(22, 163, 74, 0.05);
+        }
+
+        .input-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .input-cell label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .input-cell input {
+            width: 70px;
+            padding: 10px 8px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .input-cell input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .input-cell input.error {
+            border-color: var(--secondary-color);
+            background: rgba(220, 38, 38, 0.05);
+        }
+
+        .input-cell input.filled {
+            border-color: var(--success-color);
+            background: rgba(22, 163, 74, 0.05);
+        }
+
+        /* Paste Hint */
+        .paste-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+
+        .paste-hint .icon {
+            font-size: 1.2rem;
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-danger {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        /* ============================================
+           CHART SECTION
+           ============================================ */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .legend-up {
+            background: var(--primary-color);
+        }
+
+        .legend-down {
+            background: var(--secondary-color);
+        }
+
+        .legend-neutral {
+            background: var(--neutral-color);
+        }
+
+        /* ============================================
+           ANALYSIS SECTION
+           ============================================ */
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+        }
+
+        .filter-section label {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            min-width: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Pattern Results */
+        .pattern-results {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pattern-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .pattern-item.pattern-up {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .pattern-item.pattern-down {
+            background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .pattern-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .pattern-content {
+            flex: 1;
+        }
+
+        .pattern-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .pattern-up .pattern-title {
+            color: var(--primary-color);
+        }
+
+        .pattern-down .pattern-title {
+            color: var(--secondary-color);
+        }
+
+        .pattern-detail {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .pattern-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-up {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .badge-down {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Summary Stats */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-value.up {
+            color: var(--primary-color);
+        }
+
+        .stat-value.down {
+            color: var(--secondary-color);
+        }
+
+        .stat-value.neutral {
+            color: var(--neutral-color);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* No Data Message */
+        .no-data-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .no-data-message .icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            margin-top: auto;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer .brand {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           TOAST NOTIFICATION
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: toastIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.toast-out {
+            animation: toastOut 0.3s ease forwards;
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        .toast-success {
+            background: var(--success-color);
+        }
+
+        .toast-error {
+            background: var(--secondary-color);
+        }
+
+        .toast-info {
+            background: var(--primary-color);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .input-cell input {
+                width: 60px;
+                padding: 8px 6px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Hidden class for conditional display */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- ============================================
+             HEADER SECTION
+             ============================================ -->
+        <header class="header">
+            <h1>🔬 Project mywhatitu: Analisis Pola Tren Data</h1>
+            <p class="subtitle">
+                Tujuannya buat cek pola data. Alat ini membantu memvisualisasikan kapan data
+                <span class="highlight-up">naik (biru)</span> atau
+                <span class="highlight-down">turun (merah)</span>
+                dan mendeteksi seberapa sering pola tersebut terjadi secara berurutan.
+            </p>
+        </header>
+
+        <!-- ============================================
+             INPUT SECTION
+             ============================================ -->
+        <section class="card" id="inputSection">
+            <h2 class="card-title">
+                <span class="icon">📊</span>
+                Input Data
+            </h2>
+
+            <!-- Description Input -->
+            <div class="description-input-wrapper">
+                <label for="dataDescription">Deskripsi/Keterangan:</label>
+                <input type="text" id="dataDescription" class="description-input"
+                    placeholder="Contoh: Data Penjualan Bulanan 2024">
+            </div>
+
+            <!-- Paste Hint -->
+            <div class="paste-hint">
+                <span class="icon">💡</span>
+                <span><strong>Tips:</strong> Anda dapat langsung paste data dari Excel! Cukup copy baris data dan paste
+                    di area input di bawah.</span>
+            </div>
+
+            <!-- Data Input Label -->
+            <label class="data-input-label">Data Numerik (t1, t2, t3, ...):</label>
+
+            <!-- Dynamic Data Input Container -->
+            <div class="data-input-container" id="dataInputContainer">
+                <!-- Input cells will be generated here by JavaScript -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-secondary" id="btnAddInput" title="Tambah 1 kolom input">
+                    ➕ Add Data (+)
+                </button>
+                <button class="btn btn-secondary btn-danger" id="btnClearAll" title="Hapus semua data">
+                    🗑️ Clear All
+                </button>
+                <button class="btn btn-primary" id="btnProcess" title="Proses dan analisis data">
+                    🚀 Proses & Analisis Data
+                </button>
+            </div>
+        </section>
+
+        <!-- ============================================
+             CHART SECTION
+             ============================================ -->
+        <section class="card hidden" id="chartSection">
+            <h2 class="card-title">
+                <span class="icon">📈</span>
+                Visualisasi Grafik
+                <span id="chartDescription"
+                    style="font-weight: normal; font-size: 0.9rem; color: var(--text-muted); margin-left: auto;"></span>
+            </h2>
+
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+
+            <!-- Custom Legend -->
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color legend-up"></div>
+                    <span>Naik (Uptrend)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-down"></div>
+                    <span>Turun (Downtrend)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-neutral"></div>
+                    <span>Sama (Neutral)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             ANALYSIS SECTION
+             ============================================ -->
+        <section class="card hidden" id="analysisSection">
+            <h2 class="card-title">
+                <span class="icon">🔍</span>
+                Analisis Pola Berurutan (Streak)
+            </h2>
+
+            <!-- Summary Statistics -->
+            <div class="summary-stats" id="summaryStats">
+                <!-- Stats will be generated here -->
+            </div>
+
+            <!-- Filter Dropdown -->
+            <div class="filter-section">
+                <label for="patternFilter">Filter Pola Berurutan Minimal (x kali):</label>
+                <select id="patternFilter" class="filter-select">
+                    <option value="2">2</option>
+                </select>
+                <span id="filterInfo" style="color: var(--text-muted); font-size: 0.875rem;"></span>
+            </div>
+
+            <!-- Pattern Results -->
+            <div class="pattern-results" id="patternResults">
+                <!-- Pattern items will be generated here -->
+            </div>
+        </section>
+
+        <!-- ============================================
+             FOOTER SECTION
+             ============================================ -->
+        <footer class="footer">
+            <p>© <span class="brand">Dari mywhatitu</span>. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Toast Container for Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================
+         JAVASCRIPT - Main Application Logic
+         ============================================ -->
+    <script>
+
+        let chart = null;           // Chart.js instance
+        let currentData = [];       // Processed data array
+        let allStreaks = [];        // All detected streaks
+        let inputCount = 10;        // Current number of input fields
+
+        // LocalStorage key for auto-save
+        const LOCALSTORAGE_KEY = 'mywhatitu_trend_data';
+
+        // DOM Element References (cached for performance)
+        const DOM = {
+            dataInputContainer: document.getElementById('dataInputContainer'),
+            dataDescription: document.getElementById('dataDescription'),
+            btnAddInput: document.getElementById('btnAddInput'),
+            btnClearAll: document.getElementById('btnClearAll'),
+            btnProcess: document.getElementById('btnProcess'),
+            chartSection: document.getElementById('chartSection'),
+            chartDescription: document.getElementById('chartDescription'),
+            analysisSection: document.getElementById('analysisSection'),
+            summaryStats: document.getElementById('summaryStats'),
+            patternFilter: document.getElementById('patternFilter'),
+            filterInfo: document.getElementById('filterInfo'),
+            patternResults: document.getElementById('patternResults'),
+            toastContainer: document.getElementById('toastContainer')
+        };
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        /**
+         * Menampilkan toast notification
+         * @param {string} message - Pesan yang akan ditampilkan
+         * @param {string} type - Tipe toast: 'success', 'error', 'info'
+         * @param {number} duration - Durasi tampil dalam ms (default: 3000)
+         */
+        function showToast(message, type = 'info', duration = 3000) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const icons = {
+                success: '✅',
+                error: '❌',
+                info: 'ℹ️'
+            };
+
+            toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+            DOM.toastContainer.appendChild(toast);
+
+            // Auto remove after duration
+            setTimeout(() => {
+                toast.classList.add('toast-out');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        /**
+         * Validasi apakah string adalah angka valid
+         * @param {string} value - Nilai yang akan divalidasi
+         * @returns {boolean}
+         */
+        function isValidNumber(value) {
+            if (value === '' || value === null || value === undefined) return false;
+            const num = parseFloat(value);
+            return !isNaN(num) && isFinite(num);
+        }
+
+        /**
+         * Parse string ke number dengan handling khusus untuk format Indonesia
+         * @param {string} value - Nilai string
+         * @returns {number|null}
+         */
+        function parseNumber(value) {
+            if (!value) return null;
+            // Handle format dengan koma sebagai desimal
+            const cleaned = value.toString().replace(/\s/g, '').replace(',', '.');
+            const num = parseFloat(cleaned);
+            return isNaN(num) ? null : num;
+        }
+
+        // ============================================
+        // INPUT MANAGEMENT FUNCTIONS
+        // ============================================
+
+        /**
+         * Membuat elemen input cell tunggal
+         * @param {number} index - Index (1-based) untuk label
+         * @param {string|number} value - Nilai awal (opsional)
+         * @returns {HTMLElement}
+         */
+        function createInputCell(index, value = '') {
+            const cell = document.createElement('div');
+            cell.className = 'input-cell';
+            cell.innerHTML = `
+                <label for="t${index}">t${index}</label>
+                <input 
+                    type="text" 
+                    id="t${index}" 
+                    name="t${index}" 
+                    placeholder="0"
+                    inputmode="decimal"
+                    value="${value}"
+                    data-index="${index}"
+                >
+            `;
+
+            // Add input event listener untuk visual feedback
+            const input = cell.querySelector('input');
+            input.addEventListener('input', handleInputChange);
+            input.addEventListener('focus', () => input.select());
+
+            return cell;
+        }
+
+        // ============================================
+        // LOCALSTORAGE AUTO-SAVE FUNCTIONS
+        // ============================================
+
+        /**
+         * Menyimpan data ke LocalStorage
+         * Menyimpan: deskripsi, jumlah kolom, dan semua nilai input
+         */
+        function saveToLocal() {
+            try {
+                const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
+                const values = [];
+
+                inputs.forEach((input) => {
+                    values.push(input.value);
+                });
+
+                const dataToSave = {
+                    description: DOM.dataDescription.value,
+                    inputCount: inputCount,
+                    values: values
+                };
+
+                localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(dataToSave));
+            } catch (e) {
+                console.warn('Gagal menyimpan ke LocalStorage:', e);
+            }
+        }
+
+        /**
+         * Memuat data dari LocalStorage saat halaman dibuka
+         * @returns {boolean} - true jika berhasil load data
+         */
+        function loadFromLocal() {
+            try {
+                const savedData = localStorage.getItem(LOCALSTORAGE_KEY);
+
+                // Jika LocalStorage kosong, return false
+                if (!savedData) return false;
+
+                const data = JSON.parse(savedData);
+
+                // Validasi data
+                if (!data || typeof data.inputCount !== 'number') return false;
+
+                // Restore deskripsi
+                if (data.description) {
+                    DOM.dataDescription.value = data.description;
+                }
+
+                // Generate kolom input sesuai jumlah yang tersimpan
+                DOM.dataInputContainer.innerHTML = '';
+                inputCount = data.inputCount;
+
+                for (let i = 1; i <= inputCount; i++) {
+                    const savedValue = data.values && data.values[i - 1] ? data.values[i - 1] : '';
+                    DOM.dataInputContainer.appendChild(createInputCell(i, savedValue));
+                }
+
+                // Apply visual feedback untuk input yang sudah terisi
+                const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
+                inputs.forEach((input) => {
+                    const value = input.value.trim();
+                    if (value !== '') {
+                        if (isValidNumber(value)) {
+                            input.classList.add('filled');
+                        } else {
+                            input.classList.add('error');
+                        }
+                    }
+                });
+
+                return true;
+            } catch (e) {
+                console.warn('Gagal memuat dari LocalStorage:', e);
+                return false;
+            }
+        }
+
+        /**
+         * Menghapus data dari LocalStorage
+         */
+        function clearLocalStorage() {
+            try {
+                localStorage.removeItem(LOCALSTORAGE_KEY);
+            } catch (e) {
+                console.warn('Gagal menghapus LocalStorage:', e);
+            }
+        }
+
+        /**
+         * Handle perubahan pada input field
+         * @param {Event} event 
+         */
+        function handleInputChange(event) {
+            const input = event.target;
+            const value = input.value.trim();
+
+            // Reset class
+            input.classList.remove('error', 'filled');
+
+            if (value === '') {
+                saveToLocal(); // Auto-save even empty values
+                return;
+            }
+
+            if (isValidNumber(value)) {
+                input.classList.add('filled');
+            } else {
+                input.classList.add('error');
+            }
+
+            // Auto-save ke LocalStorage
+            saveToLocal();
+        }
+
+        /**
+         * Inisialisasi input fields awal (10 kolom)
+         */
+        function initializeInputs() {
+            DOM.dataInputContainer.innerHTML = '';
+            inputCount = 10;
+
+            for (let i = 1; i <= inputCount; i++) {
+                DOM.dataInputContainer.appendChild(createInputCell(i));
+            }
+        }
+
+        /**
+         * Menambah satu kolom input baru di akhir
+         */
+        function addInputField() {
+            inputCount++;
+            DOM.dataInputContainer.appendChild(createInputCell(inputCount));
+
+            // Scroll ke input baru dan focus
+            const newInput = document.getElementById(`t${inputCount}`);
+            newInput.scrollIntoView({ behavior: 'smooth', inline: 'end' });
+            newInput.focus();
+
+            showToast(`Kolom t${inputCount} ditambahkan`, 'success', 2000);
+
+            // Auto-save setelah menambah kolom
+            saveToLocal();
+        }
+
+        /**
+         * Membersihkan semua input dan reset ke kondisi awal
+         */
+        function clearAllInputs() {
+            if (confirm('Apakah Anda yakin ingin menghapus semua data?')) {
+                DOM.dataDescription.value = '';
+                initializeInputs();
+
+                // Hide output sections
+                DOM.chartSection.classList.add('hidden');
+                DOM.analysisSection.classList.add('hidden');
+
+                // Destroy chart if exists
+                if (chart) {
+                    chart.destroy();
+                    chart = null;
+                }
+
+                // Reset state
+                currentData = [];
+                allStreaks = [];
+
+                // Hapus data dari LocalStorage
+                clearLocalStorage();
+
+                showToast('Semua data telah dihapus', 'info');
+            }
+        }
+
+        // ============================================
+        // SMART PASTE EXCEL HANDLER (KRUSIAL)
+        // ============================================
+
+        /**
+         * Handler untuk event paste pada container input
+         * Mendeteksi data TSV (Tab Separated Values) dari Excel
+         * dan secara otomatis membuat kolom input yang diperlukan
+         * 
+         * @param {ClipboardEvent} event 
+         */
+        function handleSmartPaste(event) {
+            // Ambil data dari clipboard
+            const clipboardData = event.clipboardData || window.clipboardData;
+            const pastedText = clipboardData.getData('text');
+
+            if (!pastedText) return;
+
+            // Deteksi apakah data adalah TSV (dari Excel)
+            // Excel biasanya menggunakan tab sebagai separator
+            const hasTabs = pastedText.includes('\t');
+            const hasNewlines = pastedText.includes('\n');
+
+            // Jika tidak ada tab dan tidak ada newline, biarkan paste normal
+            if (!hasTabs && !hasNewlines) return;
+
+            // Prevent default paste behavior
+            event.preventDefault();
+
+            // Visual feedback
+            DOM.dataInputContainer.classList.add('paste-active');
+            setTimeout(() => {
+                DOM.dataInputContainer.classList.remove('paste-active');
+            }, 500);
+
+            // Parse data - handle both tabs and newlines
+            // Untuk multi-row paste, ambil baris pertama saja atau gabungkan semua
+            let values = [];
+
+            if (hasNewlines && hasTabs) {
+                // Multi-row data dari Excel
+                // Opsi 1: Ambil semua data dari semua baris
+                const rows = pastedText.trim().split('\n');
+                rows.forEach(row => {
+                    const rowValues = row.split('\t').map(v => v.trim()).filter(v => v !== '');
+                    values = values.concat(rowValues);
+                });
+            } else if (hasTabs) {
+                // Single row dengan tabs
+                values = pastedText.split('\t').map(v => v.trim()).filter(v => v !== '');
+            } else if (hasNewlines) {
+                // Single column data (newline separated)
+                values = pastedText.split('\n').map(v => v.trim()).filter(v => v !== '');
+            }
+
+            if (values.length === 0) {
+                showToast('Tidak ada data valid yang terdeteksi', 'error');
+                return;
+            }
+
+            // Cek apakah perlu menambah kolom input
+            const currentInputCount = DOM.dataInputContainer.querySelectorAll('.input-cell').length;
+            const neededInputs = values.length;
+
+            if (neededInputs > currentInputCount) {
+                // Tambah kolom yang diperlukan
+                const additionalInputs = neededInputs - currentInputCount;
+                for (let i = 0; i < additionalInputs; i++) {
+                    inputCount++;
+                    DOM.dataInputContainer.appendChild(createInputCell(inputCount));
+                }
+                showToast(`${additionalInputs} kolom baru ditambahkan secara otomatis`, 'info');
+            }
+
+            // Isi data ke input fields
+            const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
+            let filledCount = 0;
+
+            values.forEach((value, index) => {
+                if (inputs[index]) {
+                    inputs[index].value = value;
+                    inputs[index].classList.remove('error', 'filled');
+
+                    // Validasi dan beri feedback visual
+                    if (isValidNumber(value)) {
+                        inputs[index].classList.add('filled');
+                        filledCount++;
+                    } else {
+                        inputs[index].classList.add('error');
+                    }
+                }
+            });
+
+            // Auto-save setelah paste
+            saveToLocal();
+
+            showToast(`${filledCount} data berhasil di-paste dari clipboard!`, 'success');
+        }
+
+        // ============================================
+        // DATA PROCESSING & VALIDATION
+        // ============================================
+
+        /**
+         * Mengumpulkan dan memvalidasi semua data dari input fields
+         * @returns {Object} - { success: boolean, data: number[], errors: string[] }
+         */
+        function collectAndValidateData() {
+            const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
+            const data = [];
+            const errors = [];
+
+            inputs.forEach((input, index) => {
+                const value = input.value.trim();
+
+                if (value !== '') {
+                    const num = parseNumber(value);
+                    if (num !== null) {
+                        data.push({
+                            index: index + 1,
+                            label: `t${index + 1}`,
+                            value: num
+                        });
+                        input.classList.remove('error');
+                        input.classList.add('filled');
+                    } else {
+                        errors.push(`t${index + 1}: "${value}" bukan angka valid`);
+                        input.classList.add('error');
+                    }
+                }
+            });
+
+            return {
+                success: errors.length === 0 && data.length >= 2,
+                data: data,
+                errors: errors
+            };
+        }
+
+        // ============================================
+        // STREAK/PATTERN DETECTION ALGORITHM
+        // ============================================
+
+        /**
+         * Menganalisis data untuk menemukan semua streak (pola berurutan)
+         * 
+         * Algoritma:
+         * 1. Bandingkan setiap titik data dengan titik sebelumnya
+         * 2. Tentukan tren: 'up' (naik), 'down' (turun), atau 'same' (sama)
+         * 3. Kelompokkan tren yang berurutan menjadi streak
+         * 4. Catat posisi awal, akhir, dan panjang setiap streak
+         * 
+         * @param {Array} data - Array of {index, label, value}
+         * @returns {Array} - Array of streak objects
+         */
+        function detectStreaks(data) {
+            if (data.length < 2) return [];
+
+            const streaks = [];
+            let currentStreak = null;
+
+            for (let i = 1; i < data.length; i++) {
+                const prevValue = data[i - 1].value;
+                const currValue = data[i].value;
+
+                // Tentukan arah trend
+                let direction;
+                if (currValue > prevValue) {
+                    direction = 'up';
+                } else if (currValue < prevValue) {
+                    direction = 'down';
+                } else {
+                    direction = 'same';
+                }
+
+                // Jika ini awal streak baru atau arah berubah
+                if (!currentStreak || currentStreak.direction !== direction) {
+                    // Simpan streak sebelumnya jika ada dan panjangnya >= 1
+                    if (currentStreak && currentStreak.count >= 1) {
+                        streaks.push({ ...currentStreak });
+                    }
+
+                    // Mulai streak baru
+                    currentStreak = {
+                        direction: direction,
+                        startIndex: i - 1,
+                        startLabel: data[i - 1].label,
+                        endIndex: i,
+                        endLabel: data[i].label,
+                        count: 1,
+                        values: [data[i - 1].value, data[i].value]
+                    };
+                } else {
+                    // Lanjutkan streak yang sama
+                    currentStreak.count++;
+                    currentStreak.endIndex = i;
+                    currentStreak.endLabel = data[i].label;
+                    currentStreak.values.push(data[i].value);
+                }
+            }
+
+            // Jangan lupa simpan streak terakhir
+            if (currentStreak && currentStreak.count >= 1) {
+                streaks.push({ ...currentStreak });
+            }
+
+            return streaks;
+        }
+
+        /**
+         * Filter streaks berdasarkan minimum count
+         * @param {Array} streaks - All detected streaks
+         * @param {number} minCount - Minimum streak length
+         * @returns {Array} - Filtered streaks
+         */
+        function filterStreaks(streaks, minCount) {
+            return streaks.filter(s => s.count >= minCount && s.direction !== 'same');
+        }
+
+        /**
+         * Mendapatkan streak terpanjang
+         * @param {Array} streaks 
+         * @returns {number}
+         */
+        function getMaxStreakLength(streaks) {
+            if (streaks.length === 0) return 2;
+            return Math.max(...streaks.map(s => s.count), 2);
+        }
+
+        // ============================================
+        // CHART.JS VISUALIZATION
+        // ============================================
+
+        /**
+         * Membuat atau memperbarui grafik dengan Chart.js
+         * 
+         * Fitur penting: Pewarnaan segmen dinamis berdasarkan trend
+         * - Biru untuk kenaikan
+         * - Merah untuk penurunan  
+         * - Abu-abu untuk nilai sama
+         * 
+         * @param {Array} data - Array of {index, label, value}
+         */
+        function renderChart(data) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+
+            // Destroy existing chart
+            if (chart) {
+                chart.destroy();
+            }
+
+            // Prepare data for Chart.js
+            const labels = data.map(d => d.label);
+            const values = data.map(d => d.value);
+
+            // Warna untuk setiap segmen
+            const segmentColors = [];
+            for (let i = 1; i < values.length; i++) {
+                if (values[i] > values[i - 1]) {
+                    segmentColors.push('#2563eb'); // Blue - Up
+                } else if (values[i] < values[i - 1]) {
+                    segmentColors.push('#dc2626'); // Red - Down
+                } else {
+                    segmentColors.push('#6b7280'); // Gray - Same
+                }
+            }
+
+            /**
+             * Chart.js v3+ mendukung properti 'segment' untuk styling 
+             * per-segmen. Kita menggunakan callback function untuk
+             * menentukan warna berdasarkan perbandingan nilai.
+             */
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Nilai Data',
+                        data: values,
+                        fill: false,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#667eea',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointHoverBackgroundColor: '#667eea',
+                        pointHoverBorderColor: '#ffffff',
+                        pointHoverBorderWidth: 2,
+                        tension: 0.1,
+                        // Segment styling - KUNCI untuk pewarnaan dinamis
+                        segment: {
+                            borderColor: (ctx) => {
+                                // ctx.p0 adalah titik sebelumnya, ctx.p1 adalah titik saat ini
+                                const prev = ctx.p0.parsed.y;
+                                const curr = ctx.p1.parsed.y;
+
+                                if (curr > prev) return '#2563eb'; // Blue - Naik
+                                if (curr < prev) return '#dc2626'; // Red - Turun
+                                return '#6b7280'; // Gray - Sama
+                            }
+                        }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Kita pakai custom legend
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                title: (tooltipItems) => {
+                                    return `Data ${tooltipItems[0].label}`;
+                                },
+                                label: (context) => {
+                                    const value = context.parsed.y;
+                                    const index = context.dataIndex;
+                                    let trendInfo = '';
+
+                                    if (index > 0) {
+                                        const prevValue = values[index - 1];
+                                        const diff = value - prevValue;
+                                        const pctChange = ((diff / Math.abs(prevValue)) * 100).toFixed(1);
+
+                                        if (diff > 0) {
+                                            trendInfo = ` (↑ +${diff.toFixed(2)}, +${pctChange}%)`;
+                                        } else if (diff < 0) {
+                                            trendInfo = ` (↓ ${diff.toFixed(2)}, ${pctChange}%)`;
+                                        } else {
+                                            trendInfo = ' (→ Tidak berubah)';
+                                        }
+                                    }
+
+                                    return `Nilai: ${value}${trendInfo}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Titik Data',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Nilai',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // ANALYSIS DISPLAY FUNCTIONS
+        // ============================================
+
+        /**
+         * Render summary statistics
+         * @param {Array} data - Processed data
+         * @param {Array} streaks - All detected streaks
+         */
+        function renderSummaryStats(data, streaks) {
+            const upCount = streaks.filter(s => s.direction === 'up').reduce((sum, s) => sum + s.count, 0);
+            const downCount = streaks.filter(s => s.direction === 'down').reduce((sum, s) => sum + s.count, 0);
+            const sameCount = streaks.filter(s => s.direction === 'same').reduce((sum, s) => sum + s.count, 0);
+
+            const maxUpStreak = Math.max(...streaks.filter(s => s.direction === 'up').map(s => s.count), 0);
+            const maxDownStreak = Math.max(...streaks.filter(s => s.direction === 'down').map(s => s.count), 0);
+
+            DOM.summaryStats.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value up">${upCount}</div>
+                    <div class="stat-label">Total Kenaikan</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value down">${downCount}</div>
+                    <div class="stat-label">Total Penurunan</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value up">${maxUpStreak}</div>
+                    <div class="stat-label">Streak Naik Terpanjang</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value down">${maxDownStreak}</div>
+                    <div class="stat-label">Streak Turun Terpanjang</div>
+                </div>
+            `;
+        }
+
+        /**
+         * Update dropdown options berdasarkan max streak
+         * @param {number} maxStreak 
+         */
+        function updateFilterDropdown(maxStreak) {
+            DOM.patternFilter.innerHTML = '';
+
+            for (let i = 2; i <= maxStreak; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                DOM.patternFilter.appendChild(option);
+            }
+
+            DOM.filterInfo.textContent = `(Streak terpanjang: ${maxStreak}x berturut-turut)`;
+        }
+
+        /**
+         * Render pattern results berdasarkan filter
+         * @param {Array} streaks 
+         * @param {number} minCount 
+         */
+        function renderPatternResults(streaks, minCount) {
+            const filtered = filterStreaks(streaks, minCount);
+
+            if (filtered.length === 0) {
+                DOM.patternResults.innerHTML = `
+                    <div class="no-data-message">
+                        <div class="icon">🔎</div>
+                        <p>Tidak ditemukan pola berurutan dengan minimal ${minCount}x berturut-turut.</p>
+                        <p>Coba kurangi nilai filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by count (descending) then by position
+            filtered.sort((a, b) => {
+                if (b.count !== a.count) return b.count - a.count;
+                return a.startIndex - b.startIndex;
+            });
+
+            DOM.patternResults.innerHTML = filtered.map((streak, idx) => {
+                const isUp = streak.direction === 'up';
+                const icon = isUp ? '📈' : '📉';
+                const directionText = isUp ? 'NAIK' : 'TURUN';
+                const patternClass = isUp ? 'pattern-up' : 'pattern-down';
+                const badgeClass = isUp ? 'badge-up' : 'badge-down';
+
+                // Generate badges for each data point in the streak
+                const badges = streak.values.map((val, i) => {
+                    const label = `t${streak.startIndex + i + 1}`;
+                    return `<span class="badge ${badgeClass}">${label}: ${val}</span>`;
+                }).join('');
+
+                return `
+                    <div class="pattern-item ${patternClass}" style="animation-delay: ${idx * 0.1}s">
+                        <span class="pattern-icon">${icon}</span>
+                        <div class="pattern-content">
+                            <div class="pattern-title">
+                                Ditemukan pola ${directionText} sebanyak ${streak.count} kali berturut-turut
+                            </div>
+                            <div class="pattern-detail">
+                                Dari data ke-${streak.startLabel} sampai ${streak.endLabel}
+                            </div>
+                            <div class="pattern-badges">
+                                ${badges}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // MAIN PROCESSING FUNCTION
+        // ============================================
+
+        /**
+         * Fungsi utama untuk memproses dan menganalisis data
+         */
+        function processAndAnalyze() {
+            // Validasi data
+            const result = collectAndValidateData();
+
+            if (result.errors.length > 0) {
+                showToast(`Error: ${result.errors[0]}`, 'error');
+                return;
+            }
+
+            if (result.data.length < 2) {
+                showToast('Minimal 2 data numerik diperlukan untuk analisis', 'error');
+                return;
+            }
+
+            // Update state
+            currentData = result.data;
+
+            // Update description jika ada
+            const description = DOM.dataDescription.value.trim();
+            DOM.chartDescription.textContent = description ? `— ${description}` : '';
+
+            // Detect streaks
+            allStreaks = detectStreaks(currentData);
+            const maxStreak = getMaxStreakLength(allStreaks);
+
+            // Render chart
+            renderChart(currentData);
+
+            // Render analysis
+            renderSummaryStats(currentData, allStreaks);
+            updateFilterDropdown(maxStreak);
+            renderPatternResults(allStreaks, 2);
+
+            // Show output sections
+            DOM.chartSection.classList.remove('hidden');
+            DOM.analysisSection.classList.remove('hidden');
+
+            // Scroll to chart
+            DOM.chartSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            showToast(`Berhasil menganalisis ${currentData.length} data!`, 'success');
+        }
+
+        // ============================================
+        // EVENT LISTENERS SETUP
+        // ============================================
+
+        function initializeEventListeners() {
+            // Button: Add Input
+            DOM.btnAddInput.addEventListener('click', addInputField);
+
+            // Button: Clear All
+            DOM.btnClearAll.addEventListener('click', clearAllInputs);
+
+            // Button: Process & Analyze
+            DOM.btnProcess.addEventListener('click', processAndAnalyze);
+
+            // Smart Paste: Container level paste handler
+            DOM.dataInputContainer.addEventListener('paste', handleSmartPaste);
+
+            // Filter dropdown change
+            DOM.patternFilter.addEventListener('change', (e) => {
+                const minCount = parseInt(e.target.value);
+                renderPatternResults(allStreaks, minCount);
+            });
+
+            // Keyboard shortcut: Enter to process
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+                    processAndAnalyze();
+                }
+            });
+        }
+
+        // ============================================
+        // APPLICATION INITIALIZATION
+        // ============================================
+
+        /**
+         * Inisialisasi aplikasi saat DOM loaded
+         */
+        function initializeApp() {
+            console.log('🚀 Project mywhatitu - Data Trend Analyzer initialized');
+
+            // Coba load data dari LocalStorage terlebih dahulu
+            const hasRestoredData = loadFromLocal();
+
+            // Jika tidak ada data tersimpan, initialize input fields default
+            if (!hasRestoredData) {
+                initializeInputs();
+            }
+
+            // Setup event listeners
+            initializeEventListeners();
+
+            // Add auto-save listener untuk description input
+            DOM.dataDescription.addEventListener('input', saveToLocal);
+
+            // Show welcome toast
+            if (hasRestoredData) {
+                showToast('Data sebelumnya berhasil di-restore dari LocalStorage!', 'success', 4000);
+            } else {
+                showToast('Selamat datang! Silakan masukkan data Anda.', 'info', 4000);
+            }
+        }
+
+        // Run initialization when DOM is ready
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+
+</html>
