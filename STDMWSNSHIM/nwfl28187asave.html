@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project mywhatitu: Analisis Pola Tren Data</title>
-
+    
     <!-- Chart.js Library via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <style>
         /* ============================================
            CSS RESET & BASE STYLES
@@ -396,7 +395,6 @@
                 opacity: 0;
                 transform: translateX(-10px);
             }
-
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -567,7 +565,6 @@
                 opacity: 0;
                 transform: translateX(100px);
             }
-
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -583,7 +580,6 @@
                 opacity: 1;
                 transform: translateX(0);
             }
-
             to {
                 opacity: 0;
                 transform: translateX(100px);
@@ -644,7 +640,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="app-container">
         <!-- ============================================
@@ -653,9 +648,9 @@
         <header class="header">
             <h1>🔬 Project mywhatitu: Analisis Pola Tren Data</h1>
             <p class="subtitle">
-                Tujuannya buat cek pola data. Alat ini membantu memvisualisasikan kapan data
-                <span class="highlight-up">naik (biru)</span> atau
-                <span class="highlight-down">turun (merah)</span>
+                Tujuannya buat cek pola data. Alat ini membantu memvisualisasikan kapan data 
+                <span class="highlight-up">naik (biru)</span> atau 
+                <span class="highlight-down">turun (merah)</span> 
                 dan mendeteksi seberapa sering pola tersebut terjadi secara berurutan.
             </p>
         </header>
@@ -672,15 +667,18 @@
             <!-- Description Input -->
             <div class="description-input-wrapper">
                 <label for="dataDescription">Deskripsi/Keterangan:</label>
-                <input type="text" id="dataDescription" class="description-input"
-                    placeholder="Contoh: Data Penjualan Bulanan 2024">
+                <input 
+                    type="text" 
+                    id="dataDescription" 
+                    class="description-input" 
+                    placeholder="Contoh: Data Penjualan Bulanan 2024"
+                >
             </div>
 
             <!-- Paste Hint -->
             <div class="paste-hint">
                 <span class="icon">💡</span>
-                <span><strong>Tips:</strong> Anda dapat langsung paste data dari Excel! Cukup copy baris data dan paste
-                    di area input di bawah.</span>
+                <span><strong>Tips:</strong> Anda dapat langsung paste data dari Excel! Cukup copy baris data dan paste di area input di bawah.</span>
             </div>
 
             <!-- Data Input Label -->
@@ -712,10 +710,9 @@
             <h2 class="card-title">
                 <span class="icon">📈</span>
                 Visualisasi Grafik
-                <span id="chartDescription"
-                    style="font-weight: normal; font-size: 0.9rem; color: var(--text-muted); margin-left: auto;"></span>
+                <span id="chartDescription" style="font-weight: normal; font-size: 0.9rem; color: var(--text-muted); margin-left: auto;"></span>
             </h2>
-
+            
             <div class="chart-container">
                 <canvas id="trendChart"></canvas>
             </div>
@@ -781,15 +778,26 @@
          JAVASCRIPT - Main Application Logic
          ============================================ -->
     <script>
+        /**
+         * ============================================
+         * PROJECT MYWHATITU - DATA TREND ANALYZER
+         * ============================================
+         * Single Page Application untuk menganalisis 
+         * tren data numerik dan mendeteksi pola berurutan.
+         * 
+         * Author: Senior Full Stack Developer
+         * Version: 1.0.0
+         */
 
+        // ============================================
+        // GLOBAL STATE & VARIABLES
+        // ============================================
+        
         let chart = null;           // Chart.js instance
         let currentData = [];       // Processed data array
         let allStreaks = [];        // All detected streaks
         let inputCount = 10;        // Current number of input fields
-
-        // LocalStorage key for auto-save
-        const LOCALSTORAGE_KEY = 'mywhatitu_trend_data';
-
+        
         // DOM Element References (cached for performance)
         const DOM = {
             dataInputContainer: document.getElementById('dataInputContainer'),
@@ -820,16 +828,16 @@
         function showToast(message, type = 'info', duration = 3000) {
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
-
+            
             const icons = {
                 success: '✅',
                 error: '❌',
                 info: 'ℹ️'
             };
-
+            
             toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
             DOM.toastContainer.appendChild(toast);
-
+            
             // Auto remove after duration
             setTimeout(() => {
                 toast.classList.add('toast-out');
@@ -886,103 +894,13 @@
                     data-index="${index}"
                 >
             `;
-
+            
             // Add input event listener untuk visual feedback
             const input = cell.querySelector('input');
             input.addEventListener('input', handleInputChange);
             input.addEventListener('focus', () => input.select());
-
+            
             return cell;
-        }
-
-        // ============================================
-        // LOCALSTORAGE AUTO-SAVE FUNCTIONS
-        // ============================================
-
-        /**
-         * Menyimpan data ke LocalStorage
-         * Menyimpan: deskripsi, jumlah kolom, dan semua nilai input
-         */
-        function saveToLocal() {
-            try {
-                const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
-                const values = [];
-
-                inputs.forEach((input) => {
-                    values.push(input.value);
-                });
-
-                const dataToSave = {
-                    description: DOM.dataDescription.value,
-                    inputCount: inputCount,
-                    values: values
-                };
-
-                localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(dataToSave));
-            } catch (e) {
-                console.warn('Gagal menyimpan ke LocalStorage:', e);
-            }
-        }
-
-        /**
-         * Memuat data dari LocalStorage saat halaman dibuka
-         * @returns {boolean} - true jika berhasil load data
-         */
-        function loadFromLocal() {
-            try {
-                const savedData = localStorage.getItem(LOCALSTORAGE_KEY);
-
-                // Jika LocalStorage kosong, return false
-                if (!savedData) return false;
-
-                const data = JSON.parse(savedData);
-
-                // Validasi data
-                if (!data || typeof data.inputCount !== 'number') return false;
-
-                // Restore deskripsi
-                if (data.description) {
-                    DOM.dataDescription.value = data.description;
-                }
-
-                // Generate kolom input sesuai jumlah yang tersimpan
-                DOM.dataInputContainer.innerHTML = '';
-                inputCount = data.inputCount;
-
-                for (let i = 1; i <= inputCount; i++) {
-                    const savedValue = data.values && data.values[i - 1] ? data.values[i - 1] : '';
-                    DOM.dataInputContainer.appendChild(createInputCell(i, savedValue));
-                }
-
-                // Apply visual feedback untuk input yang sudah terisi
-                const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
-                inputs.forEach((input) => {
-                    const value = input.value.trim();
-                    if (value !== '') {
-                        if (isValidNumber(value)) {
-                            input.classList.add('filled');
-                        } else {
-                            input.classList.add('error');
-                        }
-                    }
-                });
-
-                return true;
-            } catch (e) {
-                console.warn('Gagal memuat dari LocalStorage:', e);
-                return false;
-            }
-        }
-
-        /**
-         * Menghapus data dari LocalStorage
-         */
-        function clearLocalStorage() {
-            try {
-                localStorage.removeItem(LOCALSTORAGE_KEY);
-            } catch (e) {
-                console.warn('Gagal menghapus LocalStorage:', e);
-            }
         }
 
         /**
@@ -992,23 +910,17 @@
         function handleInputChange(event) {
             const input = event.target;
             const value = input.value.trim();
-
+            
             // Reset class
             input.classList.remove('error', 'filled');
-
-            if (value === '') {
-                saveToLocal(); // Auto-save even empty values
-                return;
-            }
-
+            
+            if (value === '') return;
+            
             if (isValidNumber(value)) {
                 input.classList.add('filled');
             } else {
                 input.classList.add('error');
             }
-
-            // Auto-save ke LocalStorage
-            saveToLocal();
         }
 
         /**
@@ -1017,7 +929,7 @@
         function initializeInputs() {
             DOM.dataInputContainer.innerHTML = '';
             inputCount = 10;
-
+            
             for (let i = 1; i <= inputCount; i++) {
                 DOM.dataInputContainer.appendChild(createInputCell(i));
             }
@@ -1029,16 +941,13 @@
         function addInputField() {
             inputCount++;
             DOM.dataInputContainer.appendChild(createInputCell(inputCount));
-
+            
             // Scroll ke input baru dan focus
             const newInput = document.getElementById(`t${inputCount}`);
             newInput.scrollIntoView({ behavior: 'smooth', inline: 'end' });
             newInput.focus();
-
+            
             showToast(`Kolom t${inputCount} ditambahkan`, 'success', 2000);
-
-            // Auto-save setelah menambah kolom
-            saveToLocal();
         }
 
         /**
@@ -1048,24 +957,21 @@
             if (confirm('Apakah Anda yakin ingin menghapus semua data?')) {
                 DOM.dataDescription.value = '';
                 initializeInputs();
-
+                
                 // Hide output sections
                 DOM.chartSection.classList.add('hidden');
                 DOM.analysisSection.classList.add('hidden');
-
+                
                 // Destroy chart if exists
                 if (chart) {
                     chart.destroy();
                     chart = null;
                 }
-
+                
                 // Reset state
                 currentData = [];
                 allStreaks = [];
-
-                // Hapus data dari LocalStorage
-                clearLocalStorage();
-
+                
                 showToast('Semua data telah dihapus', 'info');
             }
         }
@@ -1085,30 +991,30 @@
             // Ambil data dari clipboard
             const clipboardData = event.clipboardData || window.clipboardData;
             const pastedText = clipboardData.getData('text');
-
+            
             if (!pastedText) return;
-
+            
             // Deteksi apakah data adalah TSV (dari Excel)
             // Excel biasanya menggunakan tab sebagai separator
             const hasTabs = pastedText.includes('\t');
             const hasNewlines = pastedText.includes('\n');
-
+            
             // Jika tidak ada tab dan tidak ada newline, biarkan paste normal
             if (!hasTabs && !hasNewlines) return;
-
+            
             // Prevent default paste behavior
             event.preventDefault();
-
+            
             // Visual feedback
             DOM.dataInputContainer.classList.add('paste-active');
             setTimeout(() => {
                 DOM.dataInputContainer.classList.remove('paste-active');
             }, 500);
-
+            
             // Parse data - handle both tabs and newlines
             // Untuk multi-row paste, ambil baris pertama saja atau gabungkan semua
             let values = [];
-
+            
             if (hasNewlines && hasTabs) {
                 // Multi-row data dari Excel
                 // Opsi 1: Ambil semua data dari semua baris
@@ -1124,16 +1030,16 @@
                 // Single column data (newline separated)
                 values = pastedText.split('\n').map(v => v.trim()).filter(v => v !== '');
             }
-
+            
             if (values.length === 0) {
                 showToast('Tidak ada data valid yang terdeteksi', 'error');
                 return;
             }
-
+            
             // Cek apakah perlu menambah kolom input
             const currentInputCount = DOM.dataInputContainer.querySelectorAll('.input-cell').length;
             const neededInputs = values.length;
-
+            
             if (neededInputs > currentInputCount) {
                 // Tambah kolom yang diperlukan
                 const additionalInputs = neededInputs - currentInputCount;
@@ -1143,16 +1049,16 @@
                 }
                 showToast(`${additionalInputs} kolom baru ditambahkan secara otomatis`, 'info');
             }
-
+            
             // Isi data ke input fields
             const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
             let filledCount = 0;
-
+            
             values.forEach((value, index) => {
                 if (inputs[index]) {
                     inputs[index].value = value;
                     inputs[index].classList.remove('error', 'filled');
-
+                    
                     // Validasi dan beri feedback visual
                     if (isValidNumber(value)) {
                         inputs[index].classList.add('filled');
@@ -1162,10 +1068,7 @@
                     }
                 }
             });
-
-            // Auto-save setelah paste
-            saveToLocal();
-
+            
             showToast(`${filledCount} data berhasil di-paste dari clipboard!`, 'success');
         }
 
@@ -1181,10 +1084,10 @@
             const inputs = DOM.dataInputContainer.querySelectorAll('.input-cell input');
             const data = [];
             const errors = [];
-
+            
             inputs.forEach((input, index) => {
                 const value = input.value.trim();
-
+                
                 if (value !== '') {
                     const num = parseNumber(value);
                     if (num !== null) {
@@ -1201,7 +1104,7 @@
                     }
                 }
             });
-
+            
             return {
                 success: errors.length === 0 && data.length >= 2,
                 data: data,
@@ -1227,14 +1130,14 @@
          */
         function detectStreaks(data) {
             if (data.length < 2) return [];
-
+            
             const streaks = [];
             let currentStreak = null;
-
+            
             for (let i = 1; i < data.length; i++) {
                 const prevValue = data[i - 1].value;
                 const currValue = data[i].value;
-
+                
                 // Tentukan arah trend
                 let direction;
                 if (currValue > prevValue) {
@@ -1244,14 +1147,14 @@
                 } else {
                     direction = 'same';
                 }
-
+                
                 // Jika ini awal streak baru atau arah berubah
                 if (!currentStreak || currentStreak.direction !== direction) {
                     // Simpan streak sebelumnya jika ada dan panjangnya >= 1
                     if (currentStreak && currentStreak.count >= 1) {
                         streaks.push({ ...currentStreak });
                     }
-
+                    
                     // Mulai streak baru
                     currentStreak = {
                         direction: direction,
@@ -1270,12 +1173,12 @@
                     currentStreak.values.push(data[i].value);
                 }
             }
-
+            
             // Jangan lupa simpan streak terakhir
             if (currentStreak && currentStreak.count >= 1) {
                 streaks.push({ ...currentStreak });
             }
-
+            
             return streaks;
         }
 
@@ -1315,16 +1218,16 @@
          */
         function renderChart(data) {
             const ctx = document.getElementById('trendChart').getContext('2d');
-
+            
             // Destroy existing chart
             if (chart) {
                 chart.destroy();
             }
-
+            
             // Prepare data for Chart.js
             const labels = data.map(d => d.label);
             const values = data.map(d => d.value);
-
+            
             // Warna untuk setiap segmen
             const segmentColors = [];
             for (let i = 1; i < values.length; i++) {
@@ -1336,7 +1239,7 @@
                     segmentColors.push('#6b7280'); // Gray - Same
                 }
             }
-
+            
             /**
              * Chart.js v3+ mendukung properti 'segment' untuk styling 
              * per-segmen. Kita menggunakan callback function untuk
@@ -1366,7 +1269,7 @@
                                 // ctx.p0 adalah titik sebelumnya, ctx.p1 adalah titik saat ini
                                 const prev = ctx.p0.parsed.y;
                                 const curr = ctx.p1.parsed.y;
-
+                                
                                 if (curr > prev) return '#2563eb'; // Blue - Naik
                                 if (curr < prev) return '#dc2626'; // Red - Turun
                                 return '#6b7280'; // Gray - Sama
@@ -1407,12 +1310,12 @@
                                     const value = context.parsed.y;
                                     const index = context.dataIndex;
                                     let trendInfo = '';
-
+                                    
                                     if (index > 0) {
                                         const prevValue = values[index - 1];
                                         const diff = value - prevValue;
                                         const pctChange = ((diff / Math.abs(prevValue)) * 100).toFixed(1);
-
+                                        
                                         if (diff > 0) {
                                             trendInfo = ` (↑ +${diff.toFixed(2)}, +${pctChange}%)`;
                                         } else if (diff < 0) {
@@ -1421,7 +1324,7 @@
                                             trendInfo = ' (→ Tidak berubah)';
                                         }
                                     }
-
+                                    
                                     return `Nilai: ${value}${trendInfo}`;
                                 }
                             }
@@ -1478,10 +1381,10 @@
             const upCount = streaks.filter(s => s.direction === 'up').reduce((sum, s) => sum + s.count, 0);
             const downCount = streaks.filter(s => s.direction === 'down').reduce((sum, s) => sum + s.count, 0);
             const sameCount = streaks.filter(s => s.direction === 'same').reduce((sum, s) => sum + s.count, 0);
-
+            
             const maxUpStreak = Math.max(...streaks.filter(s => s.direction === 'up').map(s => s.count), 0);
             const maxDownStreak = Math.max(...streaks.filter(s => s.direction === 'down').map(s => s.count), 0);
-
+            
             DOM.summaryStats.innerHTML = `
                 <div class="stat-card">
                     <div class="stat-value up">${upCount}</div>
@@ -1508,14 +1411,14 @@
          */
         function updateFilterDropdown(maxStreak) {
             DOM.patternFilter.innerHTML = '';
-
+            
             for (let i = 2; i <= maxStreak; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = i;
                 DOM.patternFilter.appendChild(option);
             }
-
+            
             DOM.filterInfo.textContent = `(Streak terpanjang: ${maxStreak}x berturut-turut)`;
         }
 
@@ -1526,7 +1429,7 @@
          */
         function renderPatternResults(streaks, minCount) {
             const filtered = filterStreaks(streaks, minCount);
-
+            
             if (filtered.length === 0) {
                 DOM.patternResults.innerHTML = `
                     <div class="no-data-message">
@@ -1537,26 +1440,26 @@
                 `;
                 return;
             }
-
+            
             // Sort by count (descending) then by position
             filtered.sort((a, b) => {
                 if (b.count !== a.count) return b.count - a.count;
                 return a.startIndex - b.startIndex;
             });
-
+            
             DOM.patternResults.innerHTML = filtered.map((streak, idx) => {
                 const isUp = streak.direction === 'up';
                 const icon = isUp ? '📈' : '📉';
                 const directionText = isUp ? 'NAIK' : 'TURUN';
                 const patternClass = isUp ? 'pattern-up' : 'pattern-down';
                 const badgeClass = isUp ? 'badge-up' : 'badge-down';
-
+                
                 // Generate badges for each data point in the streak
                 const badges = streak.values.map((val, i) => {
                     const label = `t${streak.startIndex + i + 1}`;
                     return `<span class="badge ${badgeClass}">${label}: ${val}</span>`;
                 }).join('');
-
+                
                 return `
                     <div class="pattern-item ${patternClass}" style="animation-delay: ${idx * 0.1}s">
                         <span class="pattern-icon">${icon}</span>
@@ -1586,43 +1489,43 @@
         function processAndAnalyze() {
             // Validasi data
             const result = collectAndValidateData();
-
+            
             if (result.errors.length > 0) {
                 showToast(`Error: ${result.errors[0]}`, 'error');
                 return;
             }
-
+            
             if (result.data.length < 2) {
                 showToast('Minimal 2 data numerik diperlukan untuk analisis', 'error');
                 return;
             }
-
+            
             // Update state
             currentData = result.data;
-
+            
             // Update description jika ada
             const description = DOM.dataDescription.value.trim();
             DOM.chartDescription.textContent = description ? `— ${description}` : '';
-
+            
             // Detect streaks
             allStreaks = detectStreaks(currentData);
             const maxStreak = getMaxStreakLength(allStreaks);
-
+            
             // Render chart
             renderChart(currentData);
-
+            
             // Render analysis
             renderSummaryStats(currentData, allStreaks);
             updateFilterDropdown(maxStreak);
             renderPatternResults(allStreaks, 2);
-
+            
             // Show output sections
             DOM.chartSection.classList.remove('hidden');
             DOM.analysisSection.classList.remove('hidden');
-
+            
             // Scroll to chart
             DOM.chartSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+            
             showToast(`Berhasil menganalisis ${currentData.length} data!`, 'success');
         }
 
@@ -1633,22 +1536,22 @@
         function initializeEventListeners() {
             // Button: Add Input
             DOM.btnAddInput.addEventListener('click', addInputField);
-
+            
             // Button: Clear All
             DOM.btnClearAll.addEventListener('click', clearAllInputs);
-
+            
             // Button: Process & Analyze
             DOM.btnProcess.addEventListener('click', processAndAnalyze);
-
+            
             // Smart Paste: Container level paste handler
             DOM.dataInputContainer.addEventListener('paste', handleSmartPaste);
-
+            
             // Filter dropdown change
             DOM.patternFilter.addEventListener('change', (e) => {
                 const minCount = parseInt(e.target.value);
                 renderPatternResults(allStreaks, minCount);
             });
-
+            
             // Keyboard shortcut: Enter to process
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && e.ctrlKey) {
@@ -1667,32 +1570,19 @@
          */
         function initializeApp() {
             console.log('🚀 Project mywhatitu - Data Trend Analyzer initialized');
-
-            // Coba load data dari LocalStorage terlebih dahulu
-            const hasRestoredData = loadFromLocal();
-
-            // Jika tidak ada data tersimpan, initialize input fields default
-            if (!hasRestoredData) {
-                initializeInputs();
-            }
-
+            
+            // Initialize input fields
+            initializeInputs();
+            
             // Setup event listeners
             initializeEventListeners();
-
-            // Add auto-save listener untuk description input
-            DOM.dataDescription.addEventListener('input', saveToLocal);
-
+            
             // Show welcome toast
-            if (hasRestoredData) {
-                showToast('Data sebelumnya berhasil di-restore dari LocalStorage!', 'success', 4000);
-            } else {
-                showToast('Selamat datang! Silakan masukkan data Anda.', 'info', 4000);
-            }
+            showToast('Selamat datang! Silakan masukkan data Anda.', 'info', 4000);
         }
 
         // Run initialization when DOM is ready
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
-
 </html>
